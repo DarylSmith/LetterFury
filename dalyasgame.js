@@ -75,6 +75,7 @@ const DalyasGame = {
 				DalyasGame.NumberOfRounds = 0;
 				DalyasGame.GetScores();
 				DalyasGame.BeginAdvancedRound();
+				document.querySelector("#gameText").focus();
 				//DalyasGame.DisplayScores();
 				//DalyasGame.ShowModal("Select a name and level to begin");
 
@@ -93,7 +94,7 @@ const DalyasGame = {
 					
 					DalyasGame.IntroIndex = DalyasGame.IntroIndex >= IntroJson.Items.length-1 ?0 : DalyasGame.IntroIndex+1;
 
-				}, 3000)
+				}, 1800)
 
 
 			},
@@ -140,8 +141,8 @@ const DalyasGame = {
 			WriteToConsole: function(text, elemClass){
 
 				let textElem = document.createElement("div");
-				//textElem.classList.add(elemClass,"consoleInner");
 				textElem.innerHTML = text;
+				textElem.className=elemClass;
 				const parentElem = document.querySelector("#consoleText");
 
 				document.querySelector("#consoleText").insertBefore(textElem,parentElem.firstChild);
@@ -204,6 +205,7 @@ const DalyasGame = {
 						window.clearInterval(window.GamePlay);
 						DalyasGame.SetScores(DalyasGame.NumberOfRounds);
 						DalyasGame.Init();
+					
 						//DalyasGame.ShowModal(`Game Over! You got ${DalyasGame.NumberOfRounds}. <br/> Want to play again ?` );
 					}
 					else {
@@ -237,6 +239,17 @@ const DalyasGame = {
 				DalyasGame.DisplayScores();
 			},
 
+			DisplayInputResults:function($gameTextElem, text,className){
+				
+				window.setTimeout(e=>{
+					$gameTextElem.value = "";
+					$gameTextElem.focus();
+					DalyasGame.WriteToConsole(text,className);
+					},500);
+
+
+			},
+
 			DisplayScores: function () {
 
 				let beginnerText = '';
@@ -266,10 +279,10 @@ const DalyasGame = {
 				let $resultsElem = document.querySelector("#results");
 				let $gameTextElem = document.querySelector("#gameText");
 
-
+				const regex = /^\d{3}$/;
 				let gameText = $gameTextElem.value;
-				if (gameText.length !== 3) {
-					DalyasGame.WriteToConsole("Sorry, you were supposed to put in 3 characters, but you screwed up! Try Again !","error");
+				if (!regex.test(gameText)) {
+					DalyasGame.WriteToConsole("Computer does not understand you!","error");
 					$gameTextElem.value ="";
 				
 				}
@@ -291,20 +304,11 @@ const DalyasGame = {
 
 					if (DalyasGame.OurRandomNumber.toString() === gameText) {
 
-						if (DalyasGame.Level === 'beginner') {
-							DalyasGame.ShowModal('Congratulations! you have won the game in ' + DalyasGame.ListOfChances.length + ' turns!<br/> Want to play again?');
-							DalyasGame.SetScores(DalyasGame.ListOfChances.length);
-							return;
-						}
-						else {
-
+							DalyasGame.DisplayInputResults($gameTextElem, "Congrats! Code successfully unlocked. Resetting to new number","victory");
 							DalyasGame.StartNextRound();
 							return;
-						}
-
 
 					}
-
 
 					for (let i = 0; i < 3; i++) {
 						//check our number against the computers number
@@ -330,10 +334,12 @@ const DalyasGame = {
 
 					DalyasGame.ListOfChances.push(resultsCode);
 
-					$gameTextElem.value=resultCode
-					$resultsElem.innerHTML = DalyasGame.ListOfChances.join('<br/>');
+					$gameTextElem.value=resultsCode
+					//$resultsElem.innerHTML = DalyasGame.ListOfChances.join('<br/>');
 					console.log(whatIsHappening);
-					$gameTextElem.focus();
+					
+					DalyasGame.DisplayInputResults($gameTextElem,`Code ${resultsCode} for number ${gameText} (attempt ${DalyasGame.ListOfChances.length})`,"results");
+
 
 				}
 

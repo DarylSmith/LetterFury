@@ -84,6 +84,20 @@
 			overflow:hidden;
 		}
 
+		.error{
+			color: #cd3276 !important;
+		}
+
+		.victory{
+			color: 	#cd32c3 !important;
+		}
+
+		.results {
+			color: #c3cd32 !important;
+		}
+
+		
+
 		#consoleContainer {
 			width: 45%;
     background-color: #000;
