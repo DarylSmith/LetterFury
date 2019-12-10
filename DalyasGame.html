@@ -1,0 +1,153 @@
+<html>
+
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Orbitron:400,900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="styles.css" />
+	<script src="dalyasgame.js"></script>
+
+	<script>
+
+
+
+		//document.write(DalyasGame.OurRandomNumber);
+
+		//check box and make sure someone add 3 numbers
+		//if they didn't add three numbers add an error message-box
+
+		document.addEventListener("DOMContentLoaded", () => {
+
+			DalyasGame.DialogElem = document.getElementById('gamedialog');
+
+			DalyasGame.ShowIntro();
+			/* 
+						DalyasGame.DialogElem.addEventListener('close', (event) => {
+			
+							let playerName = document.querySelector('#nametext').value;
+							DalyasGame.PlayerName = playerName === '' ? 'Hidden Genius' : playerName;
+							DalyasGame.Level = document.querySelector('#levelselect').value;
+			
+							if (DalyasGame.Level === 'advanced') {
+			
+								DalyasGame.BeginAdvancedRound();
+							}
+			
+						}); */
+
+			document.querySelector("#startGameButton").addEventListener('click', (event) => {
+
+
+				DalyasGame.Init();
+			})
+
+			document.querySelector("#gameText").focus();
+
+			document.querySelector("#gameText").addEventListener('keyup', (event) => {
+
+				console.log(event.target.value);
+				if(event.target.value.length>=3){
+					DalyasGame.MakeSelection();
+				}
+
+			});
+		});
+
+
+	</script>
+
+</head>
+
+
+<body>
+	<div id="main-container">
+		<div class="header">
+			<h1>Dalya's Program</h1>
+		</div>
+		<section id="ruleSection">
+
+
+			<div id="terminal">___</div>
+			<div id="rules">
+				Loading...
+			</div>
+			<button id="startGameButton">I'm ready!</button>
+
+		</section>
+		<section id="gameSection">
+
+			<div id="mainBody">
+
+
+				<div id="game" class="game-child">
+					<label id="gamePlayLabel"> Input guess here </label>
+					<div id="inputContainer">
+						<input id="gameText" placeholder="___" type="text" />
+					</div>
+
+
+					<div id="timerContainer">
+						<label id="timerLabel"> Game Timer </label>
+						<div id="timer">
+						</div>
+					</div>
+					<button id="gameButton">Check</button>
+
+					<div id="results"></div>
+
+
+				</div>
+				<div id="consoleContainer" class="game-child">
+				<label id ="consoleLabel">Console</label>
+
+				<div id="consoleText"></div>
+					</div>
+			</div>
+	</div>
+
+	<div id="console">
+		<div class="console-container">
+			<h5>Timer</h5>
+
+
+		</div>
+		<div class="console-container">
+			<h5>Round</h5>
+			<div id="round">
+			</div>
+		</div>
+	</div>
+	</section>
+	<dialog id="gamedialog">
+
+		<form method="dialog">
+			<div id="dialog-message">
+
+			</div>
+
+			<div id="name">
+
+				<label>Name</label>
+				<input type="text" id="nametext" />
+
+			</div>
+
+			<div id="level">
+
+				<label>Level</label>
+				<select id="levelselect">
+					<option value="beginner">Beginner</option>
+					<option value="advanced">Advanced</option>
+				</select>
+
+			</div>
+
+			<button id="startgame"> Start Game! </button>
+
+		</form>
+
+	</dialog>
+	</div>
+</body>
+
+
+
+</html>
