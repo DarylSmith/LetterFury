@@ -41,11 +41,19 @@
 
 			document.querySelector("#gameText").focus();
 
+			document.querySelector("#gameText").addEventListener('keydown',(event)=>{
+
+				document.querySelector("#inputInner").classList.remove("has-cursor");
+			});
+
 			document.querySelector("#gameText").addEventListener('keyup', (event) => {
 
 				console.log(event.target.value);
-				if(event.target.value.length>=3){
+				if(event.target.value.length>=3 && DalyasGame.GameState === 'game_play'){
 					DalyasGame.MakeSelection();
+				}
+				else if(event.target.value.toUpperCase()==='YES' &&  DalyasGame.GameState==='game_over'){
+					DalyasGame.Init();
 				}
 
 			});
@@ -80,7 +88,7 @@
 				<div id="game" class="game-child">
 					<label id="gamePlayLabel"> Input guess here </label>
 					<div id="inputContainer">
-						<span class="has-cursor" id="inputInner"></span><input id="gameText"  placeholder="___" type="text" />
+						<span  id="inputInner"></span><input id="gameText"  placeholder="___" type="text" />
 					</div>
 
 
@@ -89,7 +97,7 @@
 						<div id="timer">
 						</div>
 					</div>
-					<button id="gameButton">Check</button>
+					
 
 					<div id="results"></div>
 
@@ -116,35 +124,6 @@
 		</div>
 	</div>
 	</section>
-	<dialog id="gamedialog">
-
-		<form method="dialog">
-			<div id="dialog-message">
-
-			</div>
-
-			<div id="name">
-
-				<label>Name</label>
-				<input type="text" id="nametext" />
-
-			</div>
-
-			<div id="level">
-
-				<label>Level</label>
-				<select id="levelselect">
-					<option value="beginner">Beginner</option>
-					<option value="advanced">Advanced</option>
-				</select>
-
-			</div>
-
-			<button id="startgame"> Start Game! </button>
-
-		</form>
-
-	</dialog>
 	</div>
 </body>
 

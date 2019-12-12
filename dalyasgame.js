@@ -58,6 +58,7 @@ const DalyasGame = {
 			DialogElem: {},
 			IntroIndex:0,
 			Level: 'beginner',
+			GameState: 'intro',
 			CurrentTime: 0,
 			CountdownNumber: 0,
 			LengthOfGameInMinutes: 2,
@@ -124,7 +125,6 @@ const DalyasGame = {
 
 				DalyasGame.SetRandomNumber();
 				DalyasGame.ListOfChances = [];
-				document.querySelector("#results").innerHTML = "<span class='bignews'>You got it! Keep Going!</span>";
 				DalyasGame.NumberOfRounds++;
 				document.querySelector("#round").innerHTML = DalyasGame.NumberOfRounds;
 				;
@@ -189,10 +189,13 @@ const DalyasGame = {
 			},
 
 			BeginAdvancedGame: function () {
+				DalyasGame.GameState = 'game_play';
 
 				document.querySelector("#gameText").removeAttribute("disabled");
 
 				DalyasGame.EndOfGame = new Date().getTime() + DalyasGame.LengthOfGameInMinutes * 60000;
+				document.querySelector("#gameText").focus();
+				document.querySelector("#inputInner").className="has-cursor";
 
 				window.GamePlay = setInterval(() => {
 
@@ -200,11 +203,14 @@ const DalyasGame = {
 					const t = DalyasGame.EndOfGame - now;
 
 
-					if (t < 0) {
+					if (t <= 0) {
 
 						window.clearInterval(window.GamePlay);
 						DalyasGame.SetScores(DalyasGame.NumberOfRounds);
-						DalyasGame.Init();
+						//DalyasGame.Init();
+						DalyasGame.GameState ='game_over';
+						DalyasGame.WriteToConsole(`Game Over! You have ${DalyasGame.NumberOfRounds} points!`,"");
+						DalyasGame.WriteToConsole("If you would like to play again, type YES into the input box.");
 					
 						//DalyasGame.ShowModal(`Game Over! You got ${DalyasGame.NumberOfRounds}. <br/> Want to play again ?` );
 					}
@@ -236,13 +242,14 @@ const DalyasGame = {
 
 				localStorage.setItem('highScores', JSON.stringify(DalyasGame.HighScores));
 
-				DalyasGame.DisplayScores();
+				//DalyasGame.DisplayScores();
 			},
 
 			DisplayInputResults:function($gameTextElem, text,className){
 				
 				window.setTimeout(e=>{
 					$gameTextElem.value = "";
+					document.querySelector("#inputInner").className="has-cursor";
 					$gameTextElem.focus();
 					DalyasGame.WriteToConsole(text,className);
 					},500);
@@ -276,7 +283,6 @@ const DalyasGame = {
 
 			MakeSelection: function () {
 
-				let $resultsElem = document.querySelector("#results");
 				let $gameTextElem = document.querySelector("#gameText");
 
 				const regex = /^\d{3}$/;
@@ -284,6 +290,8 @@ const DalyasGame = {
 				if (!regex.test(gameText)) {
 					DalyasGame.WriteToConsole("Computer does not understand you!","error");
 					$gameTextElem.value ="";
+					document.querySelector("#inputInner").className="has-cursor";
+					$ganeTextElem.focus();
 				
 				}
 				else {
