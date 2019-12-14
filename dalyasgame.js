@@ -86,6 +86,9 @@ const DalyasGame = {
 
 			ShowIntro:function(){
 
+				DalyasGame.HighScores.advanced.push({ Name: 'TYP', Score: 5 });
+				DalyasGame.HighScores.advanced.push({ Name: 'YYP', Score: 6 });
+
 				window.IntroText = window.setInterval(e =>{
 
 					const currentItem = IntroJson.Items[DalyasGame.IntroIndex];
@@ -138,16 +141,19 @@ const DalyasGame = {
 
 			},
 
-			WriteToConsole: function(text, elemClass){
+			WriteToConsole: function(text, elemClass, target){
+				if(target===undefined){
+					target = "#consoleText";
+				}
 
-				let id = `comment-${new Date().getUTCDate().toString()}`;
+				let id = `comment--${new Date().getUTCDate().toString()}`;
 				let textElem = document.createElement("div");
 				textElem.id=id;
 				//textElem.innerHTML = text;
 				textElem.className=elemClass;
-				const parentElem = document.querySelector("#consoleText");
+				const parentElem = document.querySelector(target);
 
-				document.querySelector("#consoleText").insertBefore(textElem,parentElem.firstChild);
+				document.querySelector(target).insertBefore(textElem,parentElem.firstChild);
 
 				var $currentElem = document.querySelector("#"+ id);
 
@@ -297,25 +303,20 @@ const DalyasGame = {
 			},
 
 			DisplayScores: function () {
+				if (window.IntroText){
+					window.clearInterval(window.IntroText);
+					}
 
-				let beginnerText = '';
 				let advancedText = '';
-
-				DalyasGame.HighScores.beginner.forEach((item) => {
-
-					beginnerText += `${item.Name} - ${item.Score}<br/>`;
-
-				});
-
-				document.querySelector("#beginner-scores").innerHTML = beginnerText;
-
+				document.querySelector("#terminal").innerHTML='';
+			
 				DalyasGame.HighScores.advanced.forEach((item) => {
 
 					advancedText += `${item.Name} - ${item.Score}<br/>`;
 
-				});
+					DalyasGame.WriteToConsole(advancedText,"high-score-item","#terminal");
 
-				document.querySelector("#advanced-scores").innerHTML = advancedText;
+				});
 
 
 			},

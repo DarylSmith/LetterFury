@@ -37,7 +37,16 @@
 
 
 				DalyasGame.Init();
-			})
+			});
+
+			window.onanimationend= (e)=>{
+				switch(e.animationName){
+
+					case 'extend-console':
+						DalyasGame.DisplayScores();
+					break;
+				}
+			}
 
 			document.querySelector("#highScoreButton").addEventListener('click', (event)=>{
 
