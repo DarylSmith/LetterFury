@@ -134,19 +134,35 @@ const DalyasGame = {
 
 			SetRandomNumber: function () {
 
-				DalyasGame.OurRandomNumber = Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
+				DalyasGame.OurRandomNumber = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
 
 			},
 
 			WriteToConsole: function(text, elemClass){
 
+				let id = `comment-${new Date().getUTCDate().toString()}`;
 				let textElem = document.createElement("div");
-				textElem.innerHTML = text;
+				textElem.id=id;
+				//textElem.innerHTML = text;
 				textElem.className=elemClass;
 				const parentElem = document.querySelector("#consoleText");
 
 				document.querySelector("#consoleText").insertBefore(textElem,parentElem.firstChild);
 
+				var $currentElem = document.querySelector("#"+ id);
+
+				text.split('').forEach((item,index)=>{
+
+					(function(index){window.setTimeout((e)=>{
+
+						const currentText = text.substring(0,index+1);
+						$currentElem.innerHTML = currentText;
+						
+
+					},10 * index);
+				})(index);
+
+				});
 
 
 			},
@@ -216,18 +232,41 @@ const DalyasGame = {
 					}
 					else {
 
-						let minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+						DalyasGame.SetCountdownClock(t);
+
+					}
+
+				}, 1000);
+
+
+			},
+
+			AddSecondsToTime:function(timeAddedInSeconds){
+
+				for(let i=0;i<=timeAddedInSeconds;i++){
+
+					(function(i){
+					window.setTimeout((e)=>{
+						DalyasGame.EndOfGame+= 1000;
+						const t = DalyasGame.EndOfGame - new Date().getTime();;
+						DalyasGame.SetCountdownClock(t);
+
+					},10*i);
+
+					})(i);
+
+				}
+
+			},
+
+			SetCountdownClock: function(t){
+				let minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
 						let seconds = (Math.floor((t % (1000 * 60)) / 1000)).toString();
 
 						seconds = parseInt(seconds) < 10 ? '0' + seconds : seconds;
 
 
 						document.querySelector("#timer").innerHTML = `${minutes}:${seconds}`;
-
-					}
-
-				}, 1000);
-
 
 			},
 
@@ -288,10 +327,11 @@ const DalyasGame = {
 				const regex = /^\d{3}$/;
 				let gameText = $gameTextElem.value;
 				if (!regex.test(gameText)) {
-					DalyasGame.WriteToConsole("Computer does not understand you!","error");
+					DalyasGame.WriteToConsole("Invalid entry - 5 second penalty!","error");
+					DalyasGame.AddSecondsToTime(-5);
 					$gameTextElem.value ="";
 					document.querySelector("#inputInner").className="has-cursor";
-					$ganeTextElem.focus();
+					$gameTextElem.focus();
 				
 				}
 				else {
@@ -313,6 +353,20 @@ const DalyasGame = {
 					if (DalyasGame.OurRandomNumber.toString() === gameText) {
 
 							DalyasGame.DisplayInputResults($gameTextElem, "Congrats! Code successfully unlocked. Resetting to new number","victory");
+							
+							
+							
+							if(DalyasGame.ListOfChances.length<4){
+
+								DalyasGame.DisplayInputResults($gameTextElem, "30 second bonus for guessing in under 4 tries","bonus");
+								DalyasGame.AddSecondsToTime(30);
+							}
+							else if(DalyasGame.ListOfChances.length>3 && DalyasGame.ListOfChances.length< 7){
+
+								DalyasGame.DisplayInputResults($gameTextElem, "15 second bonus for guessing in under 7 tries","bonus");
+								DalyasGame.AddSecondsToTime(15);
+
+							}
 							DalyasGame.StartNextRound();
 							return;
 
