@@ -19,7 +19,7 @@
 			DalyasGame.DialogElem = document.getElementById('gamedialog');
 
 			DalyasGame.ShowIntro();
-			/* 
+			/*, 
 						DalyasGame.DialogElem.addEventListener('close', (event) => {
 			
 							let playerName = document.querySelector('#nametext').value;
@@ -38,6 +38,14 @@
 
 				DalyasGame.Init();
 			})
+
+			document.querySelector("#highScoreButton").addEventListener('click', (event)=>{
+
+				
+				document.querySelector("#rules").style.display = "none";
+				document.querySelector("#terminal").classList.add("extendConsole");
+
+			});
 
 			document.querySelector("#gameText").focus();
 
@@ -77,7 +85,10 @@
 			<div id="rules">
 				Loading...
 			</div>
+			<div class="buttonContainer">
 			<button id="startGameButton">I'm ready!</button>
+			<button id="highScoreButton">High Scores</button>
+			</div>
 
 		</section>
 		<section id="gameSection">
@@ -109,19 +120,6 @@
 				<div id="consoleText"></div>
 					</div>
 			</div>
-	</div>
-
-	<div id="console">
-		<div class="console-container">
-			<h5>Timer</h5>
-
-
-		</div>
-		<div class="console-container">
-			<h5>Round</h5>
-			<div id="round">
-			</div>
-		</div>
 	</div>
 	</section>
 	</div>
