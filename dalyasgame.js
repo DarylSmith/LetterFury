@@ -1,3 +1,5 @@
+const $q =  document.querySelector.bind(document);
+
 const IntroJson = {
 	Items:[
 		{'Console' : '???','Text':'The computer has chosen a random number between 100 and 1000.', 'HTML':''},
@@ -6,7 +8,7 @@ const IntroJson = {
 		{'Console' : 'BTF','Text':'The code B means the digit is not in the number.', 'HTML':'<span class="emphasis">B</span>TF'},
 		{'Console' : 'BTF','Text':'The code T means the digit is in the number, but in the wrong place.','HTML':'B<span class="emphasis">T</span>F'},
 		{'Console' : 'BTF','Text':'F Means the digit is in the right place.','HTML':'BT<span class="emphasis">F</span>'},
-		{'Console' : '283','Text':'Your goal is to get FFF as many times as you can in 2 minutes.','HTML':''},
+		{'Console' : '123','Text':'Your goal is to get FFF as many times as you can in 2 minutes.','HTML':''},
 		{'Console' : 'FFF','Text':'Are you ready to accept the challenge?','HTML':'<span class="emphasis">FFF</span>'}
 
 
@@ -23,7 +25,7 @@ Items:[
 		window.InitInput = window.setInterval( (event)=>{
 
 			DalyasGame.SetRandomNumber();
-			document.querySelector("#gameText").value = DalyasGame.OurRandomNumber;
+			$q("#gameText").value = DalyasGame.OurRandomNumber;
 
 		},40);
 	}},
@@ -31,7 +33,7 @@ Items:[
 		
 		
 
-			let currentNumElem = document.querySelector("#timer");
+			let currentNumElem = $q("#timer");
 			currentNumElem.innerHTML='00:00';
 	}},
 
@@ -39,7 +41,7 @@ Items:[
 		'Console':'Finalizing Game...','Action':()=>{
 
 			window.clearInterval(window.InitInput);
-			document.querySelector("#gameText").value = '';
+			$q("#gameText").value = '';
 		}
 	}
 
@@ -50,14 +52,13 @@ Items:[
 }
 
 const DalyasGame = {
-			HighScores: { beginner: [], advanced: [] },
+			HighScores: [],
 			PlayerName: 'unknown',
 			OurRandomNumber: 0,// 
 			ListOfChances: [],
 			NumberOfRounds: 0,
 			DialogElem: {},
 			IntroIndex:0,
-			Level: 'beginner',
 			GameState: 'intro',
 			CurrentTime: 0,
 			CountdownNumber: 0,
@@ -69,14 +70,18 @@ const DalyasGame = {
 				if (window.IntroText){
 				window.clearInterval(window.IntroText);
 				}
-				document.querySelector("#gameSection").style.display ="block";
-				document.querySelector("#ruleSection").style.display="none";
+
+				if(DalyasGame.ElementIsHidden($q("#gameSection"))){
+				
+					DalyasGame.NavigateToGamePageStart();
+				}
+				$q("#consoleContainer").innerHTML='Resetting Game...';
 				DalyasGame.SetRandomNumber();
 				DalyasGame.ListOfChances = [];
 				DalyasGame.NumberOfRounds = 0;
 				DalyasGame.GetScores();
 				DalyasGame.BeginAdvancedRound();
-				document.querySelector("#gameText").focus();
+				$q("#gameText").focus();
 				//DalyasGame.DisplayScores();
 				//DalyasGame.ShowModal("Select a name and level to begin");
 
@@ -84,10 +89,44 @@ const DalyasGame = {
 
 			},
 
+			NavigateToGamePageStart:function(){
+
+				$q("#gameSection").style.display ="block";
+				$q("#ruleSection").style.display="none";
+				$q("#consoleContainer").classList.add("easeInRight");
+				$q("#timerContainer").classList.add("easeInLeft");
+				$q("#inputContainer").classList.add("easeInLeft");
+			},
+
+			NavigationToHomePageEnd:function(){
+
+				$q("#consoleContainer").classList.remove("easeInRight");
+				$q("#timerContainer").classList.remove("easeInLeft");
+				$q("#inputContainer").classList.remove("easeInLeft");
+			},
+
+			NavigateToHomePageStart:function(){
+
+				$q("#consoleContainer").classList.add("easeOutRight");
+				$q("#timerContainer").classList.add("easeOutLeft");
+				$q("#inputContainer").classList.add("easeOutLeft");
+
+			},
+
+			NaviationToHomePageEnd:function(){
+
+				$q("#consoleContainer").classList.remove("easeOutRight");
+				$q("#timerContainer").classList.remove("easeOutLeft");
+				$q("#inputContainer").classList.remove("easeOutLeft");
+				$q("#gameSection").style.display ="none";
+				$q("#ruleSection").style.display="block";
+
+			},
+
 			ShowIntro:function(){
 
-				DalyasGame.HighScores.advanced.push({ Name: 'TYP', Score: 5 });
-				DalyasGame.HighScores.advanced.push({ Name: 'YYP', Score: 6 });
+				DalyasGame.HighScores.push({ Name: 'TYP', Score: 5 });
+				DalyasGame.HighScores.push({ Name: 'YYP', Score: 6 });
 
 				window.IntroText = window.setInterval(e =>{
 
@@ -104,8 +143,8 @@ const DalyasGame = {
 
 			RenderConsoleText(obj){
 
-				const $currentElem = document.querySelector("#terminal");
-				document.querySelector("#rules").innerHTML = obj.Text;
+				const $currentElem = $q("#terminal");
+				$q("#rules").innerHTML = obj.Text;
 
 					
 				obj.Console.split('').forEach((item,index,arr)=>{
@@ -132,7 +171,7 @@ const DalyasGame = {
 
 
 
-				document.querySelector("#dialog-message").innerHTML = msg;
+				$q("#dialog-message").innerHTML = msg;
 				DalyasGame.DialogElem.showModal();
 
 
@@ -143,7 +182,7 @@ const DalyasGame = {
 				DalyasGame.SetRandomNumber();
 				DalyasGame.ListOfChances = [];
 				DalyasGame.NumberOfRounds++;
-				document.querySelector("#round").innerHTML = DalyasGame.NumberOfRounds;
+				$q("#round").innerHTML = DalyasGame.NumberOfRounds;
 				;
 
 
@@ -160,16 +199,16 @@ const DalyasGame = {
 					target = "#consoleText";
 				}
 
-				let id = `comment--${new Date().getUTCDate().toString()}`;
+				let id = `comment--${Math.floor(Math.random() *  10000000)}`;
 				let textElem = document.createElement("div");
 				textElem.id=id;
 				//textElem.innerHTML = text;
 				textElem.className=elemClass;
-				const parentElem = document.querySelector(target);
+				const parentElem = $q(target);
 
-				document.querySelector(target).insertBefore(textElem,parentElem.firstChild);
+				$q(target).insertBefore(textElem,parentElem.firstChild);
 
-				var $currentElem = document.querySelector("#"+ id);
+				var $currentElem = $q("#"+ id);
 
 				text.split('').forEach((item,index)=>{
 
@@ -200,7 +239,7 @@ const DalyasGame = {
 			BeginAdvancedRound: function () {
 
 				DalyasGame.CountdownNumber = 0;
-				document.querySelector("#gameText").setAttribute("disabled", true);
+				$q("#gameText").setAttribute("disabled", true);
 				window.Countdown = setInterval(() => {
 
 
@@ -214,7 +253,7 @@ const DalyasGame = {
 					else {
 						//DalyasGame.CountdownNumber = 5;
 						clearInterval(window.Countdown);
-						document.querySelector("#timer").innerHTML = "GO!";
+						$q("#timer").innerHTML = "GO!";
 						DalyasGame.BeginAdvancedGame();
 
 					}
@@ -226,11 +265,11 @@ const DalyasGame = {
 			BeginAdvancedGame: function () {
 				DalyasGame.GameState = 'game_play';
 
-				document.querySelector("#gameText").removeAttribute("disabled");
+				$q("#gameText").removeAttribute("disabled");
 
 				DalyasGame.EndOfGame = new Date().getTime() + DalyasGame.LengthOfGameInMinutes * 60000;
-				document.querySelector("#gameText").focus();
-				document.querySelector("#inputInner").className="has-cursor";
+				$q("#gameText").focus();
+				$q("#inputInner").className="has-cursor";
 
 				window.GamePlay = setInterval(() => {
 
@@ -285,18 +324,20 @@ const DalyasGame = {
 						seconds = parseInt(seconds) < 10 ? '0' + seconds : seconds;
 
 
-						document.querySelector("#timer").innerHTML = `${minutes}:${seconds}`;
+						$q("#timer").innerHTML = `${minutes}:${seconds}`;
 
 			},
 
 			SetScores: function (points) {
 
-				DalyasGame.HighScores[DalyasGame.Level].push({ Name: DalyasGame.PlayerName, Score: points });
+				DalyasGame.HighScores.push({ Name: DalyasGame.PlayerName, Score: points });
 
-				DalyasGame.HighScores[DalyasGame.Level] = DalyasGame.HighScores[DalyasGame.Level]
+				DalyasGame.HighScores = DalyasGame.HighScores
 					.filter(e => e.Score > 0)
 					.sort((a, b) => b.Score - a.Score)
 					.splice(0, 3);
+
+					console.log(DalyasGame.HighScores);
 
 				localStorage.setItem('highScores', JSON.stringify(DalyasGame.HighScores));
 
@@ -307,7 +348,7 @@ const DalyasGame = {
 				
 				window.setTimeout(e=>{
 					$gameTextElem.value = "";
-					document.querySelector("#inputInner").className="has-cursor";
+					$q("#inputInner").className="has-cursor";
 					$gameTextElem.focus();
 					DalyasGame.WriteToConsole(text,className);
 					},500);
@@ -321,9 +362,9 @@ const DalyasGame = {
 					}
 
 				let advancedText = '';
-				document.querySelector("#terminal").innerHTML='';
+				$q("#terminal").innerHTML='';
 			
-				DalyasGame.HighScores.advanced.forEach((item) => {
+				DalyasGame.HighScores.forEach((item) => {
 
 					advancedText += `${item.Name} - ${item.Score}<br/>`;
 
@@ -334,9 +375,14 @@ const DalyasGame = {
 
 			},
 
+			ElementIsHidden: function(el){
+				return el.offsetParent === null;
+				
+			},
+
 			MakeSelection: function () {
 
-				let $gameTextElem = document.querySelector("#gameText");
+				let $gameTextElem = $q("#gameText");
 
 				const regex = /^\d{3}$/;
 				let gameText = $gameTextElem.value;
@@ -344,7 +390,7 @@ const DalyasGame = {
 					DalyasGame.WriteToConsole("Invalid entry - 5 second penalty!","error");
 					DalyasGame.AddSecondsToTime(-5);
 					$gameTextElem.value ="";
-					document.querySelector("#inputInner").className="has-cursor";
+					$q("#inputInner").className="has-cursor";
 					$gameTextElem.focus();
 				
 				}

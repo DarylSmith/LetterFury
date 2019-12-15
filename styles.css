@@ -91,6 +91,34 @@
 			
 		}
 
+		.easeInLeft{
+
+			animation: ease-left .5s linear;
+			animation-fill-mode: forwards; 
+		}
+
+		.easeInRight{
+
+			animation: ease-right .5s linear;
+			animation-fill-mode: forwards; 
+
+		}
+
+		.easeOutLeft{
+
+			animation: ease-left .5s linear;
+			animation-fill-mode: forwards; 
+			animation-direction:reverse;
+
+
+		}
+		.easeOutRight{
+			
+			animation: ease-right .5s linear;
+			animation-fill-mode: forwards; 
+
+		}
+
 		#inputContainer{
 			width:85%;
 			height:136px;
@@ -245,19 +273,33 @@
 		}
 
 		@keyframes color-emphasis {
-			0% {color:#32CD3C}
-			100%{color: #cd32c3}
+			0% {color:#32CD3C;}
+			100%{color: #cd32c3;}
 	
 		}
 
 		@keyframes blink {
-			0% {color: 0}
-			49%{opacity: 0}
-			50% {opacity: 1}
+			0% {color: 0;}
+			49%{opacity: 0;}
+			50% {opacity: 1;}
 		}
 
 
 		@keyframes extend-console {
-			0% {height: 276px}
+			0% {height: 276px;}
 			100% {height: 360px;}
+		}
+
+		
+
+		@keyframes ease-left{
+
+			0%{right:700px;}
+			100%{right:0px;}
+		}
+
+		@keyframes ease-right{
+
+			0%{left:700px;}
+			100%{left:0px;}
 		}
