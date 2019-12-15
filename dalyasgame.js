@@ -1,13 +1,13 @@
 const IntroJson = {
 	Items:[
-		{'Console' : '???','Text':'The computer has chosen a random number between 100 and 1000.', 'emp':''},
-		{'Console' : '123','Text':'You need to guess what it is.','emp':''},
-		{'Console' : 'BTF','Text':'The computer will give you a code with some clues. ','emp':''},
-		{'Console' : 'BTF','Text':'The code B means the digit is not in the number.', 'emp':'B'},
-		{'Console' : 'BTF','Text':'The code T means the digit is in the number, but in the wrong place.','emp':'T'},
-		{'Console' : 'BTF','Text':'F Means the digit is in the right place.','emp':'F'},
-		{'Console' : '283','Text':'Your goal is to get FFF as many times as you can in 2 minutes.','emp':''},
-		{'Console' : 'FFF','Text':'Are you ready to accept the challenge?','emp':'BFT'}
+		{'Console' : '???','Text':'The computer has chosen a random number between 100 and 1000.', 'HTML':''},
+		{'Console' : '123','Text':'You need to guess what it is.','HTML':''},
+		{'Console' : 'BTF','Text':'The computer will give you a code with some clues. ','HTML':''},
+		{'Console' : 'BTF','Text':'The code B means the digit is not in the number.', 'HTML':'<span class="emphasis">B</span>TF'},
+		{'Console' : 'BTF','Text':'The code T means the digit is in the number, but in the wrong place.','HTML':'B<span class="emphasis">T</span>F'},
+		{'Console' : 'BTF','Text':'F Means the digit is in the right place.','HTML':'BT<span class="emphasis">F</span>'},
+		{'Console' : '283','Text':'Your goal is to get FFF as many times as you can in 2 minutes.','HTML':''},
+		{'Console' : 'FFF','Text':'Are you ready to accept the challenge?','HTML':'<span class="emphasis">FFF</span>'}
 
 
 
@@ -93,8 +93,7 @@ const DalyasGame = {
 
 					const currentItem = IntroJson.Items[DalyasGame.IntroIndex];
 					const consoleText = DalyasGame.RenderConsoleText(currentItem);
-					document.querySelector("#terminal").innerHTML =consoleText;
-					document.querySelector("#rules").innerHTML = currentItem.Text;
+				
 					
 					DalyasGame.IntroIndex = DalyasGame.IntroIndex >= IntroJson.Items.length-1 ?0 : DalyasGame.IntroIndex+1;
 
@@ -105,14 +104,29 @@ const DalyasGame = {
 
 			RenderConsoleText(obj){
 
+				const $currentElem = document.querySelector("#terminal");
+				document.querySelector("#rules").innerHTML = obj.Text;
 
-			 let console =  obj.Console.split('')
-										.map(e=> obj.emp.indexOf(e)!==-1? `<span class='emphasis'>${e }</span>`: e)
-										.join('');
+					
+				obj.Console.split('').forEach((item,index,arr)=>{
+
+				(function(index){window.setTimeout((e)=>{
+
+					if (index=== arr.length - 1 && obj.HTML!==''){
+						$currentElem.innerHTML = obj.HTML;
+
+					}
+					else{
+						const currentText = obj.Console.substring(0,index+1);
+						$currentElem.innerHTML = currentText;
+					}
 					
 
-			 return console;
-			},
+				},100 * index);
+			})(index);
+			});
+
+		},
 
 			ShowModal: function (msg) {
 
@@ -201,7 +215,6 @@ const DalyasGame = {
 						//DalyasGame.CountdownNumber = 5;
 						clearInterval(window.Countdown);
 						document.querySelector("#timer").innerHTML = "GO!";
-						document.querySelector("#round").innerHTML = DalyasGame.NumberOfRounds;
 						DalyasGame.BeginAdvancedGame();
 
 					}
