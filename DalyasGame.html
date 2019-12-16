@@ -19,19 +19,6 @@
 			DalyasGame.DialogElem = document.getElementById('gamedialog');
 
 			DalyasGame.ShowIntro();
-			/*, 
-						DalyasGame.DialogElem.addEventListener('close', (event) => {
-			
-							let playerName = document.querySelector('#nametext').value;
-							DalyasGame.PlayerName = playerName === '' ? 'Hidden Genius' : playerName;
-							DalyasGame.Level = document.querySelector('#levelselect').value;
-			
-							if (DalyasGame.Level === 'advanced') {
-			
-								DalyasGame.BeginAdvancedRound();
-							}
-			
-						}); */
 
 			document.querySelector("#startGameButton").addEventListener('click', (event) => {
 
@@ -78,6 +65,12 @@
 				else if(event.target.value.toUpperCase()==='YES' &&  DalyasGame.GameState==='game_over'){
 					DalyasGame.Init();
 				}
+				else if(event.target.value.toUpperCase()==='NO' &&  DalyasGame.GameState==='game_over'){
+					DalyasGame.NavigationToHomePageStart();
+				}
+				else if(event.target.value.length==3 &&  DalyasGame.GameState==='high_score'){
+					DalyasGame.SetScores(event.target.value);
+				}
 
 			});
 		});
@@ -112,9 +105,9 @@
 
 
 				<div id="game" class="game-child">
-					<label id="gamePlayLabel"> Input guess here </label>
+					<label id="gamePlayLabel"> Input <span id="inputAction">guess</span>s here </label>
 					<div id="inputContainer">
-						<span  id="inputInner"></span><input id="gameText"  placeholder="___" type="text" />
+						<span  id="inputInner"></span><input id="gameText" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"  placeholder="___" type="text" />
 					</div>
 
 
