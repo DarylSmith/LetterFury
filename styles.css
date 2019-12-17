@@ -2,9 +2,6 @@
 			background-color: paleturquoise;
 			font-size: 16px;
 			font-family: 'Orbitron', sans-serif;
-
-
-
 		}
 
 		.has-cursor{
@@ -106,16 +103,16 @@
 
 		.easeOutLeft{
 
-			animation: ease-left .5s linear;
+			animation: ease-out-left .5s linear;
 			animation-fill-mode: forwards; 
-			animation-direction:reverse;
 
 
 		}
 		.easeOutRight{
 			
-			animation: ease-right .5s linear;
-			animation-fill-mode: forwards; 
+			animation: ease-out-right .5s linear;
+			animation-fill-mode: forwards;
+
 
 		}
 
@@ -302,4 +299,15 @@
 
 			0%{left:700px;}
 			100%{left:0px;}
+		}
+		@keyframes ease-out-left{
+
+			0%{right:0px;}
+			100%{right:1000px;}
+		}
+
+		@keyframes ease-out-right{
+
+			0%{left:0px;}
+			100%{left:1000px;}
 		}

@@ -104,7 +104,7 @@ const DalyasGame = {
 		$q("#inputContainer").classList.add("easeInLeft");
 	},
 
-	NavigationToHomePageEnd: function () {
+	NavigateToGamePageEnd: function () {
 
 		$q("#consoleContainer").classList.remove("easeInRight");
 		$q("#timerContainer").classList.remove("easeInLeft");
@@ -119,13 +119,14 @@ const DalyasGame = {
 
 	},
 
-	NaviationToHomePageEnd: function () {
+	NavigateToHomePageEnd: function () {
 
 		$q("#consoleContainer").classList.remove("easeOutRight");
 		$q("#timerContainer").classList.remove("easeOutLeft");
 		$q("#inputContainer").classList.remove("easeOutLeft");
 		$q("#gameSection").style.display = "none";
 		$q("#ruleSection").style.display = "block";
+		DalyasGame.ShowIntro();
 
 	},
 
@@ -137,7 +138,7 @@ const DalyasGame = {
 		window.IntroText = window.setInterval(e => {
 
 			const currentItem = IntroJson.Items[DalyasGame.IntroIndex];
-			const consoleText = DalyasGame.RenderConsoleText(currentItem);
+			DalyasGame.RenderConsoleText(currentItem);
 
 
 			DalyasGame.IntroIndex = DalyasGame.IntroIndex >= IntroJson.Items.length - 1 ? 0 : DalyasGame.IntroIndex + 1;
@@ -174,15 +175,6 @@ const DalyasGame = {
 
 	},
 
-	ShowModal: function (msg) {
-
-
-
-		$q("#dialog-message").innerHTML = msg;
-		DalyasGame.DialogElem.showModal();
-
-
-	},
 
 	StartNextRound: function () {
 

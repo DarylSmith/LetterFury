@@ -27,16 +27,19 @@
 			});
 
 			window.onanimationend= (e)=>{
+				console.log(e);
+
 				switch(e.animationName){
 
 					case 'extend-console':
 						DalyasGame.DisplayScores();
 					break;
-					case 'ease-in-left':
-						DalyasGame.NavigationToGamePageEnd();
+					case 'ease-left':
+						DalyasGame.NavigateToGamePageEnd();
 					break;
 					case 'ease-out-left':
-						DalyasGame.NavigationToHomePageEnd();
+					
+						DalyasGame.NavigateToHomePageEnd();
 					break;
 				}
 			}
@@ -66,7 +69,7 @@
 					DalyasGame.Init();
 				}
 				else if(event.target.value.toUpperCase()==='NO' &&  DalyasGame.GameState==='game_over'){
-					DalyasGame.NavigationToHomePageStart();
+					DalyasGame.NavigateToHomePageStart();
 				}
 				else if(event.target.value.length==3 &&  DalyasGame.GameState==='high_score'){
 					DalyasGame.SetScores(event.target.value);
