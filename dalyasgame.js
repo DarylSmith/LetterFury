@@ -121,6 +121,7 @@ const DalyasGame = {
 
 	NavigateToHomePageEnd: function () {
 
+		$("#terminal").classList.remove("extendConsole");
 		$q("#consoleContainer").classList.remove("easeOutRight");
 		$q("#timerContainer").classList.remove("easeOutLeft");
 		$q("#inputContainer").classList.remove("easeOutLeft");
@@ -132,8 +133,7 @@ const DalyasGame = {
 
 	ShowIntro: function () {
 
-		DalyasGame.HighScores.push({ Name: 'TYP', Score: 5 });
-		DalyasGame.HighScores.push({ Name: 'YYP', Score: 6 });
+		document.querySelector("#terminal").classList.remove("flattenConsole")
 
 		window.IntroText = window.setInterval(e => {
 
@@ -284,7 +284,7 @@ const DalyasGame = {
 				DalyasGame.GameState = 'high_score';
 
 				$q("#inputAction").innerHTML ="initials";
-					DalyasGame.WriteToConsole(`Congratulations! you are ranked number ${currentRank} on our list of all time champs!
+					DalyasGame.WriteToConsole(`Congratulations! you are ranked number ${currentRank + 1} on our list of all time champs!
 													Please enter your initials`, "bonus");
 				}
 			}
@@ -300,6 +300,7 @@ const DalyasGame = {
 	InitGameOver: function () {
 
 		DalyasGame.GameState = 'game_over';
+		$q("#consoleText").innerHTML="___";
 		DalyasGame.WriteToConsole(`If you would like to play again, type YES into the input box.
 								 To go back to the homepage and high, scores, type NO `,"info");
 	},
@@ -371,8 +372,9 @@ const DalyasGame = {
 			window.clearInterval(window.IntroText);
 		}
 
-		let advancedText = '';
+		let advancedText = '<h3>High Scores</h3>';
 		$q("#terminal").innerHTML = '';
+	
 
 		DalyasGame.HighScores.forEach((item) => {
 

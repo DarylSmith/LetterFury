@@ -1,6 +1,7 @@
 <html>
 
 <head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.googleapis.com/css?family=Orbitron:400,900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="styles.css" />
 	<script src="dalyasgame.js"></script>
@@ -16,7 +17,7 @@
 
 		document.addEventListener("DOMContentLoaded", () => {
 
-			DalyasGame.DialogElem = document.getElementById('gamedialog');
+			DalyasGame.GetScores();
 
 			DalyasGame.ShowIntro();
 
@@ -32,23 +33,40 @@
 				switch(e.animationName){
 
 					case 'extend-console':
+						
 						DalyasGame.DisplayScores();
 					break;
 					case 'ease-left':
 						DalyasGame.NavigateToGamePageEnd();
 					break;
 					case 'ease-out-left':
-					
 						DalyasGame.NavigateToHomePageEnd();
 					break;
+					case 'flatten-console':
+						DalyasGame.ShowIntro();
+					break
 				}
 			}
 
 			document.querySelector("#highScoreButton").addEventListener('click', (event)=>{
 
-				
-				document.querySelector("#rules").style.display = "none";
-				document.querySelector("#terminal").classList.add("extendConsole");
+				let $rulesElem = document.querySelector("#rules");
+				let $terminalElem = document.querySelector("#terminal");
+				let $button = document.querySelector("#highScoreButton");
+
+				if(DalyasGame.ElementIsHidden($rulesElem)){
+					$rulesElem.style.display = "block";
+					$terminalElem.classList.remove("extendConsole");
+					$terminalElem.classList.add("flattenConsole");
+					$button.innerHTML="High Scores";
+
+				}
+				else{
+					$rulesElem.style.display = "none";
+					$terminalElem.classList.add("extendConsole");
+					$button.innerHTML="See Rules";
+
+				}
 
 			});
 
