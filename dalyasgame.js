@@ -372,17 +372,23 @@ const DalyasGame = {
 			window.clearInterval(window.IntroText);
 		}
 
-		let advancedText = '<h3>High Scores</h3>';
+		
+		let advancedText = '';
 		$q("#terminal").innerHTML = '';
 	
 
-		DalyasGame.HighScores.forEach((item) => {
+			for(let i=DalyasGame.HighScores.length-1;i>=0; i--){
 
-			advancedText += `${item.Name} - ${item.Score}<br/>`;
+				if(i===0){
+					advancedText='<h3>High Scores</h3>';
+				}
 
+			advancedText += `${DalyasGame.HighScores[i].Name} - ${DalyasGame.HighScores[i].Score}<br/>`;
+			console.log(advancedText);
 			DalyasGame.WriteToConsole(advancedText, "high-score-item", "#terminal");
+			advancedText='';
 
-		});
+		};
 
 
 	},
