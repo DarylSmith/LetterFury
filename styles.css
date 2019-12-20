@@ -8,7 +8,6 @@
 
 		
 		.has-cursor{
-
 			margin-left: 3px;
 			display: inline-block;
 			width: 17px;
@@ -53,9 +52,8 @@
 
 		#mainBody label{
 
-			position: relative;
+			
 			width: 200px;
-			z-index: 50000;
 			
 			margin: 0px auto;
 			color: #32CD3C;
@@ -129,7 +127,7 @@
 			width:85%;
 			height:136px;
 			min-height:0px !important;
-			bottom:90px !important;
+			bottom:90px;
 		}
 
 		#consoleText{
@@ -152,6 +150,11 @@
 		.bonus{
 			color: #ffffff !important;
 		
+		}
+
+		#timer{
+			position:relative;
+			bottom:20px;
 		}
 
 		
@@ -249,6 +252,8 @@
 			width:60%;
 			display:inline-block;
 			font-family:'Orbitron', sans-serif;
+			text-align:center;
+			
 
 			
 
@@ -268,7 +273,10 @@
 	
 
 
-		.game-child{width:50%}
+		.game-child{
+			width:50%;
+			margin-top:18px;
+		}
 
 
 
@@ -283,11 +291,48 @@
 				font-size:30px;
 			}
 
+			#mainBody{
+				flex-direction: column-reverse;
+				
+			}
+			#consoleContainer{
+				height: 200px;
+				width:85%;
+				margin: 0px auto 10px auto;
+			}
+			#consoleText{
+				height:175px;
+			}
+
+			#inputContainer,#timerContainer{
+				height:70px;
+				font-size:50px;
+				letter-spacing:10px;
+			}
+
+			#inputContainer{
+				bottom: 76px;
+			}
+
+			.game-child{
+				width:90%
+			}
+			#gameText{
+				font-size:50px;
+				letter-spacing:10px;
+			}
+
+			#game{
+				width:100%;
+				margin:0px auto;
+			}
+
 			#terminal{
 				font-size:65px;
 				min-height:120px;
 				width:80%;
 			}
+			
 
 			#rules{font-size:16px;
 				min-height:40px;

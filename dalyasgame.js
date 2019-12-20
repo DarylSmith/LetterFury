@@ -121,7 +121,7 @@ const DalyasGame = {
 
 	NavigateToHomePageEnd: function () {
 
-		$("#terminal").classList.remove("extendConsole");
+		$q("#terminal").classList.remove("extendConsole");
 		$q("#consoleContainer").classList.remove("easeOutRight");
 		$q("#timerContainer").classList.remove("easeOutLeft");
 		$q("#inputContainer").classList.remove("easeOutLeft");
