@@ -24,12 +24,12 @@
 			animation-fill-mode: forwards; 
 		}
 
-		.flattenConsole{
+		.easeUpLegend{
 
-			animation: flatten-console .5s linear;
+			animation: ease-up 3s linear;
 			animation-fill-mode: forwards; 
 		}
-		
+
 
 		.header{
 			
@@ -65,6 +65,8 @@
 			background-color: #000
 		}
 
+
+
 		#gamePlayLabel{
 			bottom:60px
 		}
@@ -73,7 +75,7 @@
 			bottom:10px;
 		}
 
-		#terminal,#inputContainer, #timerContainer, #consoleContainer{
+		#terminal,#inputContainer, #timerContainer, #consoleContainer, #legend{
 			color: #32CD3C;
     font-weight: 900;
     font-size: 104px;
@@ -128,6 +130,36 @@
 			height:136px;
 			min-height:0px !important;
 			bottom:90px;
+		}
+
+		#legend{
+			color: #fff;
+			background-color: #cd32c3;
+			margin-top: 0px;
+			width: 90%;
+			letter-spacing: 3px;
+			font-size: 30px;
+			text-shadow: -0.2em 0.3em 0 rgba(0,0,0,0.2);
+			position:relative;
+
+		}
+
+		#legend label{
+			width: 200px;
+			color: #fff;
+			margin: 0px auto;
+			display: block;
+			letter-spacing:2px;
+			background-color: #cd32c3;
+			font-size: 12px;
+			font-weight:300;
+		
+		}
+
+		#legend span{
+			display:inline-block;
+			color: #32CD3C;
+			margin:0px 3px;
 		}
 
 		#consoleText{
@@ -292,7 +324,7 @@
 			}
 
 			#mainBody{
-				flex-direction: column-reverse;
+				flex-direction: column;
 				
 			}
 			#consoleContainer{
@@ -304,10 +336,24 @@
 				height:175px;
 			}
 
-			#inputContainer,#timerContainer{
+			#inputContainer{
 				height:70px;
 				font-size:50px;
 				letter-spacing:10px;
+			}
+
+			#timerContainer{
+				font-size:12px;
+				height:10px;
+			}
+
+			#timerLabel{
+				display:none !important;
+			}
+
+			#timer{
+				letter-spacing:3px;
+				bottom:10px;
 			}
 
 			#inputContainer{
@@ -394,6 +440,13 @@
 			0%{right:0px;}
 			100%{right:1000px;}
 		}
+
+		@keyframes ease-up{
+
+			0%{bottom:-1000px;}
+			100%{right:55px;}
+		}
+
 
 		@keyframes ease-out-right{
 

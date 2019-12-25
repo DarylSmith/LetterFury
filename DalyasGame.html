@@ -44,6 +44,8 @@
 					break;
 					case 'flatten-console':
 						DalyasGame.ShowIntro();
+					case 'ease-up':
+						document.querySelector("#legend").classList.remove("easeUpLegend");
 					break
 				}
 			}
@@ -124,7 +126,6 @@
 
 			<div id="mainBody">
 
-
 				<div id="game" class="game-child">
 			
 					<div id="inputContainer">
@@ -150,7 +151,11 @@
 				<div id="consoleText"></div>
 					</div>
 			</div>
-	</div>
+			<div id="legend">
+				<label> Legend</label>
+				<span>B</span> Not in number <span>T</span> In number, but wrong place <span>F</span> In number
+			</div>
+
 	</section>
 	</div>
 </body>

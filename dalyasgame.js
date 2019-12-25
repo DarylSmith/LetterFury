@@ -102,6 +102,7 @@ const DalyasGame = {
 		$q("#consoleContainer").classList.add("easeInRight");
 		$q("#timerContainer").classList.add("easeInLeft");
 		$q("#inputContainer").classList.add("easeInLeft");
+		$q("#legend").classList.add("easeUpLegend");
 	},
 
 	NavigateToGamePageEnd: function () {
@@ -109,6 +110,7 @@ const DalyasGame = {
 		$q("#consoleContainer").classList.remove("easeInRight");
 		$q("#timerContainer").classList.remove("easeInLeft");
 		$q("#inputContainer").classList.remove("easeInLeft");
+
 	},
 
 	NavigateToHomePageStart: function () {
@@ -143,7 +145,7 @@ const DalyasGame = {
 
 			DalyasGame.IntroIndex = DalyasGame.IntroIndex >= IntroJson.Items.length - 1 ? 0 : DalyasGame.IntroIndex + 1;
 
-		}, 1800)
+		}, 2500)
 
 
 	},
@@ -300,7 +302,8 @@ const DalyasGame = {
 	InitGameOver: function () {
 
 		DalyasGame.GameState = 'game_over';
-		$q("#consoleText").innerHTML="___";
+		$q("#gameText").innerHTML="___";
+		$q("#consoleText").innerHTML="";
 		DalyasGame.WriteToConsole(`If you would like to play again, type YES into the input box.
 								 To go back to the homepage and high, scores, type NO `,"info");
 	},
@@ -367,6 +370,39 @@ const DalyasGame = {
 
 	},
 
+	//taken from https://stackoverflow.com/questions/8335834/how-can-i-hide-the-android-keyboard-using-javascript
+	HideKeyboard:function() {
+		//this set timeout needed for case when hideKeyborad
+		//is called inside of 'onfocus' event handler
+		setTimeout(function() {
+	  
+		  //creating temp field
+		  var field = document.createElement('input');
+		  field.setAttribute('type', 'text');
+		  //hiding temp field from peoples eyes
+		  //-webkit-user-modify is nessesary for Android 4.x
+		  field.setAttribute('style', 'position:absolute; top: 0px; opacity: 0; -webkit-user-modify: read-write-plaintext-only; left:0px;');
+		  document.body.appendChild(field);
+	  
+		  //adding onfocus event handler for out temp field
+		  field.onfocus = function(){
+			//this timeout of 200ms is nessasary for Android 2.3.x
+			setTimeout(function() {
+	  
+			  field.setAttribute('style', 'display:none;');
+			  setTimeout(function() {
+				document.body.removeChild(field);
+				document.body.focus();
+			  }, 14);
+	  
+			}, 200);
+		  };
+		  //focusing it
+		  field.focus();
+	  
+		}, 50);
+	  },
+
 	DisplayScores: function () {
 		if (window.IntroText) {
 			window.clearInterval(window.IntroText);
@@ -399,7 +435,12 @@ const DalyasGame = {
 	},
 
 	MakeSelection: function () {
+		
+		if(window.matchMedia("(max-width:961px)")){
 
+			document.location="#game";
+		}
+		DalyasGame.HideKeyboard();
 		let $gameTextElem = $q("#gameText");
 
 		const regex = /^\d{3}$/;
