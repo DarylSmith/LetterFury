@@ -276,7 +276,6 @@
 
 		#gameText {
 			background-color: #000;
-			color: #32CD3C;
     		font-weight: 900;
     		font-size: 95px;
 			border:0px;
@@ -285,10 +284,14 @@
 			display:inline-block;
 			font-family:'Orbitron', sans-serif;
 			text-align:center;
-			
+			border: none;
+			color: transparent;
+			text-shadow: 0 0 0 #32CD3C;
 
-			
+		}
 
+		#gameText:focus{
+			outline:none;
 		}
 
 		#mainBody {
