@@ -441,10 +441,6 @@ const DalyasGame = {
 
 	MakeSelection: function () {
 		
-		if(window.matchMedia("(max-width:961px)")){
-
-			document.location="#game";
-		}
 		DalyasGame.HideKeyboard();
 		let $gameTextElem = $q("#gameText");
 
