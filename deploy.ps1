@@ -1,10 +1,12 @@
 $config = Get-Content -Path config.json | ConvertFrom-Json
-Write-Host $config.S3BucketName
 
-Get-ChildItem "./src" | 
+
+Get-ChildItem  -Path "./src" -Recurse -Attributes !Directory | 
 Foreach-Object {
-    Write-Host $_.FullName
 
-    Write-S3Object -BucketName "dflo.rocks"  -File $_.FullName -ProfileName DalyasGame -PublicReadOnly
+    $key = [regex]::Match($_.FullName, "src\\(.*)").Groups[1].Value;
+    Write-Host $key
+
+    Write-S3Object -BucketName $config.S3BucketName  -File $_.FullName -Key $key -ProfileName DalyasGame -PublicReadOnly
     
 }
