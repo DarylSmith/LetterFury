@@ -23,6 +23,7 @@ const CountdownObj = {
 		{
 			'Console': 'Setting up RandomNumbers...', 'Action': () => {
 
+
 				window.InitInput = window.setInterval((event) => {
 
 					DalyasGame.SetRandomNumber();
@@ -34,8 +35,8 @@ const CountdownObj = {
 		{
 			'Console': 'Allocating game time...', 'Action': () => {
 
-
-
+				var audio = new Audio('audio/playergo.mp3');
+				audio.play();
 				let currentNumElem = $q("#timer");
 				currentNumElem.innerHTML = '00:00';
 			}
@@ -43,7 +44,6 @@ const CountdownObj = {
 
 		{
 			'Console': 'Finalizing Game...', 'Action': () => {
-
 				window.clearInterval(window.InitInput);
 				$q("#gameText").value = '';
 			}
@@ -86,7 +86,7 @@ const DalyasGame = {
 		DalyasGame.NumberOfRounds = 0;
 		DalyasGame.GetScores();
 		DalyasGame.BeginAdvancedRound();
-		$q("#inputAction").innerHTML ="guess";
+		$q("#inputAction").innerHTML = "guess";
 		$q("#gameText").focus();
 		//DalyasGame.DisplayScores();
 		//DalyasGame.ShowModal("Select a name and level to begin");
@@ -150,6 +150,20 @@ const DalyasGame = {
 
 	},
 
+	ResetRandomNumber: function(delay, repetitions) {
+		var x = 0;
+		var intervalID = window.setInterval(function () {
+	
+			DalyasGame.SetRandomNumber();
+			$q("#gameText").value = DalyasGame.OurRandomNumber;
+	
+		   if (++x === repetitions) {
+			   window.clearInterval(intervalID);
+			   DalyasGame.ClearGameText();
+		   }
+		}, delay);
+	},
+
 	RenderConsoleText(obj) {
 
 		const $currentElem = $q("#terminal");
@@ -183,7 +197,7 @@ const DalyasGame = {
 		DalyasGame.SetRandomNumber();
 		DalyasGame.ListOfChances = [];
 		DalyasGame.NumberOfRounds++;
-	
+
 	},
 
 	SetRandomNumber: function () {
@@ -250,7 +264,7 @@ const DalyasGame = {
 
 			}
 			else {
-				//DalyasGame.CountdownNumber = 5;
+				//DalyasGame.CountdownNumber = 5;gg
 				clearInterval(window.Countdown);
 				$q("#timer").innerHTML = "GO!";
 				DalyasGame.BeginAdvancedGame();
@@ -283,9 +297,9 @@ const DalyasGame = {
 					this.InitGameOver();
 				}
 				else {
-				DalyasGame.GameState = 'high_score';
+					DalyasGame.GameState = 'high_score';
 
-				$q("#inputAction").innerHTML ="initials";
+					$q("#inputAction").innerHTML = "initials";
 					DalyasGame.WriteToConsole(`Congratulations! you are ranked number ${currentRank + 1} on our list of all time champs!
 													Please enter your initials`, "bonus");
 				}
@@ -299,18 +313,19 @@ const DalyasGame = {
 
 	},
 
-	ClearGameText:function(){
-		$q("#gameText").innerHTML="___";
+	ClearGameText: function () {
+		$q("#gameText").value = "___";
 	},
 
 	InitGameOver: function () {
 
 		DalyasGame.GameState = 'game_over';
-		
-		$q("#consoleText").innerHTML="";
+
+		$q("#consoleText").innerHTML = "";
+		DalyasGame.ClearGameText()
 		DalyasGame.WriteToConsole(`If you would like to play again, type YES into the input box.
-								 To go back to the homepage and high, scores, type NO `,"info");
-	    DalayasGame.ClearGameText();
+								 To go back to the homepage and high, scores, type NO `, "info");
+		DalyasGame.ClearGameText();
 	},
 
 	AddSecondsToTime: function (timeAddedInSeconds) {
@@ -376,58 +391,58 @@ const DalyasGame = {
 	},
 
 	//taken from https://stackoverflow.com/questions/8335834/how-can-i-hide-the-android-keyboard-using-javascript
-	HideKeyboard:function() {
+	HideKeyboard: function () {
 		//this set timeout needed for case when hideKeyborad
 		//is called inside of 'onfocus' event handler
-		setTimeout(function() {
-	  
-		  //creating temp field
-		  var field = document.createElement('input');
-		  field.setAttribute('type', 'text');
-		  //hiding temp field from peoples eyes
-		  //-webkit-user-modify is nessesary for Android 4.x
-		  field.setAttribute('style', 'position:absolute; top: 0px; opacity: 0; -webkit-user-modify: read-write-plaintext-only; left:0px;');
-		  document.body.appendChild(field);
-	  
-		  //adding onfocus event handler for out temp field
-		  field.onfocus = function(){
-			//this timeout of 200ms is nessasary for Android 2.3.x
-			setTimeout(function() {
-	  
-			  field.setAttribute('style', 'display:none;');
-			  setTimeout(function() {
-				document.body.removeChild(field);
-				document.body.focus();
-			  }, 14);
-	  
-			}, 200);
-		  };
-		  //focusing it
-		  field.focus();
-	  
+		setTimeout(function () {
+
+			//creating temp field
+			var field = document.createElement('input');
+			field.setAttribute('type', 'text');
+			//hiding temp field from peoples eyes
+			//-webkit-user-modify is nessesary for Android 4.x
+			field.setAttribute('style', 'position:absolute; top: 0px; opacity: 0; -webkit-user-modify: read-write-plaintext-only; left:0px;');
+			document.body.appendChild(field);
+
+			//adding onfocus event handler for out temp field
+			field.onfocus = function () {
+				//this timeout of 200ms is nessasary for Android 2.3.x
+				setTimeout(function () {
+
+					field.setAttribute('style', 'display:none;');
+					setTimeout(function () {
+						document.body.removeChild(field);
+						document.body.focus();
+					}, 14);
+
+				}, 200);
+			};
+			//focusing it
+			field.focus();
+
 		}, 50);
-	  },
+	},
 
 	DisplayScores: function () {
 		if (window.IntroText) {
 			window.clearInterval(window.IntroText);
 		}
 
-		
+
 		let advancedText = '';
 		$q("#terminal").innerHTML = '';
-	
 
-			for(let i=DalyasGame.HighScores.length-1;i>=0; i--){
 
-				if(i===0){
-					advancedText='<h3>High Scores</h3>';
-				}
+		for (let i = DalyasGame.HighScores.length - 1; i >= 0; i--) {
+
+			if (i === 0) {
+				advancedText = '<h3>High Scores</h3>';
+			}
 
 			advancedText += `${DalyasGame.HighScores[i].Name} - ${DalyasGame.HighScores[i].Score}<br/>`;
 			console.log(advancedText);
 			DalyasGame.WriteToConsole(advancedText, "high-score-item", "#terminal");
-			advancedText='';
+			advancedText = '';
 
 		};
 
@@ -440,7 +455,7 @@ const DalyasGame = {
 	},
 
 	MakeSelection: function () {
-		
+
 		DalyasGame.HideKeyboard();
 		let $gameTextElem = $q("#gameText");
 
@@ -473,7 +488,7 @@ const DalyasGame = {
 			if (DalyasGame.OurRandomNumber.toString() === gameText) {
 
 				DalyasGame.DisplayInputResults($gameTextElem, "Congrats! Code successfully unlocked. Resetting to new number", "victory");
-
+				DalyasGame.ResetRandomNumber(40,12);
 
 
 				if (DalyasGame.ListOfChances.length < 4) {
@@ -516,12 +531,23 @@ const DalyasGame = {
 
 			DalyasGame.ListOfChances.push(resultsCode);
 
-			$gameTextElem.value = resultsCode
-			//$resultsElem.innerHTML = DalyasGame.ListOfChances.join('<br/>');
+
+
+			$gameTextElem.value = resultsCode.split(' ')[0];
+		
 			console.log(whatIsHappening);
 
 			DalyasGame.DisplayInputResults($gameTextElem, `Code ${resultsCode} for number ${gameText} (attempt ${DalyasGame.ListOfChances.length})`, "results");
 
+			//give incentive to get bonus points
+			if (DalyasGame.ListOfChances.length === 2) {
+				DalyasGame.WriteToConsole("One more chance for 30 second bonus", "bonus");
+			}
+
+			//give incentive to get bonus points
+			if (DalyasGame.ListOfChances.length === 5) {
+				DalyasGame.WriteToConsole("One more chance for 15 second bonus", "bonus");
+			}
 
 		}
 
