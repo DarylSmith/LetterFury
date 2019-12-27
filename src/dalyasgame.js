@@ -299,13 +299,18 @@ const DalyasGame = {
 
 	},
 
+	ClearGameText:function(){
+		$q("#gameText").innerHTML="___";
+	},
+
 	InitGameOver: function () {
 
 		DalyasGame.GameState = 'game_over';
-		$q("#gameText").innerHTML="___";
+		
 		$q("#consoleText").innerHTML="";
 		DalyasGame.WriteToConsole(`If you would like to play again, type YES into the input box.
 								 To go back to the homepage and high, scores, type NO `,"info");
+	    DalayasGame.ClearGameText();
 	},
 
 	AddSecondsToTime: function (timeAddedInSeconds) {
