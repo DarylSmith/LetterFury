@@ -58,6 +58,7 @@ const CountdownObj = {
 const DalyasGame = {
 	HighScores: [],
 	PlayerName: 'unknown',
+	HighScoresEndpoint:'https://h64hstwg05.execute-api.us-east-1.amazonaws.com/default',
 	OurRandomNumber: 0,// 
 	ListOfChances: [],
 	NumberOfRounds: 0,
@@ -84,7 +85,6 @@ const DalyasGame = {
 		DalyasGame.SetRandomNumber();
 		DalyasGame.ListOfChances = [];
 		DalyasGame.NumberOfRounds = 0;
-		DalyasGame.GetScores();
 		DalyasGame.BeginAdvancedRound();
 		$q("#inputAction").innerHTML = "guess";
 		$q("#gameText").focus();
@@ -236,16 +236,6 @@ const DalyasGame = {
 
 		});
 
-
-	},
-
-	GetScores: function () {
-
-		const highScores = localStorage.getItem('highScores');
-
-		if (highScores) {
-			DalyasGame.HighScores = JSON.parse(highScores);
-		}
 
 	},
 
@@ -431,7 +421,12 @@ const DalyasGame = {
 
 		let advancedText = '';
 		$q("#terminal").innerHTML = '';
+		
+		fetch(`${DalyasGame.HighScoresEndpoint}/gethighscores`)
+			.then((result)=>result.json())
+			.then((data)=>{
 
+				DalyasGame.HighScores = data;
 
 		for (let i = DalyasGame.HighScores.length - 1; i >= 0; i--) {
 
@@ -439,12 +434,13 @@ const DalyasGame = {
 				advancedText = '<h3>High Scores</h3>';
 			}
 
-			advancedText += `${DalyasGame.HighScores[i].Name} - ${DalyasGame.HighScores[i].Score}<br/>`;
+			advancedText += `${DalyasGame.HighScores[i].name} - ${DalyasGame.HighScores[i].highscore}<br/>`;
 			console.log(advancedText);
 			DalyasGame.WriteToConsole(advancedText, "high-score-item", "#terminal");
 			advancedText = '';
 
-		};
+		}
+	});
 
 
 	},
@@ -466,7 +462,9 @@ const DalyasGame = {
 			DalyasGame.AddSecondsToTime(-5);
 			$gameTextElem.value = "";
 			$q("#inputInner").className = "has-cursor";
-			$gameTextElem.focus();
+			if(window.matchMedia('(max-width: 961px)')){
+				$gameTextElem.focus();
+			}
 
 		}
 		else {
