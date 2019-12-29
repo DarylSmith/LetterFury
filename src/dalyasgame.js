@@ -67,6 +67,7 @@ const DalyasGame = {
 	NumberOfHighScores: 10,
 	GameState: 'intro',
 	CurrentTime: 0,
+	CurrentRank:0,
 	CountdownNumber: 0,
 	LengthOfGameInMinutes: 2,
 	EndOfGame: {},
@@ -282,17 +283,7 @@ const DalyasGame = {
 
 				window.clearInterval(window.GamePlay);
 				DalyasGame.WriteToConsole(`Game Over! You have ${DalyasGame.NumberOfRounds} points!`, "");
-				const currentRank = DalyasGame.HasHighScore(DalyasGame.NumberOfRounds);
-				if (currentRank > 10) {
-					this.InitGameOver();
-				}
-				else {
-					DalyasGame.GameState = 'high_score';
-
-					$q("#inputAction").innerHTML = "initials";
-					DalyasGame.WriteToConsole(`Congratulations! you are ranked number ${currentRank + 1} on our list of all time champs!
-													Please enter your initials`, "bonus");
-				}
+				DalyasGame.CheckForHighScore();
 			}
 			else {
 
@@ -347,7 +338,49 @@ const DalyasGame = {
 
 	},
 
-	HasHighScore: function (score) {
+	HasHighScore:function(score, highscores){
+
+		if(highscores.length<10 && score>0){
+			DalyasGame.CurrentRank = (highscores.length+1);
+			return true;
+		}
+
+		let hasHighScore = false;
+
+		for(let i =0; i< highscores.length;i++){
+
+			if(score > highscores[i]){
+
+				DalyasGame.CurrentRank = (i+1);
+				hasHighScore=true;
+				break;
+			}
+		}
+
+		//return hasHighScore;
+
+	},
+
+	CheckForHighScore: function (score) {
+
+		fetch(`${DalyasGame.HighScoresEndpoint}/gethighscores`)
+			.then((result)=>result.json())
+			.then((data)=>{
+
+				const hasHighScore = DalyasGame.HasHighScore(DalyasGame.NumberOfRounds,data);
+				if (!hasHighScore) {
+					this.InitGameOver();
+				}
+				else {
+					DalyasGame.GameState = 'high_score';
+
+					$q("#inputAction").innerHTML = "initials";
+					DalyasGame.WriteToConsole(`Congratulations! you are ranked number ${DalyasGame.CurrentRank} on our list of all time champs!
+													Please enter your initials`, "bonus");
+				}			
+
+
+			});
 
 		const higherScores = DalyasGame.HighScores.filter(e => e >= score);
 		return higherScores.length;
@@ -355,17 +388,25 @@ const DalyasGame = {
 
 	SetScores: function (initials) {
 
-		DalyasGame.HighScores.push({ Name: initials, Score: DalyasGame.NumberOfRounds });
-		DalyasGame.HighScores = DalyasGame.HighScores
-			.filter(e => e.Score > 0)
-			.sort((a, b) => b.Score - a.Score)
-			.splice(0, DalyasGame.NumberOfHighScores);
+		fetch(`${DalyasGame.HighScoresEndpoint}/loghighscores`, {
+  			method: 'post',
+ 			 headers: {
+   			 'Accept': 'application/json, text/plain, */*',
+   			 'Content-Type': 'application/json'
+  			},
+  			body: JSON.stringify({name: initials, highscore: DalyasGame.NumberOfRounds})
+			}).then((res)=>{
+				if(res.ok){
+					DalyasGame.WriteToConsole(`High score successfully added for ${initials}`,"info");
+				}
+				else{
+					DalyasGame.WriteToConsole("Sorry, could not add high score","error");
+				}
 
-		console.log(DalyasGame.HighScores);
+				DalyasGame.InitGameOver();
 
-		localStorage.setItem('highScores', JSON.stringify(DalyasGame.HighScores));
-
-		DalyasGame.InitGameOver();
+			});
+  			
 	},
 
 	DisplayInputResults: function ($gameTextElem, text, className) {
