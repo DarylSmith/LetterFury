@@ -471,6 +471,11 @@ const DalyasGame = {
 			.then((data)=>{
 
 				DalyasGame.HighScores = data;
+		if(DalyasGame.HighScores.length===0){
+
+			DalyasGame.WriteToConsole('<h3>No High Scores</h3>', "high-score-item", "#terminal");
+			return;
+		}
 
 		for (let i = DalyasGame.HighScores.length - 1; i >= 0; i--) {
 
