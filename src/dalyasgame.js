@@ -58,7 +58,7 @@ const CountdownObj = {
 const DalyasGame = {
 	HighScores: [],
 	PlayerName: 'unknown',
-	HighScoresEndpoint:'https://h64hstwg05.execute-api.us-east-1.amazonaws.com/default',
+	HighScoresEndpoint:'https://6dmnrf7ylc.execute-api.us-east-1.amazonaws.com',
 	OurRandomNumber: 0,// 
 	ListOfChances: [],
 	NumberOfRounds: 0,
@@ -295,7 +295,7 @@ const DalyasGame = {
 	},
 
 	ClearGameText: function () {
-		$q("#gameText").value = "___";
+		$q("#gameText").value = "";
 	},
 
 	InitGameOver: function () {
@@ -363,7 +363,7 @@ const DalyasGame = {
 
 	CheckForHighScore: function (score) {
 
-		fetch(`${DalyasGame.HighScoresEndpoint}/gethighscores`)
+		fetch(`${DalyasGame.HighScoresEndpoint}/getscores`)
 			.then((result)=>result.json())
 			.then((data)=>{
 
@@ -388,7 +388,7 @@ const DalyasGame = {
 
 	SetScores: function (initials) {
 
-		fetch(`${DalyasGame.HighScoresEndpoint}/loghighscores`, {
+		fetch(`${DalyasGame.HighScoresEndpoint}/logscores`, {
   			method: 'post',
  			 headers: {
    			 'Accept': 'application/json, text/plain, */*',
