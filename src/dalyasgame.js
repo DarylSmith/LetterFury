@@ -146,7 +146,7 @@ const DalyasGame = {
 
 			DalyasGame.IntroIndex = DalyasGame.IntroIndex >= IntroJson.Items.length - 1 ? 0 : DalyasGame.IntroIndex + 1;
 
-		}, 2500)
+		}, 5500)
 
 
 	},
