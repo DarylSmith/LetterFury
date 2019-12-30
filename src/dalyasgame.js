@@ -415,7 +415,9 @@ const DalyasGame = {
 		window.setTimeout(e => {
 			$gameTextElem.value = "";
 			$q("#inputInner").className = "has-cursor";
-			$gameTextElem.focus();
+			if(window.matchMedia('(max-width: 961px)')){
+				$gameTextElem.focus();
+			}
 			DalyasGame.WriteToConsole(text, className);
 		}, 500);
 
