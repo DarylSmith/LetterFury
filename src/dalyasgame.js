@@ -58,7 +58,7 @@ const CountdownObj = {
 const DalyasGame = {
 	HighScores: [],
 	PlayerName: 'unknown',
-	HighScoresEndpoint:'https://6dmnrf7ylc.execute-api.us-east-1.amazonaws.com',
+	HighScoresEndpoint:'https://6dmnrf7ylc.execute-api.us-east-1.amazonaws.com/default/',
 	OurRandomNumber: 0,// 
 	ListOfChances: [],
 	NumberOfRounds: 0,
