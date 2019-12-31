@@ -2,10 +2,10 @@ const $q = document.querySelector.bind(document);
 
 const IntroJson = {
 	Items: [
-		{ 'Console': '???', 'Text': 'The computer has chosen a random number between 100 and 1000.', 'HTML': '' },
-		{ 'Console': '123', 'Text': 'You need to guess what it is.', 'HTML': '' },
+		{ 'Console': ()=>{ DalyasGame.ResetRandomNumber(60,40,()=>{$q("#terminal").innerHTML = DalyasGame.OurRandomNumber;}); }, 'Text': 'The computer has chosen a random number containing 3 digits.', 'HTML': '' },
+		{ 'Console': '???', 'Text': 'You need to guess what it is.', 'HTML': '' },
 		{ 'Console': 'BTF', 'Text': 'The computer will give you a code with some clues. ', 'HTML': '' },
-		{ 'Console': 'BTF', 'Text': 'The code B means the digit is not in the number.', 'HTML': '<span class="emphasis">B</span>TF' },
+		{ 'Console': 'BTF', 'Text': 'The code B means the digit is NOT in the number.', 'HTML': '<span class="emphasis">B</span>TF' },
 		{ 'Console': 'BTF', 'Text': 'The code T means the digit is in the number, but in the wrong place.', 'HTML': 'B<span class="emphasis">T</span>F' },
 		{ 'Console': 'BTF', 'Text': 'F Means the digit is in the right place.', 'HTML': 'BT<span class="emphasis">F</span>' },
 		{ 'Console': '123', 'Text': 'Your goal is to get FFF as many times as you can in 2 minutes.', 'HTML': '' },
@@ -63,7 +63,7 @@ const DalyasGame = {
 	ListOfChances: [],
 	NumberOfRounds: 0,
 	DialogElem: {},
-	IntroIndex: 0,
+	IntroIndex: 1,
 	NumberOfHighScores: 10,
 	GameState: 'intro',
 	CurrentTime: 0,
@@ -138,9 +138,12 @@ const DalyasGame = {
 
 		document.querySelector("#terminal").classList.remove("flattenConsole")
 
+		DalyasGame.RenderConsoleText(IntroJson.Items[0]);
+
 		window.IntroText = window.setInterval(e => {
 
 			const currentItem = IntroJson.Items[DalyasGame.IntroIndex];
+			
 			DalyasGame.RenderConsoleText(currentItem);
 
 
@@ -151,12 +154,12 @@ const DalyasGame = {
 
 	},
 
-	ResetRandomNumber: function(delay, repetitions) {
+	ResetRandomNumber: function(delay, repetitions,elementReset) {
 		var x = 0;
 		var intervalID = window.setInterval(function () {
 	
 			DalyasGame.SetRandomNumber();
-			$q("#gameText").value = DalyasGame.OurRandomNumber;
+			elementReset();
 	
 		   if (++x === repetitions) {
 			   window.clearInterval(intervalID);
@@ -170,6 +173,7 @@ const DalyasGame = {
 		const $currentElem = $q("#terminal");
 		$q("#rules").innerHTML = obj.Text;
 
+		if(typeof(obj.Console)==='string'){
 
 		obj.Console.split('').forEach((item, index, arr) => {
 
@@ -189,6 +193,11 @@ const DalyasGame = {
 				}, 100 * index);
 			})(index);
 		});
+	}
+	else{
+		obj.Console();
+	}
+
 
 	},
 
@@ -535,7 +544,7 @@ const DalyasGame = {
 			if (DalyasGame.OurRandomNumber.toString() === gameText) {
 
 				DalyasGame.DisplayInputResults($gameTextElem, "Congrats! Code successfully unlocked. Resetting to new number", "victory");
-				DalyasGame.ResetRandomNumber(40,12);
+				DalyasGame.ResetRandomNumber(40,12,()=>{$q("#gameText").value = DalyasGame.OurRandomNumber;});
 
 
 				if (DalyasGame.ListOfChances.length < 4) {
