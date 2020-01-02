@@ -88,7 +88,7 @@ const DalyasGame = {
 		DalyasGame.NumberOfRounds = 0;
 		DalyasGame.BeginAdvancedRound();
 		$q("#inputAction").innerHTML = "guess";
-		$q("#gameText").focus();
+		DalyasGame.FocusInputElement();
 		//DalyasGame.DisplayScores();
 		//DalyasGame.ShowModal("Select a name and level to begin");
 
@@ -295,7 +295,7 @@ const DalyasGame = {
 		$q("#gameText").removeAttribute("disabled");
 
 		DalyasGame.EndOfGame = new Date().getTime() + DalyasGame.LengthOfGameInMinutes * 60000;
-		$q("#gameText").focus();
+		DalyasGame.FocusInputElement();
 		$q("#inputInner").className = "has-cursor";
 
 		window.GamePlay = setInterval(() => {
@@ -303,6 +303,8 @@ const DalyasGame = {
 			const now = new Date().getTime();
 			const t = DalyasGame.EndOfGame - now;
 			if (t <= 0) {
+				DalyasGame.AddLoadingIcon($q("#inputContainer"),"lds-facebook");
+				$q("#inputContainerInner").style.display="none";
 
 				window.clearInterval(window.GamePlay);
 				DalyasGame.WriteToConsole(`Game Over! You have ${DalyasGame.NumberOfRounds} points!`, "");
@@ -316,6 +318,7 @@ const DalyasGame = {
 		}, 1000);
 
 	},
+
 
 	ClearGameText: function () {
 		$q("#gameText").value = "";
@@ -389,7 +392,8 @@ const DalyasGame = {
 		fetch(`${DalyasGame.HighScoresEndpoint}/getscores`)
 			.then((result)=>result.json())
 			.then((data)=>{
-
+				DalyasGame.RemoveLoadingIcon( $q("#inputContainer"),"lds-facebook");
+				$q("#inputContainerInner").style.display="block";
 				const hasHighScore = DalyasGame.HasHighScore(DalyasGame.NumberOfRounds,data);
 				if (!hasHighScore) {
 					this.InitGameOver();
@@ -407,6 +411,12 @@ const DalyasGame = {
 
 		const higherScores = DalyasGame.HighScores.filter(e => e >= score);
 		return higherScores.length;
+	},
+
+	FocusInputElement:function(){
+		if(window.matchMedia('(max-width: 961px)')){
+			$q("#gameText").focus();
+		}
 	},
 
 	SetScores: function (initials) {
@@ -438,9 +448,7 @@ const DalyasGame = {
 		window.setTimeout(e => {
 			$gameTextElem.value = "";
 			$q("#inputInner").className = "has-cursor";
-			if(window.matchMedia('(max-width: 961px)')){
-				$gameTextElem.focus();
-			}
+			DalyasGame.FocusInputElement();
 			DalyasGame.WriteToConsole(text, className);
 		}, 500);
 
@@ -488,13 +496,13 @@ const DalyasGame = {
 		const $terminal = $q("#terminal");
 		let advancedText = '';
 		$terminal.innerHTML = '';
-		DalyasGame.AddLoadingIcon($terminal);
+		DalyasGame.AddLoadingIcon($terminal,"lds-dual-ring");
 		
 		fetch(`${DalyasGame.HighScoresEndpoint}/getscores`)
 			.then((result)=>result.json())
 			.then((data)=>{
 
-				DalyasGame.RemoveLoadingIcon($terminal);
+				DalyasGame.RemoveLoadingIcon($terminal,"lds-dual-ring");
 				DalyasGame.HighScores = data;
 		if(DalyasGame.HighScores.length===0){
 
@@ -524,18 +532,25 @@ const DalyasGame = {
 
 	},
 
-	AddLoadingIcon:function($parent)
+	AddLoadingIcon:function($parent, icon)
 	{
 		let $loading = document.createElement("div");
 		//textElem.innerHTML = text;
-		$loading.className = "lds-dual-ring";
+		$loading.className = icon;
+		if(icon ==="lds-facebook"){
+			for(let i=0;i<3;i++)
+			{
+				let $innerElem = document.createElement("div");
+				$loading.appendChild($innerElem);
+			}
+		}
 		$parent.appendChild($loading);
 
 	},
 
-	RemoveLoadingIcon:function($parent)
+	RemoveLoadingIcon:function($parent,icon)
 	{	
-		const $elem = $q(".lds-dual-ring");
+		const $elem = $q(`.${icon}`);
 		if($elem!==null){
 			$parent.removeChild($elem);
 		}
@@ -553,9 +568,7 @@ const DalyasGame = {
 			DalyasGame.AddSecondsToTime(-5);
 			$gameTextElem.value = "";
 			$q("#inputInner").className = "has-cursor";
-			if(window.matchMedia('(max-width: 961px)')){
-				$gameTextElem.focus();
-			}
+			DalyasGame.FocusInputElement();
 
 		}
 		else {
