@@ -82,7 +82,7 @@ const DalyasGame = {
 
 			DalyasGame.NavigateToGamePageStart();
 		}
-		$q("#consoleText").innerHTML = 'Resetting Game...';
+		DalyasGame.WriteToConsole("Resetting Game...","info");
 		DalyasGame.SetRandomNumber();
 		DalyasGame.ListOfChances = [];
 		DalyasGame.NumberOfRounds = 0;
@@ -135,6 +135,8 @@ const DalyasGame = {
 	},
 
 	ShowIntro: function () {
+
+		const $body = $q("body");
 
 		document.querySelector("#terminal").classList.remove("flattenConsole")
 
@@ -210,6 +212,16 @@ const DalyasGame = {
 
 	},
 
+	InvokeConsoleScatter: function(){
+
+		document.querySelectorAll(".console-comment").forEach($elem=>{
+
+			const scatter = (Math.floor(Math.random() * 4) + 1).toString();  
+			$elem.classList.add(`scatter-console-${scatter}`);
+		});
+
+	},
+
 	SetRandomNumber: function () {
 
 		DalyasGame.OurRandomNumber = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
@@ -226,6 +238,7 @@ const DalyasGame = {
 		textElem.id = id;
 		//textElem.innerHTML = text;
 		textElem.className = elemClass;
+		textElem.classList.add("console-comment");
 		const parentElem = $q(target);
 
 		$q(target).insertBefore(textElem, parentElem.firstChild);
@@ -471,14 +484,16 @@ const DalyasGame = {
 			window.clearInterval(window.IntroText);
 		}
 
-
+		const $terminal = $q("#terminal");
 		let advancedText = '';
-		$q("#terminal").innerHTML = '';
+		$terminal.innerHTML = '';
+		DalyasGame.AddLoadingIcon($terminal);
 		
 		fetch(`${DalyasGame.HighScoresEndpoint}/getscores`)
 			.then((result)=>result.json())
 			.then((data)=>{
 
+				DalyasGame.RemoveLoadingIcon($terminal);
 				DalyasGame.HighScores = data;
 		if(DalyasGame.HighScores.length===0){
 
@@ -503,9 +518,26 @@ const DalyasGame = {
 
 	},
 
-	ElementIsHidden: function (el) {
-		return el.offsetParent === null;
+	ElementIsHidden: function ($el) {
+		return $el.offsetParent === null;
 
+	},
+
+	AddLoadingIcon:function($parent)
+	{
+		let $loading = document.createElement("div");
+		//textElem.innerHTML = text;
+		$loading.className = "lds-dual-ring";
+		$parent.appendChild($loading);
+
+	},
+
+	RemoveLoadingIcon:function($parent)
+	{	
+		const $elem = $q(".lds-dual-ring");
+		if($elem!==null){
+			$parent.removeChild($elem);
+		}
 	},
 
 	MakeSelection: function () {

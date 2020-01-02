@@ -27,7 +27,7 @@
 			});
 
 			window.onanimationend= (e)=>{
-				console.log(e);
+			
 
 				switch(e.animationName){
 
@@ -45,6 +45,9 @@
 						DalyasGame.ShowIntro();
 					case 'ease-up':
 						document.querySelector("#legend").classList.remove("easeUpLegend");
+
+					case 'scatter-console-2':
+						//document.querySelectorAll(".console-comment").forEach(($elem)=>{$elem.parentNode.removeChild($elem);});
 					break
 				}
 			}
@@ -60,6 +63,7 @@
 					$terminalElem.classList.remove("extendConsole");
 					$terminalElem.classList.add("flattenConsole");
 					$button.innerHTML="High Scores";
+					DalyasGame.ShowIntro();
 
 				}
 				else{
