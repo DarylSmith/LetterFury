@@ -2,7 +2,7 @@ const $q = document.querySelector.bind(document);
 
 const IntroJson = {
 	Items: [
-		{ 'Console': ()=>{ DalyasGame.ResetRandomNumber(60,40,()=>{$q("#terminal").innerHTML = DalyasGame.OurRandomNumber;}); }, 'Text': 'The computer has chosen a random number containing 3 digits.', 'HTML': '' },
+		{ 'Console': ()=>{ DalyasGame.ResetRandomNumber(60,40,()=>{$q("#terminal").innerHTML = !DalyasGame.ElementIsHidden($q("#rules"))? DalyasGame.OurRandomNumber:'';}); }, 'Text': 'The computer has chosen a random number containing 3 digits.', 'HTML': '' },
 		{ 'Console': '???', 'Text': 'You need to guess what it is.', 'HTML': '' },
 		{ 'Console': 'BTF', 'Text': 'The computer will give you a code with some clues. ', 'HTML': '' },
 		{ 'Console': 'BTF', 'Text': 'The code B means the digit is NOT in the number.', 'HTML': '<span class="emphasis">B</span>TF' },
