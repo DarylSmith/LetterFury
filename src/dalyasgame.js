@@ -172,8 +172,9 @@ const DalyasGame = {
 
 	RenderConsoleText(obj) {
 
+		const $rulesElem = $q("#rules");
 		const $currentElem = $q("#terminal");
-		$q("#rules").innerHTML = obj.Text;
+		$rulesElem.innerHTML = obj.Text;
 
 		if(typeof(obj.Console)==='string'){
 
@@ -182,11 +183,11 @@ const DalyasGame = {
 			(function (index) {
 				window.setTimeout((e) => {
 
-					if (index === arr.length - 1 && obj.HTML !== '') {
+					if (index === arr.length - 1 && obj.HTML !== '' && !DalyasGame.ElementIsHidden($rulesElem)) {
 						$currentElem.innerHTML = obj.HTML;
 
 					}
-					else {
+					else if(!DalyasGame.ElementIsHidden($rulesElem)) {
 						const currentText = obj.Console.substring(0, index + 1);
 						$currentElem.innerHTML = currentText;
 					}
