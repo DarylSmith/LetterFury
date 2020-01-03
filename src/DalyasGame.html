@@ -134,20 +134,24 @@
 					<div id="inputContainer">
 						<div id="inputContainerInner">
 							<div id="inputDisplayContainer">
-							<div class="inputItem">
-							<label id="gamePlayLabel"> Input <span id="inputAction">guess</span> here </label>
-							</div>
-							<div class="inputItem">
-								<div class='trophy-wrapper'>
-									<div class='trophy-mask'>
-									  <div class='trophy-container'>
-										<div class='trophy-main'></div>
-										<div class='trophy-stem1'></div>
-										<div class='trophy-arms'></div>
-									  </div>
+
+								<label id="gamePlayLabel"> Input <span id="inputAction">guess</span> here </label>
+								<div class="scoreContainer">
+									<div class="inputItem scoreItem" id="playerScoreCount">0</div>
+
+									<div class="scoreItem">
+										<div class='trophy-wrapper'>
+											<div class='trophy-mask'>
+												<div class='trophy-container'>
+													<div class='trophy-main'></div>
+													<div class='trophy-stem1'></div>
+													<div class='trophy-arms'></div>
+												</div>
+											</div>
+										</div>
 									</div>
-								  </div>
-							</div>
+									<div class="scoreItem" id="highScoreCount">0</div>
+								</div>
 							</div>
 							<span id="inputInner"></span><input id="gameText" autocomplete="off" autocorrect="off"
 								autocapitalize="off" spellcheck="false" placeholder="___" type="text" />

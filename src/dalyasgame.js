@@ -82,10 +82,14 @@ const DalyasGame = {
 
 			DalyasGame.NavigateToGamePageStart();
 		}
+
+
+
 		DalyasGame.WriteToConsole("Resetting Game...","info");
 		DalyasGame.SetRandomNumber();
 		DalyasGame.ListOfChances = [];
 		DalyasGame.NumberOfRounds = 0;
+		DalyasGame.GetTopScore();
 		DalyasGame.BeginAdvancedRound();
 		$q("#inputAction").innerHTML = "guess";
 		DalyasGame.FocusInputElement();
@@ -94,6 +98,16 @@ const DalyasGame = {
 
 
 
+	},
+
+	GetTopScore:function(){
+
+		fetch(`${DalyasGame.HighScoresEndpoint}/getscores?count=1`)
+			.then((result)=>result.json())
+			.then((data)=>{
+
+				$q("#highScoreCount").innerHTML = data[0].highscore;
+			});
 	},
 
 	NavigateToGamePageStart: function () {
@@ -210,6 +224,7 @@ const DalyasGame = {
 		DalyasGame.SetRandomNumber();
 		DalyasGame.ListOfChances = [];
 		DalyasGame.NumberOfRounds++;
+		$q("#playerScoreCount").innerHTML=DalyasGame.NumberOfRounds.toString();
 
 	},
 

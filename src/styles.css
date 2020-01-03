@@ -124,10 +124,6 @@
 			
 		}
 
-		#inputDisplayContainer{
-			display:flex;
-		}
-
 		#mainBody label{
 
 			
@@ -424,95 +420,16 @@
 			letter-spacing:5px;
 
 		}
-		@media (max-width:961px){
-
-			.header h1{
-				font-size:30px;
-			}
-
-			#mainBody{
-				flex-direction: column;
-				
-			}
-			#consoleContainer{
-				height: 200px;
-				width:85%;
-				margin: 0px auto 10px auto;
-			}
-			#consoleText{
-				height:175px;
-			}
-
-			#inputContainer{
-				height:70px;
-				font-size:50px;
-				letter-spacing:10px;
-			}
-
-			#timerContainer{
-				font-size:12px;
-				height:10px;
-			}
-
-			#timerLabel{
-				display:none !important;
-			}
-
-			#timer{
-				letter-spacing:3px;
-				bottom:10px;
-			}
-
-			#inputContainer{
-				bottom: 76px;
-			}
-
-			.game-child{
-				width:90%
-			}
-			#gameText{
-				font-size:50px;
-				letter-spacing:10px;
-			}
-
-			#game{
-				width:100%;
-				margin:0px auto;
-			}
-
-			#terminal{
-				font-size:65px;
-				min-height:120px;
-				width:80%;
-			}
-			
-
-			#rules{font-size:16px;
-				min-height:40px;
-			}
-
-			.buttonContainer {
-				
-				flex-direction: column;
-				width: 318px;
-				
-			}
-			.buttonContainer button{
-				font-size:22px;
-				height:78px;
-			}
-
-
-		}
-
 
 		/*icons*/
-
 		.trophy-wrapper {
 			display: flex;
+			position: relative;
+			margin: 0px 21px;
 			justify-content: center;
 			align-items: center;
-		  }
+		}
+
 		  .trophy-mask {
 			margin: none;
 			display: flex;
@@ -531,8 +448,8 @@
 		  }
 		  
 		  .trophy-main {
-			height: 25px;
-			width: 20px;
+			height: 18px;
+			width: 17px;
 			background:#32CD3C;
 			border-bottom-left-radius: 10px;
 			border-bottom-right-radius: 10px;
@@ -540,12 +457,12 @@
 		  
 		  .trophy-stem1 {
 			position: absolute;
-			top: 25px;
+			top: 19px;
 			  border-bottom: 10px solid #32CD3C;
 			  border-left: 5px solid transparent;
 			  border-right: 5px solid transparent;
 			  height: 0;
-			  width: 14px;
+			  width: 10px;
 			border-top-left-radius: 20px;
 			border-top-right-radius: 20px;
 		  }
@@ -559,8 +476,8 @@
 			top: 38px;
 		  }
 		  .trophy-arms {
-			width: 30px;
-			height: 15px;
+			width: 25px;
+			height: 8px;
 			position: absolute;
 			background: transparent;
 			z-index: -1;
@@ -571,10 +488,31 @@
 			border-bottom-right-radius: 100px;
 		  
 		  }
-	
-		  
 
+	.scoreContainer{
+		float:right;
+		margin:10px;
+		display:flex;
+		position:relative;
+		bottom:30px;
+	}
 
+	#playerScoreCount,#highScoreCount{
+		font-size:25px;
+		font-weight:300;
+		letter-spacing:3px;
+	}
+
+	#highScoreCount{
+		margin-left:5px;
+	}
+
+	#playerScoreCount{
+		margin-right:35px;
+	}
+  
+ 
+	/*keyframes*/
 		@keyframes lds-facebook {
 			0% {
 			  top: 8px;
@@ -679,4 +617,103 @@
 				transform: rotate(-30deg);
 				visibility: hidden;
 			}
+		}
+
+		/*responsive classes */
+
+		@media (max-width:961px){
+
+			.header h1{
+				font-size:30px;
+			}
+
+			#mainBody{
+				flex-direction: column;
+				
+			}
+			#consoleContainer{
+				height: 200px;
+				width:85%;
+				margin: 0px auto 10px auto;
+			}
+			#consoleText{
+				height:175px;
+			}
+
+			#inputContainer{
+				height:70px;
+				font-size:50px;
+				letter-spacing:10px;
+			}
+
+			#timerContainer{
+				font-size:12px;
+				height:10px;
+			}
+
+			#timerLabel{
+				display:none !important;
+			}
+
+			#timer{
+				letter-spacing:3px;
+				bottom:10px;
+			}
+
+			#inputContainer{
+				bottom: 76px;
+			}
+
+			.game-child{
+				width:90%
+			}
+			#gameText{
+				font-size:50px;
+				letter-spacing:10px;
+			}
+
+			#game{
+				width:100%;
+				margin:0px auto;
+			}
+
+			#terminal{
+				font-size:65px;
+				min-height:120px;
+				width:80%;
+			}
+			
+
+			#rules{font-size:16px;
+				min-height:40px;
+			}
+
+			.buttonContainer {
+				
+				flex-direction: column;
+				width: 318px;
+				
+			}
+			.buttonContainer button{
+				font-size:22px;
+				height:78px;
+			}
+
+			.trophy-wrapper{
+				display:none;
+			}
+
+			#playerScoreCount, #highScoreCount{
+				font-size:12px;
+			}
+
+			#playerScoreCount{
+				margin-right:8px;
+			}
+
+			#highScoreCount:before{
+				content:"HI:";
+			}
+
+
 		}
