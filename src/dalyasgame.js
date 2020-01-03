@@ -329,6 +329,8 @@ const DalyasGame = {
 		DalyasGame.GameState = 'game_over';
 
 		$q("#consoleText").innerHTML = "";
+		document.querySelector("#inputInner").classList.add("has-cursor");
+		DalyasGame.FocusInputElement();
 		DalyasGame.ClearGameText()
 		DalyasGame.WriteToConsole(`If you would like to play again, type YES into the input box.
 								 To go back to the homepage and high, scores, type NO `, "info");
@@ -375,7 +377,7 @@ const DalyasGame = {
 
 		for(let i =0; i< highscores.length;i++){
 
-			if(score > highscores[i]){
+			if(score > highscores[i].highscore){
 
 				DalyasGame.CurrentRank = (i+1);
 				hasHighScore=true;
@@ -383,7 +385,7 @@ const DalyasGame = {
 			}
 		}
 
-		//return hasHighScore;
+		return hasHighScore;
 
 	},
 
@@ -400,7 +402,8 @@ const DalyasGame = {
 				}
 				else {
 					DalyasGame.GameState = 'high_score';
-
+					document.querySelector("#inputInner").classList.add("has-cursor");
+					DalyasGame.FocusInputElement();
 					$q("#inputAction").innerHTML = "initials";
 					DalyasGame.WriteToConsole(`Congratulations! you are ranked number ${DalyasGame.CurrentRank} on our list of all time champs!
 													Please enter your initials`, "bonus");
@@ -420,7 +423,8 @@ const DalyasGame = {
 	},
 
 	SetScores: function (initials) {
-
+		DalyasGame.AddLoadingIcon($q("#inputContainer"),"lds-facebook");
+		$q("#inputContainerInner").style.display="none";
 		fetch(`${DalyasGame.HighScoresEndpoint}/logscores`, {
 			mode:'no-cors',
   			method: 'post',
@@ -430,6 +434,8 @@ const DalyasGame = {
   			},
   			body: JSON.stringify({name: initials, highscore: DalyasGame.NumberOfRounds})
 			}).then((res)=>{
+				DalyasGame.RemoveLoadingIcon( $q("#inputContainer"),"lds-facebook");
+				$q("#inputContainerInner").style.display="block";
 				if(res.ok){
 					DalyasGame.WriteToConsole(`High score successfully added for ${initials}`,"info");
 				}
@@ -496,13 +502,13 @@ const DalyasGame = {
 		const $terminal = $q("#terminal");
 		let advancedText = '';
 		$terminal.innerHTML = '';
-		DalyasGame.AddLoadingIcon($terminal,"lds-dual-ring");
+		DalyasGame.AddLoadingIcon($terminal,"lds-facebook");
 		
 		fetch(`${DalyasGame.HighScoresEndpoint}/getscores`)
 			.then((result)=>result.json())
 			.then((data)=>{
 
-				DalyasGame.RemoveLoadingIcon($terminal,"lds-dual-ring");
+				DalyasGame.RemoveLoadingIcon($terminal,"lds-facebook");
 				DalyasGame.HighScores = data;
 		if(DalyasGame.HighScores.length===0){
 

@@ -124,6 +124,10 @@
 			
 		}
 
+		#inputDisplayContainer{
+			display:flex;
+		}
+
 		#mainBody label{
 
 			
@@ -142,7 +146,9 @@
 
 
 		#gamePlayLabel{
-			bottom:60px
+			bottom:60px;
+			text-align:left;
+			margin:0px;
 		}
 
 		#timerLabel{
@@ -204,6 +210,10 @@
 			height:136px;
 			min-height:0px !important;
 			bottom:90px;
+		}
+
+		.inputItem:nth-child(1){
+			flex-basis:80%;
 		}
 
 		#legend{
@@ -494,6 +504,75 @@
 
 
 		}
+
+
+		/*icons*/
+
+		.trophy-wrapper {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		  }
+		  .trophy-mask {
+			margin: none;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 100;
+		  }
+		  
+		  .trophy-container {
+			position: absolute;
+			top: 5px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			
+		  }
+		  
+		  .trophy-main {
+			height: 25px;
+			width: 20px;
+			background:#32CD3C;
+			border-bottom-left-radius: 10px;
+			border-bottom-right-radius: 10px;
+		  }
+		  
+		  .trophy-stem1 {
+			position: absolute;
+			top: 25px;
+			  border-bottom: 10px solid #32CD3C;
+			  border-left: 5px solid transparent;
+			  border-right: 5px solid transparent;
+			  height: 0;
+			  width: 14px;
+			border-top-left-radius: 20px;
+			border-top-right-radius: 20px;
+		  }
+		  .trophy-base {
+			position: fixed;
+			width: 18px;
+			border-top-left-radius: 20px;
+			border-top-right-radius: 20px;
+			background: black;
+			height: 2px;
+			top: 38px;
+		  }
+		  .trophy-arms {
+			width: 30px;
+			height: 15px;
+			position: absolute;
+			background: transparent;
+			z-index: -1;
+			border:#32CD3C 2px solid;
+			border-top-right-radius: 5px;
+			border-top-left-radius: 5px;
+			border-bottom-left-radius: 100px;
+			border-bottom-right-radius: 100px;
+		  
+		  }
+	
+		  
 
 
 		@keyframes lds-facebook {
