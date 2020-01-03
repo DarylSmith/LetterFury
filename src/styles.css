@@ -200,6 +200,12 @@
 
 
 		}
+		.inputTextContainer{
+			width: 77%;
+   			 margin: 0px auto;
+    		position: relative;
+    		left: 38px;
+		}
 
 		#inputContainer{
 			width:85%;
@@ -579,8 +585,15 @@
 		@keyframes ease-up{
 
 			0%{bottom:-1000px;}
-			100%{right:55px;}
+			100%{bottom:20px;}
 		}
+
+		@keyframes ease-up-mobile{
+
+			0%{bottom:-1000px;}
+			100%{bottom:100px;}
+		}
+		
 
 
 		@keyframes ease-out-right{
@@ -688,12 +701,22 @@
 				min-height:40px;
 			}
 
+			#legend{
+				font-size:12px;
+				bottom:100px;
+			}
+
 			.buttonContainer {
 				
 				flex-direction: column;
 				width: 318px;
 				
 			}
+
+			.scoreContainer{
+				bottom: 32px;
+			}
+
 			.buttonContainer button{
 				font-size:22px;
 				height:78px;
@@ -713,6 +736,12 @@
 
 			#highScoreCount:before{
 				content:"HI:";
+			}
+
+			.easeUpLegend{
+
+				animation: ease-up-mobile 3s linear;
+				animation-fill-mode: forwards; 
 			}
 
 
