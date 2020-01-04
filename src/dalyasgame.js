@@ -447,7 +447,7 @@ const DalyasGame = {
 
 	FocusInputElement:function(){
 		if(window.matchMedia('(max-width: 961px)')){
-			$q("#gameText").focus();
+		//	$q("#gameText").focus();
 		}
 	},
 
