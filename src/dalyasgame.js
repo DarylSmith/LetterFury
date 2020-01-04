@@ -92,11 +92,7 @@ const DalyasGame = {
 		DalyasGame.GetTopScore();
 		DalyasGame.BeginAdvancedRound();
 		$q("#inputAction").innerHTML = "guess";
-		DalyasGame.FocusInputElement();
-		//DalyasGame.DisplayScores();
-		//DalyasGame.ShowModal("Select a name and level to begin");
-
-
+		DalyasGame.FocusInputElement(true);
 
 	},
 
@@ -319,7 +315,7 @@ const DalyasGame = {
 		$q("#gameText").removeAttribute("disabled");
 
 		DalyasGame.EndOfGame = new Date().getTime() + DalyasGame.LengthOfGameInMinutes * 60000;
-		DalyasGame.FocusInputElement();
+		DalyasGame.FocusInputElement(false);
 		$q("#inputInner").className = "has-cursor";
 
 		window.GamePlay = setInterval(() => {
@@ -359,7 +355,7 @@ const DalyasGame = {
 
 		$q("#consoleText").innerHTML = "";
 		document.querySelector("#inputInner").classList.add("has-cursor");
-		DalyasGame.FocusInputElement();
+		DalyasGame.FocusInputElement(false);
 		DalyasGame.ClearGameText()
 		DalyasGame.WriteToConsole(`If you would like to play again, type YES into the input box.
 								 To go back to the homepage and high, scores, type NO `, "info");
@@ -432,7 +428,7 @@ const DalyasGame = {
 				else {
 					DalyasGame.GameState = 'high_score';
 					document.querySelector("#inputInner").classList.add("has-cursor");
-					DalyasGame.FocusInputElement();
+					DalyasGame.FocusInputElement(false);
 					$q("#inputAction").innerHTML = "initials";
 					DalyasGame.WriteToConsole(`Congratulations! you are ranked number ${DalyasGame.CurrentRank} on our list of all time champs!
 													Please enter your initials`, "bonus");
@@ -445,8 +441,8 @@ const DalyasGame = {
 		return higherScores.length;
 	},
 
-	FocusInputElement:function(){
-		if(window.matchMedia('(min-width: 961px)').matches){
+	FocusInputElement:function(allowMobileFocus){
+		if(window.matchMedia('(min-width: 961px)').matches  || allowMobileFocus){
 
 			$q("#gameText").focus();
 		}
@@ -484,7 +480,7 @@ const DalyasGame = {
 		window.setTimeout(e => {
 			$gameTextElem.value = "";
 			$q("#inputInner").className = "has-cursor";
-			DalyasGame.FocusInputElement();
+			DalyasGame.FocusInputElement(false);
 			DalyasGame.WriteToConsole(text, className);
 		}, 500);
 
@@ -604,7 +600,7 @@ const DalyasGame = {
 			DalyasGame.AddSecondsToTime(-5);
 			$gameTextElem.value = "";
 			$q("#inputInner").className = "has-cursor";
-			DalyasGame.FocusInputElement();
+			DalyasGame.FocusInputElement(false);
 
 		}
 		else {
