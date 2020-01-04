@@ -230,11 +230,20 @@ const DalyasGame = {
 
 	InvokeConsoleScatter: function(){
 
+		$q("#consoleText").insertBefore(DalyasGame.GameOverText(),$q("#consoleText").firstChild);
+
+		window.setTimeout((e)=>{
 		document.querySelectorAll(".console-comment").forEach($elem=>{
 
-			const scatter = (Math.floor(Math.random() * 4) + 1).toString();  
-			$elem.classList.add(`scatter-console-${scatter}`);
+			const scatter = (Math.floor(Math.random() * 2) + 1).toString();  
+			const scatterClass=`scatter-console-${scatter}`;
+			if($elem.id!==undefined){
+			console.log($elem.id);
+			$elem.classList.add(scatterClass);
+			}
 		});
+
+	},500);
 
 	},
 
@@ -674,6 +683,25 @@ const DalyasGame = {
 
 		}
 
+	},
+
+	GameOverText:function(){
+
+		let $elem = document.createElement("div");
+		let $innerElem = document.createElement("pre");
+		$elem.appendChild($innerElem);
+		$elem.className="gameOver";
+		$innerElem.innerHTML=`	
+		dP""b8     db    8b    d8 888888     
+		dP   '"   dPYb   88b  d88 88__ 
+		Yb  "88  dP__Yb  88YbdP88 88""  
+		 YboodP dP""""Yb 88 YY 88 888888    
+		 dP"Yb  Yb    dP 888888 88""Yb      
+		dP   Yb  Yb  dP  88__   88__dP       
+		Yb   dP   YbdP   88""   88"Yb        
+		 YbodP     YP    888888 88  Yb  					
+		`;
+		return $elem;
 	}
 
 }
