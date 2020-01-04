@@ -693,6 +693,8 @@ const DalyasGame = {
 		let $innerElem = document.createElement("pre");
 		$elem.appendChild($innerElem);
 		$elem.className="gameOver";
+		if(window.matchMedia('(min-width: 961px)').matches){
+
 		$innerElem.innerHTML=`	
 		dP""b8     db    8b    d8 888888     
 		dP   '"   dPYb   88b  d88 88__ 
@@ -703,6 +705,10 @@ const DalyasGame = {
 		Yb   dP   YbdP   88""   88"Yb        
 		 YbodP     YP    888888 88  Yb  					
 		`;
+		}
+		else{
+			$innerElem.innerHTML ="GAME OVER";
+		}
 		return $elem;
 	}
 
