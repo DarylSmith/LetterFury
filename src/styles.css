@@ -170,7 +170,7 @@
 			width: 77%;
    			 margin: 0px auto;
     		position: relative;
-    		left: 38px;
+    		left: 10px;
 		}
 
 		#inputContainer{
@@ -345,6 +345,8 @@
 		#gameText:focus{
 			outline:none;
 		}
+
+		
 
 		#mainBody {
 
@@ -587,6 +589,10 @@
 
 			.header h1{
 				font-size:30px;
+			}
+
+			#consoleLabel{
+				display:none;
 			}
 
 			#mainBody{
