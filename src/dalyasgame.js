@@ -235,7 +235,7 @@ const DalyasGame = {
 		window.setTimeout((e)=>{
 		document.querySelectorAll(".console-comment").forEach($elem=>{
 
-			const scatter = (Math.floor(Math.random() * 2) + 1).toString();  
+			const scatter = (Math.floor(Math.random() * 3) + 1).toString();  
 			const scatterClass=`scatter-console-${scatter}`;
 			if($elem.id!==undefined){
 			console.log($elem.id);
@@ -331,8 +331,13 @@ const DalyasGame = {
 				$q("#inputContainerInner").style.display="none";
 
 				window.clearInterval(window.GamePlay);
-				DalyasGame.WriteToConsole(`Game Over! You have ${DalyasGame.NumberOfRounds} points!`, "");
+				DalyasGame.InvokeConsoleScatter();
+
+				window.setTimeout(()=>{
+				
+				$q("#consoleText").innerHTML='';
 				DalyasGame.CheckForHighScore();
+				},2000);
 			}
 			else {
 
