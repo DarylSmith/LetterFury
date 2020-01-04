@@ -592,7 +592,11 @@
 			}
 
 			#consoleLabel{
-				display:none;
+				display:none !important;
+			}
+			.has-cursor{
+				height:61%;
+				width:9px;
 			}
 
 			#mainBody{
