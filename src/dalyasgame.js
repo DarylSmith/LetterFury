@@ -1,77 +1,103 @@
+//abbreviates the native DOM selector for easier use
 const $q = document.querySelector.bind(document);
 
-const IntroJson = {
-	Items: [
-		{ 'Console': ()=>{ DalyasGame.ResetRandomNumber(60,40,()=>{$q("#terminal").innerHTML = !DalyasGame.ElementIsHidden($q("#rules"))? DalyasGame.OurRandomNumber:'';}); }, 'Text': 'The computer has chosen a random number containing 3 digits.', 'HTML': '' },
-		{ 'Console': '???', 'Text': 'You need to guess what it is.', 'HTML': '' },
-		{ 'Console': 'BTF', 'Text': 'The computer will give you a code with some clues. ', 'HTML': '' },
-		{ 'Console': 'BTF', 'Text': 'The code B means the digit is NOT in the number.', 'HTML': '<span class="emphasis">B</span>TF' },
-		{ 'Console': 'BTF', 'Text': 'The code T means the digit is in the number, but in the wrong place.', 'HTML': 'B<span class="emphasis">T</span>F' },
-		{ 'Console': 'BTF', 'Text': 'F Means the digit is in the right place.', 'HTML': 'BT<span class="emphasis">F</span>' },
-		{ 'Console': '123', 'Text': 'Your goal is to get FFF as many times as you can in 2 minutes.', 'HTML': '' },
-		{ 'Console': 'FFF', 'Text': 'Are you ready to accept the challenge?', 'HTML': '<span class="emphasis">FFF</span>' }
-
-
-
-	]
-
-}
-
-const CountdownObj = {
-
-	Items: [
-		{
-			'Console': 'Setting up RandomNumbers...', 'Action': () => {
-
-
-				window.InitInput = window.setInterval((event) => {
-
-					DalyasGame.SetRandomNumber();
-					$q("#gameText").value = DalyasGame.OurRandomNumber;
-
-				}, 40);
-			}
-		},
-		{
-			'Console': 'Allocating game time...', 'Action': () => {
-
-				//var audio = new Audio('audio/playergo.mp3');
-				//audio.play();
-				let currentNumElem = $q("#timer");
-				currentNumElem.innerHTML = '00:00';
-			}
-		},
-
-		{
-			'Console': 'Finalizing Game...', 'Action': () => {
-				window.clearInterval(window.InitInput);
-				$q("#gameText").value = '';
-			}
-		}
-
-
-
-	]
-
-}
 
 const DalyasGame = {
+
+	// holds high scores retrived from endoint
 	HighScores: [],
-	PlayerName: 'unknown',
+	
+	// endoint for  retrieving high scores. TODO add to config file
 	HighScoresEndpoint:'https://6dmnrf7ylc.execute-api.us-east-1.amazonaws.com/default',
+	
+	//Random Number generated for game
 	OurRandomNumber: 0,// 
+	
+	//container for each chance per random number
 	ListOfChances: [],
+
+	// if set to true, outputs comments about game logic to console
+	TestMode:false,
+	
+	//Number of times a player guesses during a turn. TODO: make this private
 	NumberOfRounds: 0,
-	DialogElem: {},
+
+	// Counter for the intro (rules)
 	IntroIndex: 1,
+
+	// number of high scores to be diplayed on list
 	NumberOfHighScores: 10,
+	
+	// the state the game is in. Values: intro game_play, game_over, high_score
 	GameState: 'intro',
-	CurrentTime: 0,
+
+	//Rank of player in highscores
 	CurrentRank:0,
+
+	// number used for countdown timer
 	CountdownNumber: 0,
 	LengthOfGameInMinutes: 2,
+
+	//object to store end of game datetime
 	EndOfGame: {},
 
+	
+	//these are the different steps for the rules, and run in a loop
+ 	IntroJson :{
+		Items: [
+			{ 'Console': ()=>{ DalyasGame.ResetRandomNumber(60,40,()=>{$q("#terminal").innerHTML = !DalyasGame.ElementIsHidden($q("#rules"))? DalyasGame.OurRandomNumber:'';}); }, 'Text': 'The computer has chosen a random number containing 3 digits.', 'HTML': '' },
+			{ 'Console': '???', 'Text': 'You need to guess what it is.', 'HTML': '' },
+			{ 'Console': 'BTF', 'Text': 'The computer will give you a code with some clues. ', 'HTML': '' },
+			{ 'Console': 'BTF', 'Text': 'The code B means the digit is NOT in the number.', 'HTML': '<span class="emphasis">B</span>TF' },
+			{ 'Console': 'BTF', 'Text': 'The code T means the digit is in the number, but in the wrong place.', 'HTML': 'B<span class="emphasis">T</span>F' },
+			{ 'Console': 'BTF', 'Text': 'F Means the digit is in the right place.', 'HTML': 'BT<span class="emphasis">F</span>' },
+			{ 'Console': '123', 'Text': 'Your goal is to get FFF as many times as you can in 2 minutes.', 'HTML': '' },
+			{ 'Console': 'FFF', 'Text': 'Are you ready to accept the challenge?', 'HTML': '<span class="emphasis">FFF</span>' }
+
+			]
+
+		},
+		
+		// object containing different steps for countdown to start game
+		CountdownObj:{
+
+			Items: [
+				{
+					'Console': 'Setting up RandomNumbers...', 'Action': () => {
+		
+		
+						window.InitInput = window.setInterval((event) => {
+		
+							DalyasGame.SetRandomNumber();
+							$q("#gameText").value = DalyasGame.OurRandomNumber;
+		
+						}, 40);
+					}
+				},
+				{
+					'Console': 'Allocating game time...', 'Action': () => {
+		
+						//var audio = new Audio('audio/playergo.mp3');
+						//audio.play();
+						let currentNumElem = $q("#timer");
+						currentNumElem.innerHTML = '00:00';
+					}
+				},
+		
+				{
+					'Console': 'Finalizing Game...', 'Action': () => {
+						window.clearInterval(window.InitInput);
+						$q("#gameText").value = '';
+					}
+				}
+		
+		
+		
+			]
+		
+		},
+
+	// this is the function to start a new game.  Should probably be changed to GameInit
 	Init: function () {
 
 		if (window.IntroText) {
@@ -96,6 +122,8 @@ const DalyasGame = {
 
 	},
 
+	
+
 	GetTopScore:function(){
 
 		fetch(`${DalyasGame.HighScoresEndpoint}/getscores?count=1`)
@@ -106,6 +134,8 @@ const DalyasGame = {
 			});
 	},
 
+
+	// begins changing page  to the game
 	NavigateToGamePageStart: function () {
 
 		$q("#gameSection").style.display = "block";
@@ -116,6 +146,7 @@ const DalyasGame = {
 		$q("#legend").classList.add("easeUpLegend");
 	},
 
+	//ends changing the page  to the game (removes animation classes when it completeds )
 	NavigateToGamePageEnd: function () {
 
 		$q("#consoleContainer").classList.remove("easeInRight");
@@ -124,6 +155,7 @@ const DalyasGame = {
 
 	},
 
+	// changes page to home
 	NavigateToHomePageStart: function () {
 
 		$q("#consoleContainer").classList.add("easeOutRight");
@@ -132,6 +164,7 @@ const DalyasGame = {
 
 	},
 
+	//removes animation classes from home navigation after completion
 	NavigateToHomePageEnd: function () {
 
 		$q("#terminal").classList.remove("extendConsole");
@@ -144,22 +177,23 @@ const DalyasGame = {
 
 	},
 
+	// shows the intro.rules via a timer
 	ShowIntro: function () {
 
 		const $body = $q("body");
 
 		document.querySelector("#terminal").classList.remove("flattenConsole")
 
-		DalyasGame.RenderConsoleText(IntroJson.Items[0]);
+		DalyasGame.RenderConsoleText(DalyasGame.IntroJson.Items[0]);
 
 		window.IntroText = window.setInterval(e => {
 
-			const currentItem = IntroJson.Items[DalyasGame.IntroIndex];
+			const currentItem = DalyasGame.IntroJson.Items[DalyasGame.IntroIndex];
 			
 			DalyasGame.RenderConsoleText(currentItem);
 
 
-			DalyasGame.IntroIndex = DalyasGame.IntroIndex >= IntroJson.Items.length - 1 ? 0 : DalyasGame.IntroIndex + 1;
+			DalyasGame.IntroIndex = DalyasGame.IntroIndex >= DalyasGame.IntroJson.Items.length - 1 ? 0 : DalyasGame.IntroIndex + 1;
 
 		}, 5500)
 
@@ -180,6 +214,7 @@ const DalyasGame = {
 		}, delay);
 	},
 
+	// this writes to the console on the rules page by splitting the value and writing it char by char 
 	RenderConsoleText(obj) {
 
 		const $rulesElem = $q("#rules");
@@ -215,6 +250,7 @@ const DalyasGame = {
 	},
 
 
+	//runs after the a player has guessed the correct #, and lets them choose another
 	StartNextRound: function () {
 
 		DalyasGame.SetRandomNumber();
@@ -224,6 +260,7 @@ const DalyasGame = {
 
 	},
 
+	// animation that runs when the game ends
 	InvokeConsoleScatter: function(){
 
 		$q("#consoleText").insertBefore(DalyasGame.GameOverText(),$q("#consoleText").firstChild);
@@ -249,6 +286,8 @@ const DalyasGame = {
 
 	},
 
+	// this writes to the main console, and high score console. it takes the text, writes char by char, and applies 
+	//the class passed in (elemClass) to apply the correct colour
 	WriteToConsole: function (text, elemClass, target) {
 		if (target === undefined) {
 			target = "#consoleText";
@@ -283,6 +322,7 @@ const DalyasGame = {
 
 	},
 
+	// counts down to the beginning of the game
 	BeginAdvancedRound: function () {
 
 		DalyasGame.CountdownNumber = 0;
@@ -291,7 +331,7 @@ const DalyasGame = {
 
 
 			if (DalyasGame.CountdownNumber < 3) {
-				const currentCountObj = CountdownObj.Items[DalyasGame.CountdownNumber];
+				const currentCountObj = DalyasGame.CountdownObj.Items[DalyasGame.CountdownNumber];
 				DalyasGame.WriteToConsole(currentCountObj.Console, "");
 				currentCountObj.Action();
 				DalyasGame.CountdownNumber++;
@@ -309,6 +349,7 @@ const DalyasGame = {
 
 	},
 
+	// sets up the timer that runs the game
 	BeginAdvancedGame: function () {
 		DalyasGame.GameState = 'game_play';
 
@@ -349,12 +390,13 @@ const DalyasGame = {
 		$q("#gameText").value = "";
 	},
 
+
 	InitGameOver: function () {
 
 		DalyasGame.GameState = 'game_over';
 
 		$q("#consoleText").innerHTML = "";
-		document.querySelector("#inputInner").classList.add("has-cursor");
+		$q("#inputInner").classList.add("has-cursor");
 		DalyasGame.FocusInputElement(false);
 		DalyasGame.ClearGameText()
 		DalyasGame.WriteToConsole(`If you would like to play again, type YES into the input box.
@@ -362,6 +404,7 @@ const DalyasGame = {
 		DalyasGame.ClearGameText();
 	},
 
+	// adds seconds if a player has gotten a bonus
 	AddSecondsToTime: function (timeAddedInSeconds) {
 
 		for (let i = 0; i <= timeAddedInSeconds; i++) {
@@ -391,13 +434,11 @@ const DalyasGame = {
 
 	},
 
+
+	// loops through the high scores and checks if this score falls in top 10
 	HasHighScore:function(score, highscores){
 
-		if(highscores.length<10 && score>0){
-			DalyasGame.CurrentRank = (highscores.length+1);
-			return true;
-		}
-
+		
 		let hasHighScore = false;
 
 		for(let i =0; i< highscores.length;i++){
@@ -410,10 +451,19 @@ const DalyasGame = {
 			}
 		}
 
+
+		if(hasHighScore === false && highscores.length<10 && score>0){
+			console.log(highscores.length);
+			DalyasGame.CurrentRank = (highscores.length+1);
+			hasHighScore =  true;
+		}
+
 		return hasHighScore;
 
 	},
 
+	// gets current scores from db. if the player is in the highscore list, 
+	//allow player to add initials. Otherwise continue to game over
 	CheckForHighScore: function (score) {
 
 		fetch(`${DalyasGame.HighScoresEndpoint}/getscores`)
@@ -441,6 +491,7 @@ const DalyasGame = {
 		return higherScores.length;
 	},
 
+	// puts focus on input element for each turn. disabled on mobile because the keyboard pops up and hides console
 	FocusInputElement:function(allowMobileFocus){
 		if(window.matchMedia('(min-width: 961px)').matches  || allowMobileFocus){
 
@@ -448,6 +499,7 @@ const DalyasGame = {
 		}
 	},
 
+	//sends high score to db
 	SetScores: function (initials) {
 		DalyasGame.AddLoadingIcon($q("#inputContainer"),"lds-facebook");
 		$q("#inputContainerInner").style.display="none";
@@ -520,6 +572,7 @@ const DalyasGame = {
 		}, 50);
 	},
 
+	// gets the high scores from the db and displays them on the highscore console
 	DisplayScores: function () {
 		if (window.IntroText) {
 			window.clearInterval(window.IntroText);
@@ -588,6 +641,9 @@ const DalyasGame = {
 		}
 	},
 
+
+	// this the primary function for guessing an item. it gets the input value
+	// checks if input correct, and then processes result
 	MakeSelection: function () {
 
 		DalyasGame.HideKeyboard();
@@ -669,7 +725,9 @@ const DalyasGame = {
 
 			$gameTextElem.value = resultsCode.split(' ')[0];
 		
+			if(DalyasGame.TestMode){
 			console.log(whatIsHappening);
+			}
 
 			DalyasGame.DisplayInputResults($gameTextElem, `Code ${resultsCode} for number ${gameText} (attempt ${DalyasGame.ListOfChances.length})`, "results");
 
@@ -687,6 +745,7 @@ const DalyasGame = {
 
 	},
 
+	//the hs buttom alternatives between rules and high scores, change back and forth between keypress
 	ToggleHighScoreButton:function(){
 		let $rulesElem = $q("#rules");
 		let $terminalElem = $q("#terminal");
@@ -724,6 +783,7 @@ const DalyasGame = {
 		}
 	},
 
+	// checks which css animation has completed and routes to correct fn
 	HandleAnimationEnding:function(e){
 		switch (e.animationName) {
 
