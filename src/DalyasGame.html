@@ -9,78 +9,26 @@
 
 	<script>
 
-
-
-		//document.write(DalyasGame.OurRandomNumber);
-
-		//check box and make sure someone add 3 numbers
-		//if they didn't add three numbers add an error message-box
-
 		document.addEventListener("DOMContentLoaded", () => {
 
 			DalyasGame.ShowIntro();
 
 			document.querySelector("#startGameButton").addEventListener('click', (event) => {
 
-
 				DalyasGame.Init();
 			});
 
 			window.onanimationend = (e) => {
 
-
-				switch (e.animationName) {
-
-					case 'extend-console':
-						console.log('doin-it');
-						DalyasGame.DisplayScores();
-						break;
-					case 'ease-left':
-						DalyasGame.NavigateToGamePageEnd();
-						break;
-					case 'ease-out-left':
-						DalyasGame.NavigateToHomePageEnd();
-						break;
-					case 'flatten-console':
-						DalyasGame.ShowIntro();
-						breakl
-					case 'ease-up':
-						document.querySelector("#legend").classList.remove("easeUpLegend");
-						break;
-					case 'scatter-console-1':
-					case 'scatter-console-2':
-						e.srcElement.innerHTML ="<h1>DDDD</h1>";
-						//document.querySelectorAll(".console-comment").forEach(($elem)=>{$elem.parentNode.removeChild($elem);});
-						break;
-					default:
-						console.log(e);
-				}
+				DalyasGame.HandleAnimationEnding(e);
+	
 			}
 
 			document.querySelector("#highScoreButton").addEventListener('click', (event) => {
 
-				let $rulesElem = document.querySelector("#rules");
-				let $terminalElem = document.querySelector("#terminal");
-				let $button = document.querySelector("#highScoreButton");
-
-				if (DalyasGame.ElementIsHidden($rulesElem)) {
-					$rulesElem.style.display = "block";
-					$terminalElem.classList.remove("extendConsole");
-					$terminalElem.classList.add("flattenConsole");
-					$button.innerHTML = "High Scores";
-					DalyasGame.ShowIntro();
-
-				}
-				else {
-					$rulesElem.style.display = "none";
-					$terminalElem.classList.add("extendConsole");
-					$button.innerHTML = "See Rules";
-
-				}
+				DalyasGame.ToggleHighScoreButton();
 
 			});
-
-			document.querySelector("#gameText").focus();
 
 			document.querySelector("#gameText").addEventListener('keydown', (event) => {
 
@@ -89,19 +37,7 @@
 
 			document.querySelector("#gameText").addEventListener('keyup', (event) => {
 
-				console.log(event.target.value);
-				if (event.target.value.length >= 3 && DalyasGame.GameState === 'game_play') {
-					DalyasGame.MakeSelection();
-				}
-				else if (event.target.value.toUpperCase() === 'YES' && DalyasGame.GameState === 'game_over') {
-					DalyasGame.Init();
-				}
-				else if (event.target.value.toUpperCase() === 'NO' && DalyasGame.GameState === 'game_over') {
-					DalyasGame.NavigateToHomePageStart();
-				}
-				else if (event.target.value.length == 3 && DalyasGame.GameState === 'high_score') {
-					DalyasGame.SetScores(event.target.value);
-				}
+				DalyasGame.HandleKeyPressEvent(event);
 
 			});
 		});

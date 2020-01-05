@@ -35,8 +35,8 @@ const CountdownObj = {
 		{
 			'Console': 'Allocating game time...', 'Action': () => {
 
-				var audio = new Audio('audio/playergo.mp3');
-				audio.play();
+				//var audio = new Audio('audio/playergo.mp3');
+				//audio.play();
 				let currentNumElem = $q("#timer");
 				currentNumElem.innerHTML = '00:00';
 			}
@@ -685,6 +685,64 @@ const DalyasGame = {
 
 		}
 
+	},
+
+	ToggleHighScoreButton:function(){
+		let $rulesElem = $q("#rules");
+		let $terminalElem = $q("#terminal");
+		let $button = $q("#highScoreButton");
+
+		if (DalyasGame.ElementIsHidden($rulesElem)) {
+			$rulesElem.style.display = "block";
+			$terminalElem.classList.remove("extendConsole");
+			$terminalElem.classList.add("flattenConsole");
+			$button.innerHTML = "High Scores";
+			DalyasGame.ShowIntro();
+
+		}
+		else {
+			$rulesElem.style.display = "none";
+			$terminalElem.classList.add("extendConsole");
+			$button.innerHTML = "See Rules";
+
+		}
+	},
+
+	HandleKeyPressEvent:function(event){
+
+		if (event.target.value.length >= 3 && DalyasGame.GameState === 'game_play') {
+			DalyasGame.MakeSelection();
+		}
+		else if (event.target.value.toUpperCase() === 'YES' && DalyasGame.GameState === 'game_over') {
+			DalyasGame.Init();
+		}
+		else if (event.target.value.toUpperCase() === 'NO' && DalyasGame.GameState === 'game_over') {
+			DalyasGame.NavigateToHomePageStart();
+		}
+		else if (event.target.value.length == 3 && DalyasGame.GameState === 'high_score') {
+			DalyasGame.SetScores(event.target.value);
+		}
+	},
+
+	HandleAnimationEnding:function(e){
+		switch (e.animationName) {
+
+			case 'extend-console':
+				DalyasGame.DisplayScores();
+				break;
+			case 'ease-left':
+				DalyasGame.NavigateToGamePageEnd();
+				break;
+			case 'ease-out-left':
+				DalyasGame.NavigateToHomePageEnd();
+				break;
+			case 'flatten-console':
+				DalyasGame.ShowIntro();
+				break;
+			case 'ease-up':
+				$q("#legend").classList.remove("easeUpLegend");
+				break;
+		}
 	},
 
 	GameOverText:function(){
