@@ -5,7 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.googleapis.com/css?family=Orbitron:400,900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="styles.css" />
-	<script src="dalyasgame.js"></script>
+	<script  src="words.js"></script>
+	<script  src="dalyasgame.js"></script>
 
 	<script>
 
@@ -101,8 +102,22 @@
 								</div>
 							</div>
 							<div class="inputTextContainer">
+
+							<div id="resultsDisplay">
+
+							  <img id="resultImg-0" src="img/happy.svg"  height="87"
+							  width="100" alt="correct right place"/>
+  							  <img  id="resultImg-1"  src="img/close.svg"  height="87"
+								width="100"  alt="correct wrong place"/>
+  							  <img  id="resultImg-2"  src="img/angry.svg"  height="87"
+								width="100" alt="correct wrong place"/>
+	  
+
+							</div>	
 							<span id="inputInner"></span><input id="gameText" autocomplete="off" autocorrect="off"
 								autocapitalize="off" spellcheck="false" placeholder="___" type="text" />
+							<div class="score"></div>
+						
 						</div>
 							</div>
 					</div>

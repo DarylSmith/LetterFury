@@ -2,7 +2,10 @@
 const $q = document.querySelector.bind(document);
 
 
-const DalyasGame = {
+ DalyasGame = {
+
+	//
+	ListOfWords : DalyasGameWordList(),
 
 	// holds high scores retrived from endoint
 	HighScores: [],
@@ -10,8 +13,8 @@ const DalyasGame = {
 	// endoint for  retrieving high scores. TODO add to config file
 	HighScoresEndpoint:'https://6dmnrf7ylc.execute-api.us-east-1.amazonaws.com/default',
 	
-	//Random Number generated for game
-	OurRandomNumber: 0,// 
+	//Random Word generated for game
+	OurRandomWord: '',// 
 	
 	//container for each chance per random number
 	ListOfChances: [],
@@ -45,7 +48,7 @@ const DalyasGame = {
 	//these are the different steps for the rules, and run in a loop
  	IntroJson :{
 		Items: [
-			{ 'Console': ()=>{ DalyasGame.ResetRandomNumber(60,40,()=>{$q("#terminal").innerHTML = !DalyasGame.ElementIsHidden($q("#rules"))? DalyasGame.OurRandomNumber:'';}); }, 'Text': 'The computer has chosen a random number containing 3 digits.', 'HTML': '' },
+			{ 'Console': ()=>{ DalyasGame.ResetRandomNumber(60,40,()=>{$q("#terminal").innerHTML = !DalyasGame.ElementIsHidden($q("#rules"))? DalyasGame.OurRandomWord:'';}); }, 'Text': 'The computer has chosen a random number containing 3 digits.', 'HTML': '' },
 			{ 'Console': '???', 'Text': 'You need to guess what it is.', 'HTML': '' },
 			{ 'Console': 'BTF', 'Text': 'The computer will give you a code with some clues. ', 'HTML': '' },
 			{ 'Console': 'BTF', 'Text': 'The code B means the digit is NOT in the number.', 'HTML': '<span class="emphasis">B</span>TF' },
@@ -68,8 +71,8 @@ const DalyasGame = {
 		
 						window.InitInput = window.setInterval((event) => {
 		
-							DalyasGame.SetRandomNumber();
-							$q("#gameText").value = DalyasGame.OurRandomNumber;
+							DalyasGame.SetRandomWord();
+							$q("#gameText").value = DalyasGame.OurRandomWord;
 		
 						}, 40);
 					}
@@ -112,7 +115,7 @@ const DalyasGame = {
 
 
 		DalyasGame.WriteToConsole("Resetting Game...","info");
-		DalyasGame.SetRandomNumber();
+		DalyasGame.SetRandomWord();
 		DalyasGame.ListOfChances = [];
 		DalyasGame.NumberOfRounds = 0;
 		DalyasGame.GetTopScore();
@@ -204,7 +207,7 @@ const DalyasGame = {
 		var x = 0;
 		var intervalID = window.setInterval(function () {
 	
-			DalyasGame.SetRandomNumber();
+			DalyasGame.SetRandomWord();
 			elementReset();
 	
 		   if (++x === repetitions) {
@@ -253,7 +256,7 @@ const DalyasGame = {
 	//runs after the a player has guessed the correct #, and lets them choose another
 	StartNextRound: function () {
 
-		DalyasGame.SetRandomNumber();
+		DalyasGame.SetRandomWord();
 		DalyasGame.ListOfChances = [];
 		DalyasGame.NumberOfRounds++;
 		$q("#playerScoreCount").innerHTML=DalyasGame.NumberOfRounds.toString();
@@ -280,9 +283,10 @@ const DalyasGame = {
 
 	},
 
-	SetRandomNumber: function () {
+	SetRandomWord: function () {
 
-		DalyasGame.OurRandomNumber = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
+	   const num= Math.floor(Math.random() *  (this.ListOfWords.length-1));
+	   DalyasGame.OurRandomWord  = this.ListOfWords[num];
 
 	},
 
@@ -493,7 +497,7 @@ const DalyasGame = {
 
 	// puts focus on input element for each turn. disabled on mobile because the keyboard pops up and hides console
 	FocusInputElement:function(allowMobileFocus){
-		if(window.matchMedia('(min-width: 961px)').matches  || allowMobileFocus){
+		if(this.IsDesktop || allowMobileFocus){
 
 			$q("#gameText").focus();
 		}
@@ -531,10 +535,13 @@ const DalyasGame = {
 
 		window.setTimeout(e => {
 			$gameTextElem.value = "";
+			$q("#resultsDisplay").style.display="none";
+			$q("#mainBody label").style.display="block";
 			$q("#inputInner").className = "has-cursor";
-			DalyasGame.FocusInputElement(false);
+			
 			DalyasGame.WriteToConsole(text, className);
-		}, 500);
+			$q("#gameText").focus();
+		}, 1000);
 
 
 	},
@@ -649,7 +656,7 @@ const DalyasGame = {
 		DalyasGame.HideKeyboard();
 		let $gameTextElem = $q("#gameText");
 
-		const regex = /^\d{3}$/;
+		const regex = /^[a-zA-Z]{3}$/;
 		let gameText = $gameTextElem.value;
 		if (!regex.test(gameText)) {
 			DalyasGame.WriteToConsole("Invalid entry - 5 second penalty!", "error");
@@ -665,20 +672,20 @@ const DalyasGame = {
 			//take the number computer made and split that into 3 pieces
 			//then compare the computer number against our number
 
-			let whatIsHappening = 'The computer has number' + DalyasGame.OurRandomNumber + ' and we have chosen ' + gameText;
+			let whatIsHappening = 'The computer has word' + DalyasGame.OurRandomWord + ' and we have chosen ' + gameText;
 
 			let ourGameText = gameText.split('');
 
 			let resultsCode = '';
 
-			let computerGameText = DalyasGame.OurRandomNumber.toString().split('');
+			let computerGameText = DalyasGame.OurRandomWord.split('');
 
 			$gameTextElem.value = '';
 
-			if (DalyasGame.OurRandomNumber.toString() === gameText) {
+			if (DalyasGame.OurRandomWord.toString().toLowerCase() === gameText.toLowerCase()) {
 
 				DalyasGame.DisplayInputResults($gameTextElem, "Congrats! Code successfully unlocked. Resetting to new number", "victory");
-				DalyasGame.ResetRandomNumber(40,12,()=>{$q("#gameText").value = DalyasGame.OurRandomNumber;});
+				DalyasGame.ResetRandomNumber(40,12,()=>{$q("#gameText").value = DalyasGame.OurRandomWord;});
 
 
 				if (DalyasGame.ListOfChances.length < 4) {
@@ -699,19 +706,21 @@ const DalyasGame = {
 
 			for (let i = 0; i < 3; i++) {
 				//check our number against the computers number
-				if (ourGameText[i] === computerGameText[i]) {
+				if (ourGameText[i].toLowerCase() === computerGameText[i].toLowerCase() ) {
 					whatIsHappening += `<br/>Number ${i + 1} was right!.  The computer chose ${computerGameText[i]} and you chose ${ourGameText[i]}<br/>`;
-					resultsCode += 'F';
+					resultsCode += '&#128522;';
+					$q("#resultImg-"+i).src="/img/happy.svg";
 
 				}
-				else if ((ourGameText[i] !== computerGameText[i]) && DalyasGame.OurRandomNumber.toString().indexOf(ourGameText[i]) !== -1) {
+				else if ((ourGameText[i].toLowerCase() !== computerGameText[i].toLowerCase()) && DalyasGame.OurRandomWord.toLowerCase().indexOf(ourGameText[i].toLowerCase()) !== -1) {
 					whatIsHappening += `<br/>Number ${i + 1} not totally right - it is there, but not in the same place!.  The computer chose ${computerGameText[i]} and you chose ${ourGameText[i]}<br/>`;
-					resultsCode += 'T';
+					resultsCode += '&#128579;';
+					$q("#resultImg-"+i).src="/img/close.svg";
 				}
 				else {
 					whatIsHappening += `<br/>Number ${i + 1} was wrong!.  The computer chose ${computerGameText[i]} and you chose ${ourGameText[i]}<br/>`;
-
-					resultsCode += 'B';
+					resultsCode += '&#128577;';
+					$q("#resultImg-"+i).src="/img/angry.svg";
 
 				}
 
@@ -722,14 +731,17 @@ const DalyasGame = {
 			DalyasGame.ListOfChances.push(resultsCode);
 
 
-
-			$gameTextElem.value = resultsCode.split(' ')[0];
+			//$gameTextElem.value = resultsCode.split(' ')[0];
 		
 			if(DalyasGame.TestMode){
 			console.log(whatIsHappening);
 			}
 
-			DalyasGame.DisplayInputResults($gameTextElem, `Code ${resultsCode} for number ${gameText} (attempt ${DalyasGame.ListOfChances.length})`, "results");
+			//show the emoji results
+			$q("#mainBody label").style.display="none";
+			$q("#resultsDisplay").style.display="flex";
+
+			DalyasGame.DisplayInputResults($gameTextElem, `Code ${resultsCode} for letter ${gameText} (attempt ${DalyasGame.ListOfChances.length})`, "results");
 
 			//give incentive to get bonus points
 			if (DalyasGame.ListOfChances.length === 2) {
@@ -828,6 +840,17 @@ const DalyasGame = {
 			$innerElem.innerHTML ="GAME OVER";
 		}
 		return $elem;
-	}
+	},
+
+	IsDesktop:function(){
+		const ua = navigator.userAgent
+		if (/android/i.test(ua)) {
+		  return false;
+		}
+		else if ((/iPad|iPhone|iPod/.test(ua))){
+		  return false;
+		}
+		return true;
+	  }
 
 }
