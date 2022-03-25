@@ -34,17 +34,19 @@ h4 {
 
 .header {
 	background-color: #cd32c3;
-	padding: 20px 0px;
 	text-align: center;
 	border-bottom: 40px solid #fff;
+	max-height: 160px;
 	box-shadow: 2px 2px 1px #cd32c3;
 }
 
 h1 {
 	font-weight: 900;
 	text-shadow: -0.2em 0.3em 0 rgba(0, 0, 0, 0.2);
-	font-size: 60px;
+	font-size: 120px !important;
 	color: #fff;
+	font-family: 'Permanent Marker', cursive;
+
 }
 
 /*console styles*/
@@ -136,10 +138,10 @@ justify-content: center;
 
 
 .inputTextContainer {
-	width: 82%;
+	
 	margin: 0px auto;
 	position: relative;
-	left: 23px;
+	left: 10px;
 }
 
 #inputContainer {
@@ -154,7 +156,7 @@ justify-content: center;
 }
 
 
-#mainBody label {
+#mainBody label, #skipWordLink {
 	width: 200px;
 	margin: 0px auto;
 	color: #32CD3C;
@@ -165,10 +167,16 @@ justify-content: center;
 	background-color: #000
 }
 
-#gamePlayLabel {
+#gamePlayLabel, #skipWordLink {
 	bottom: 60px;
 	text-align: left;
 	margin: 0px;
+}
+
+#skipWordLink {
+display: inline;
+text-decoration:underline ;
+cursor:pointer;
 }
 
 #timerLabel {
@@ -244,6 +252,7 @@ justify-content: center;
 	color: #32CD3C;
 }
 
+
 #gameText {
 	
 	background-color: #000;
@@ -265,7 +274,11 @@ justify-content: center;
 }
 
 
-
+#clickToStart{
+	text-decoration: underline;
+	font-size:30px;
+	cursor:pointer;
+}
 .game-child {
 	width: 50%;
 	margin-top: 18px;
@@ -294,6 +307,7 @@ justify-content: center;
 
 #highScoreCount {
 	margin-left: 5px;
+
 }
 
 #playerScoreCount {

@@ -7,6 +7,7 @@ const $q = document.querySelector.bind(document);
 	//
 	ListOfWords : DalyasGameWordList(),
 
+
 	// holds high scores retrived from endoint
 	HighScores: [],
 	
@@ -28,6 +29,17 @@ const $q = document.querySelector.bind(document);
 	// Counter for the intro (rules)
 	IntroIndex: 1,
 
+	// number of times a word can be skipped
+	NumberOfSkips:3,
+
+	// Words always start at  MaxPointsForWord and decrease by SecondsForPointChange
+	CurrentPointValue:{
+		MaxPointsForWord:10,
+		SecondsForPointChange:15,
+		PointsForCurrentWord:0,
+		SecondIndex:0
+
+	},
 	// number of high scores to be diplayed on list
 	NumberOfHighScores: 10,
 	
@@ -39,7 +51,7 @@ const $q = document.querySelector.bind(document);
 
 	// number used for countdown timer
 	CountdownNumber: 0,
-	LengthOfGameInMinutes: 2,
+	LengthOfGameInMinutes: 3,
 
 	//object to store end of game datetime
 	EndOfGame: {},
@@ -48,14 +60,14 @@ const $q = document.querySelector.bind(document);
 	//these are the different steps for the rules, and run in a loop
  	IntroJson :{
 		Items: [
-			{ 'Console': ()=>{ DalyasGame.ResetRandomNumber(60,40,()=>{$q("#terminal").innerHTML = !DalyasGame.ElementIsHidden($q("#rules"))? DalyasGame.OurRandomWord:'';}); }, 'Text': 'The computer has chosen a random number containing 3 digits.', 'HTML': '' },
+			{ 'Console': ()=>{ DalyasGame.ResetRandomNumber(60,40,()=>{$q("#terminal").innerHTML = !DalyasGame.ElementIsHidden($q("#rules"))? DalyasGame.OurRandomWord:'';}); }, 'Text': 'The computer has chosen a 3-letter word.', 'HTML': '' },
 			{ 'Console': '???', 'Text': 'You need to guess what it is.', 'HTML': '' },
-			{ 'Console': 'BTF', 'Text': 'The computer will give you a code with some clues. ', 'HTML': '' },
-			{ 'Console': 'BTF', 'Text': 'The code B means the digit is NOT in the number.', 'HTML': '<span class="emphasis">B</span>TF' },
-			{ 'Console': 'BTF', 'Text': 'The code T means the digit is in the number, but in the wrong place.', 'HTML': 'B<span class="emphasis">T</span>F' },
-			{ 'Console': 'BTF', 'Text': 'F Means the digit is in the right place.', 'HTML': 'BT<span class="emphasis">F</span>' },
-			{ 'Console': '123', 'Text': 'Your goal is to get FFF as many times as you can in 2 minutes.', 'HTML': '' },
-			{ 'Console': 'FFF', 'Text': 'Are you ready to accept the challenge?', 'HTML': '<span class="emphasis">FFF</span>' }
+			{ 'Console': '  ', 'Text': 'The computer will give you am emoji with some clues. ', 'HTML': '<img src="img/happy.svg"  height="120"/><img src="img/angry.svg"  height="120"/><img src="img/close.svg"  height="120"/>' },
+			{ 'Console': '  ', 'Text': 'The emoji &#128577; means the letter is NOT in the word.', 'HTML': '<img src="img/angry.svg"  height="120"/>' },
+			{ 'Console': '  ', 'Text': 'The emoji &#128579;  means the letter is in the word, but in the wrong place.', 'HTML': '<img src="img/close.svg"  height="120"/>' },
+			{ 'Console': '  ', 'Text': '&#128522;  Means the letter is in the right place.', 'HTML': '<img src="img/happy.svg"  height="120"/>' },
+			{ 'Console': '  ', 'Text': 'Your goal is to get &#128522; &#128522; &#128522; as many times as you can in 2 minutes.', 'HTML': '<img src="img/happy.svg"  height="120"/><img src="img/happy.svg"  height="120"/><img src="img/happy.svg"  height="120"/>' },
+			{ 'Console': '  ', 'Text': 'Are you ready to accept the challenge?', 'HTML': '<span onclick="DalyasGame.Init();" id="clickToStart">Click to start</button>' }
 
 			]
 
@@ -66,7 +78,7 @@ const $q = document.querySelector.bind(document);
 
 			Items: [
 				{
-					'Console': 'Setting up RandomNumbers...', 'Action': () => {
+					'Console': 'Setting up Random Words...', 'Action': () => {
 		
 		
 						window.InitInput = window.setInterval((event) => {
@@ -198,10 +210,11 @@ const $q = document.querySelector.bind(document);
 
 			DalyasGame.IntroIndex = DalyasGame.IntroIndex >= DalyasGame.IntroJson.Items.length - 1 ? 0 : DalyasGame.IntroIndex + 1;
 
-		}, 5500)
+		}, 4000)
 
 
 	},
+	
 
 	ResetRandomNumber: function(delay, repetitions,elementReset) {
 		var x = 0;
@@ -252,13 +265,32 @@ const $q = document.querySelector.bind(document);
 
 	},
 
+	SkipWord: function(){
+
+		DalyasGame.WriteToConsole( `The word was ${DalyasGame.OurRandomWord.toLowerCase() }.Skipping..`);
+		DalyasGame.NumberOfSkips--;
+		DalyasGame.WriteToConsole( `You have ${DalyasGame.NumberOfSkips} skip(s) left`);
+		if(DalyasGame.NumberOfSkips===0){
+			$q("#skipWordLink").style.display="none";
+		}
+		DalyasGame.StartNextRound(true);
+
+	},
 
 	//runs after the a player has guessed the correct #, and lets them choose another
-	StartNextRound: function () {
+	StartNextRound: function (isSkip) {
 
 		DalyasGame.SetRandomWord();
 		DalyasGame.ListOfChances = [];
-		DalyasGame.NumberOfRounds++;
+		if(!isSkip){
+		DalyasGame.WriteToConsole( `You earned ${DalyasGame.CurrentPointValue.PointsForCurrentWord}`);
+		DalyasGame.NumberOfRounds+=DalyasGame.CurrentPointValue.PointsForCurrentWord;
+		}
+		
+
+		//reset game
+		DalyasGame.WriteToConsole( `Points for word set to  ${DalyasGame.CurrentPointValue.MaxPointsForWord}`);
+		DalyasGame.PointsForCurrentWord=DalyasGame.CurrentPointValue.MaxPointsForWord;
 		$q("#playerScoreCount").innerHTML=DalyasGame.NumberOfRounds.toString();
 
 	},
@@ -329,6 +361,7 @@ const $q = document.querySelector.bind(document);
 	// counts down to the beginning of the game
 	BeginAdvancedRound: function () {
 
+		
 		DalyasGame.CountdownNumber = 0;
 		$q("#gameText").setAttribute("disabled", true);
 		window.Countdown = setInterval(() => {
@@ -345,6 +378,8 @@ const $q = document.querySelector.bind(document);
 				//DalyasGame.CountdownNumber = 5;gg
 				clearInterval(window.Countdown);
 				$q("#timer").innerHTML = "GO!";
+				DalyasGame.CurrentPointValue.PointsForCurrentWord = DalyasGame.CurrentPointValue.MaxPointsForWord;
+				DalyasGame.WriteToConsole(`Points allocated for current word: ${DalyasGame.CurrentPointValue.PointsForCurrentWord}`);
 				DalyasGame.BeginAdvancedGame();
 
 			}
@@ -381,6 +416,18 @@ const $q = document.querySelector.bind(document);
 				},2000);
 			}
 			else {
+
+				// set point count for player
+				// if th
+				const decreasePointValue=DalyasGame.CurrentPointValue.SecondIndex===DalyasGame.CurrentPointValue.SecondsForPointChange;
+				if(decreasePointValue &&  DalyasGame.CurrentPointValue.PointsForCurrentWord>1){
+					DalyasGame.CurrentPointValue.PointsForCurrentWord --;
+					DalyasGame.CurrentPointValue.SecondIndex=0;
+					DalyasGame.WriteToConsole( `Points for current word: ${DalyasGame.CurrentPointValue.PointsForCurrentWord}`,"bonus");
+				}
+				if(!decreasePointValue){
+					DalyasGame.CurrentPointValue.SecondIndex++;
+				}
 
 				DalyasGame.SetCountdownClock(t);
 			}
@@ -536,7 +583,8 @@ const $q = document.querySelector.bind(document);
 		window.setTimeout(e => {
 			$gameTextElem.value = "";
 			$q("#resultsDisplay").style.display="none";
-			$q("#mainBody label").style.display="block";
+			$q("#gameText").style.visibility="visible";
+			//$q("#mainBody label").style.display="block";
 			$q("#inputInner").className = "has-cursor";
 			
 			DalyasGame.WriteToConsole(text, className);
@@ -738,8 +786,9 @@ const $q = document.querySelector.bind(document);
 			}
 
 			//show the emoji results
-			$q("#mainBody label").style.display="none";
+			//$q("#mainBody label").style.display="none";
 			$q("#resultsDisplay").style.display="flex";
+			$q("#gameText").style.visibility="hidden";
 
 			DalyasGame.DisplayInputResults($gameTextElem, `Code ${resultsCode} for letter ${gameText} (attempt ${DalyasGame.ListOfChances.length})`, "results");
 
