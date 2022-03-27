@@ -1,13 +1,13 @@
 <html>
 
 <head>
-	<title>Word Fury</title>
+	<title>Letter Fury</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css?family=Orbitron:400,900&display=swap" rel="stylesheet">
 
-	<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="styles.css" />
 	<script  src="words.js"></script>
 	<script  src="dalyasgame.js"></script>
@@ -58,7 +58,8 @@
 
 		<!--begin header  component-->
 		<div class="header">
-			<h1>Word Fury</h1>
+			<h1 id="title">Letter Fury</h1>
+	
 		</div>
 		<!--end header component-->
 		<!--begin rules/highscore page-->
@@ -87,7 +88,7 @@
 						<div id="inputContainerInner">
 							<div id="inputDisplayContainer">
 
-								<label id="gamePlayLabel"> Input <span id="inputAction">guess</span> here  <a id="skipWordLink" href="javascript:DalyasGame.SkipWord();">Skip</a></label> 
+								<label id="gamePlayLabel"> Input <span id="inputAction">guess</span> <a id="skipWordLink" href="javascript:DalyasGame.SkipWord();">Skip</a></label> 
 								
 								<div class="scoreContainer">
 									<div class="inputItem scoreItem" id="playerScoreCount">0</div>
@@ -145,11 +146,7 @@
 					<div id="consoleText"></div>
 				</div>
 			</div>
-			<div id="legend">
-				<label> Legend</label>
-				<span>B</span> :Not in number. <span>T</span>: In number, but wrong place. <span>F</span>: In number.
-			</div>
-
+		
 		</section>
 		<!--end game page-->
 	</div>

@@ -10,7 +10,8 @@
 
 /*global styles*/
 body {
-	background-color: paleturquoise;
+	
+	background-color:#778878;
 	font-size: 16px;
 	font-family: 'Orbitron', sans-serif;
 }
@@ -33,21 +34,32 @@ h4 {
 }
 
 .header {
-	background-color: #cd32c3;
-	text-align: center;
-	border-bottom: 40px solid #fff;
+	background-color: #041005;
+	text-align: right;
+	border-bottom: 4px solid #fff;
 	max-height: 160px;
-	box-shadow: 2px 2px 1px #cd32c3;
+	box-shadow: 2px 2px 1px #041005;
 }
 
 h1 {
 	font-weight: 900;
-	text-shadow: -0.2em 0.3em 0 rgba(0, 0, 0, 0.2);
-	font-size: 120px !important;
-	color: #fff;
-	font-family: 'Permanent Marker', cursive;
+    text-shadow: -0.2em 0.3em 0 rgb(0 0 0 / 20%);
+    font-size: 48px !important;
+    color: #32CD3C;
+    padding: 50px 49px 0px 0px;
+    font-family: 'VT323', monospace;
+	position: relative;
+	bottom:-10;
 
 }
+
+h1:after {
+	content: '_';
+	display: inline-block;
+	color: #32CD3C;
+	margin-left:-6px;
+  }
+
 
 /*console styles*/
 
@@ -87,7 +99,7 @@ h1 {
 }
 
 .victory {
-	color: #cd32c3 !important;
+	color: #041005 !important;
 }
 
 .results {
@@ -177,6 +189,7 @@ justify-content: center;
 display: inline;
 text-decoration:underline ;
 cursor:pointer;
+margin-left:3px;
 }
 
 #timerLabel {
@@ -186,7 +199,7 @@ cursor:pointer;
 
 #legend {
 	color: #fff;
-	background-color: #cd32c3;
+	background-color: #041005;
 	margin-top: 0px;
 	width: 90%;
 	letter-spacing: 3px;
@@ -201,7 +214,7 @@ cursor:pointer;
 	margin: 0px auto;
 	display: block;
 	letter-spacing: 2px;
-	background-color: #cd32c3;
+	background-color: #041005;
 	font-size: 12px;
 	font-weight: 300;
 }
@@ -239,7 +252,7 @@ cursor:pointer;
 	padding: 20px;
 	color: #ffffff;
 	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-	background-color: #cd32c3;
+	background-color: #041005;
 	color: #ffffff;
 	font-weight: 900;
 	font-family: 'Orbitron', sans-serif;
@@ -508,7 +521,7 @@ cursor:pointer;
 		color: #32CD3C;
 	}
 	100% {
-		color: #cd32c3;
+		color: #041005;
 	}
 }
 
@@ -596,6 +609,15 @@ cursor:pointer;
 	}
 }
 
+@keyframes ease-up-title {
+	0% {
+		bottom: -10px;
+	}
+	100% {
+		bottom: 38px;
+	}
+}
+
 @keyframes ease-out-right {
 	0% {
 		left: 0px;
@@ -630,6 +652,12 @@ cursor:pointer;
 	#consoleLabel {
 		display: none !important;
 	}
+
+	#resultsDisplay{
+		position:relative;
+		bottom:6px;
+	}
+	
 	.has-cursor {
 		height: 61%;
 		width: 9px;
@@ -711,8 +739,12 @@ cursor:pointer;
 	#highScoreCount:before {
 		content: "HI:";
 	}
-	.easeUpLegend {
-		animation: ease-up-mobile 3s linear;
-		animation-fill-mode: forwards;
-	}
+	
 }
+
+.easeUpTitle {
+	animation: ease-up-title .5s linear;
+	animation-fill-mode: forwards;
+	
+}
+

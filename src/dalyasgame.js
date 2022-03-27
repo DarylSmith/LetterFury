@@ -158,7 +158,7 @@ const $q = document.querySelector.bind(document);
 		$q("#consoleContainer").classList.add("easeInRight");
 		$q("#timerContainer").classList.add("easeInLeft");
 		$q("#inputContainer").classList.add("easeInLeft");
-		$q("#legend").classList.add("easeUpLegend");
+		$q("#title").classList.add("easeUpTitle");
 	},
 
 	//ends changing the page  to the game (removes animation classes when it completeds )
@@ -186,6 +186,7 @@ const $q = document.querySelector.bind(document);
 		$q("#consoleContainer").classList.remove("easeOutRight");
 		$q("#timerContainer").classList.remove("easeOutLeft");
 		$q("#inputContainer").classList.remove("easeOutLeft");
+		$q("#title").classList.remove("easeUpTitle");
 		$q("#gameSection").style.display = "none";
 		$q("#ruleSection").style.display = "block";
 		DalyasGame.ShowIntro();
@@ -287,8 +288,6 @@ const $q = document.querySelector.bind(document);
 		DalyasGame.NumberOfRounds+=DalyasGame.CurrentPointValue.PointsForCurrentWord;
 		}
 		
-
-		//reset game
 		DalyasGame.WriteToConsole( `Points for word set to  ${DalyasGame.CurrentPointValue.MaxPointsForWord}`);
 		DalyasGame.PointsForCurrentWord=DalyasGame.CurrentPointValue.MaxPointsForWord;
 		$q("#playerScoreCount").innerHTML=DalyasGame.NumberOfRounds.toString();
@@ -364,6 +363,10 @@ const $q = document.querySelector.bind(document);
 		
 		DalyasGame.CountdownNumber = 0;
 		$q("#gameText").setAttribute("disabled", true);
+
+		// reset game score if this is not the first game
+		DalyasGame.NumberOfRounds=0;
+		$q("#playerScoreCount").innerHTML=DalyasGame.NumberOfRounds.toString();
 		window.Countdown = setInterval(() => {
 
 
