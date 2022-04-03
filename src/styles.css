@@ -65,7 +65,7 @@ h1:after {
 
 #terminal,
 #inputContainer,
-#timerContainer,
+#letterContainer,
 #consoleContainer,
 #legend {
 	color: #32CD3C;
@@ -110,10 +110,7 @@ h1:after {
 	color: #ffffff !important;
 }
 
-#timer {
-	position: relative;
-	bottom: 20px;
-}
+
 
 #consoleContainer {
 	width: 45%;
@@ -126,7 +123,7 @@ h1:after {
 	bottom: 73px !important;
 }
 
-#timerContainer {
+#letterContainer, #usedLetterContainer{
 	width: 85%;
 	font-size: 90px;
 	height: 136px;
@@ -148,7 +145,13 @@ justify-content: center;
 
 }
 
+#inputDisplayContainer{
+	display: flex;
+    /* width: 100px; */
+    margin-left: 50px;
+    height: 20px;
 
+}
 .inputTextContainer {
 	
 	margin: 0px auto;
@@ -179,10 +182,13 @@ justify-content: center;
 	background-color: #000
 }
 
-#gamePlayLabel, #skipWordLink {
+#timer{
 	bottom: 60px;
 	text-align: left;
-	margin: 0px;
+	margin-right: 30px;
+	letter-spacing: 2px;
+    font-size: 25px;
+    font-weight: 300;
 }
 
 #skipWordLink {
@@ -190,9 +196,10 @@ display: inline;
 text-decoration:underline ;
 cursor:pointer;
 margin-left:3px;
+font-size: 25px;
 }
 
-#timerLabel {
+#letterLabel {
 	bottom: 10px;
 }
 
@@ -305,10 +312,11 @@ margin-left:3px;
 
 .scoreContainer {
 	float: right;
-	margin: 10px;
-	display: flex;
-	position: relative;
-	bottom: 30px;
+    margin: 10px;
+    display: flex;
+    position: relative;
+    bottom: 30px;
+    width: 100%;
 }
 
 #playerScoreCount,
@@ -657,7 +665,7 @@ margin-left:3px;
 		position:relative;
 		bottom:6px;
 	}
-	
+
 	.has-cursor {
 		height: 61%;
 		width: 9px;
@@ -678,17 +686,14 @@ margin-left:3px;
 		font-size: 50px;
 		letter-spacing: 10px;
 	}
-	#timerContainer {
+	#letterContainer {
 		font-size: 12px;
 		height: 10px;
 	}
 	#timerLabel {
 		display: none !important;
 	}
-	#timer {
-		letter-spacing: 3px;
-		bottom: 10px;
-	}
+	
 	#inputContainer {
 		bottom: 76px;
 	}

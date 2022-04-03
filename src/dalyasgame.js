@@ -7,6 +7,8 @@ const $q = document.querySelector.bind(document);
 	//
 	ListOfWords : DalyasGameWordList(),
 
+	//this is a list of discarded letters for a round
+	DiscardedLetters:[],
 
 	// holds high scores retrived from endoint
 	HighScores: [],
@@ -30,7 +32,8 @@ const $q = document.querySelector.bind(document);
 	IntroIndex: 1,
 
 	// number of times a word can be skipped
-	NumberOfSkips:3,
+	SkipsAllowed:3,
+	NumberOfSkips:0,
 
 	// Words always start at  MaxPointsForWord and decrease by SecondsForPointChange
 	CurrentPointValue:{
@@ -156,7 +159,7 @@ const $q = document.querySelector.bind(document);
 		$q("#gameSection").style.display = "block";
 		$q("#ruleSection").style.display = "none";
 		$q("#consoleContainer").classList.add("easeInRight");
-		$q("#timerContainer").classList.add("easeInLeft");
+		$q("#letterContainer").classList.add("easeInLeft");
 		$q("#inputContainer").classList.add("easeInLeft");
 		$q("#title").classList.add("easeUpTitle");
 	},
@@ -165,7 +168,7 @@ const $q = document.querySelector.bind(document);
 	NavigateToGamePageEnd: function () {
 
 		$q("#consoleContainer").classList.remove("easeInRight");
-		$q("#timerContainer").classList.remove("easeInLeft");
+		$q("#letterContainer").classList.remove("easeInLeft");
 		$q("#inputContainer").classList.remove("easeInLeft");
 
 	},
@@ -174,7 +177,7 @@ const $q = document.querySelector.bind(document);
 	NavigateToHomePageStart: function () {
 
 		$q("#consoleContainer").classList.add("easeOutRight");
-		$q("#timerContainer").classList.add("easeOutLeft");
+		$q("#letterContainer").classList.add("easeOutLeft");
 		$q("#inputContainer").classList.add("easeOutLeft");
 
 	},
@@ -184,7 +187,7 @@ const $q = document.querySelector.bind(document);
 
 		$q("#terminal").classList.remove("extendConsole");
 		$q("#consoleContainer").classList.remove("easeOutRight");
-		$q("#timerContainer").classList.remove("easeOutLeft");
+		$q("#letterContainer").classList.remove("easeOutLeft");
 		$q("#inputContainer").classList.remove("easeOutLeft");
 		$q("#title").classList.remove("easeUpTitle");
 		$q("#gameSection").style.display = "none";
@@ -366,6 +369,7 @@ const $q = document.querySelector.bind(document);
 
 		// reset game score if this is not the first game
 		DalyasGame.NumberOfRounds=0;
+		DalyasGame.NumberOfSkips = DalyasGame.SkipsAllowed;
 		$q("#playerScoreCount").innerHTML=DalyasGame.NumberOfRounds.toString();
 		window.Countdown = setInterval(() => {
 
