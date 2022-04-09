@@ -2,6 +2,13 @@
 
 <head>
 	<title>Letter Fury</title>
+	<link rel="apple-touch-icon" sizes="152x152" href="img/favicon/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="img/favicon//favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="img/favicon//favicon-16x16.png">
+	<link rel="manifest" href="img/favicon//site.webmanifest">
+	<link rel="mask-icon" href="img/favicon//safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="theme-color" content="#ffffff">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -112,12 +119,16 @@
 
 							<div id="resultsDisplay">
 
-							  <img id="resultImg-0" src="img/happy.svg"  height="87"
+							 <!-- <img id="resultImg-0" src="img/happy.svg"  height="87"
 							  width="100" alt="correct right place"/>
   							  <img  id="resultImg-1"  src="img/close.svg"  height="87"
 								width="100"  alt="correct wrong place"/>
   							  <img  id="resultImg-2"  src="img/angry.svg"  height="87"
-								width="100" alt="correct wrong place"/>
+								width="100" alt="correct wrong place"/>-->
+
+								<div id="resultImg-0" class="result-images"></div>
+								<div id="resultImg-1" class="result-images"></div>
+								<div id="resultImg-2" class="result-images"></div>
 	  
 
 							</div>	
@@ -132,6 +143,7 @@
 
 					<div id="letterContainer">
 						<label id="letterLabel"> Used Letters </label>
+						<div id="letterText"></div>
 						
 					</div>
 
@@ -150,6 +162,40 @@
 		</section>
 		<!--end game page-->
 	</div>
+
+	<!--svgs-->
+	<div class="svg-container" id="happysvg">
+		<svg id="happyemoji"  class="game-emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" height="70">
+			<g id="line">
+			  <circle cx="36" cy="36" r="23" fill="none" stroke="#32CD3C" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+			  <path fill="none" stroke="##32CD3C" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M50.595,41.64a11.5554,11.5554,0,0,1-.87,4.49c-12.49,3.03-25.43.34-27.49-.13a11.4347,11.4347,0,0,1-.83-4.36h.11s14.8,3.59,28.89.07Z"/>
+			  <path fill="none" stroke="#32CD3C" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M49.7251,46.13c-1.79,4.27-6.35,7.23-13.69,7.23-7.41,0-12.03-3.03-13.8-7.36C24.2951,46.47,37.235,49.16,49.7251,46.13Z"/>
+			  <path fill="none" stroke="#32CD3C" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M31.6941,32.4036a4.7262,4.7262,0,0,0-8.6382,0"/>
+			  <path fill="none" stroke="#32CD3C" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M48.9441,32.4036a4.7262,4.7262,0,0,0-8.6382,0"/>
+			</g>
+		  </svg>
+	</div>
+	<div class="svg-container" id="closesvg">
+		<svg id="closeemoji"  class="game-emoji "  viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg"  height="70">
+			<g id="line">
+			  <circle cx="36" cy="36" r="23" fill="none" stroke="#f26522" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+			  <path fill="none" stroke="#f26522" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M26.1851,27.0707 c2.8995-1.6362,6.2482-2.5699,9.8149-2.5699s6.9153,0.9336,9.8149,2.5699"/>
+			  <path  fill="#f26522" stroke="#f26522" d="M42,41c0-1.6568,1.3448-3,3-3c1.6553,0,3,1.3433,3,3c0,1.6552-1.3447,3-3,3C43.3448,44,42,42.6552,42,41"/>
+			  <path fill="#f26522" stroke="#f26522"  d="M24,41c0-1.6568,1.3447-3,3-3s3,1.3433,3,3c0,1.6552-1.3447,3-3,3S24,42.6552,24,41"/>
+			</g>
+		  </svg>		  
+	</div>
+	<div class="svg-container" id="angrysvg">
+		<svg id="angryemoji" class="game-emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" height="70">
+			<g id="line">
+			  <circle cx="36" cy="36" r="23" fill="none" stroke="#bcbec0" stroke-miterlimit="10" stroke-width="2"/>
+			  <path fill="none" stroke="#bcbec0" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" d="M26.5,48c1.8768-3.8326,5.8239-6.1965,10-6c3.8343,0.1804,7.2926,2.4926,9,6"/>
+			  <path fill="#bcbec0" stroke="#bcbec0"  d="M30,31c0,1.6568-1.3448,3-3,3c-1.6553,0-3-1.3433-3-3c0-1.6552,1.3447-3,3-3C28.6552,28,30,29.3448,30,31"/>
+			  <path fill="#bcbec0" stroke="#bcbec0"  d="M48,31c0,1.6568-1.3447,3-3,3s-3-1.3433-3-3c0-1.6552,1.3447-3,3-3S48,29.3448,48,31"/>
+			</g>
+		  </svg>		  
+		</div>
+
 </body>
 
 

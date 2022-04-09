@@ -7,8 +7,7 @@ const $q = document.querySelector.bind(document);
 	//
 	ListOfWords : DalyasGameWordList(),
 
-	//this is a list of discarded letters for a round
-	DiscardedLetters:[],
+	
 
 	// holds high scores retrived from endoint
 	HighScores: [],
@@ -56,9 +55,16 @@ const $q = document.querySelector.bind(document);
 	CountdownNumber: 0,
 	LengthOfGameInMinutes: 3,
 
+	//these variables contain the emoji svg
+	$happySvg:'',
+	$closeSvg:'',
+	$angrySvg:'',
+
 	//object to store end of game datetime
 	EndOfGame: {},
 
+	//this is a list of discarded letters for a round
+	DiscardedLetters:[],
 	
 	//these are the different steps for the rules, and run in a loop
  	IntroJson :{
@@ -127,6 +133,12 @@ const $q = document.querySelector.bind(document);
 			DalyasGame.NavigateToGamePageStart();
 		}
 
+		//load all the svg data into variables
+		$happySvg = $q("#happysvg").innerHTML;
+		$angrySvg = $q("#angrysvg").innerHTML;
+		$closeSvg = $q("#closesvg").innerHTML;
+
+
 
 
 		DalyasGame.WriteToConsole("Resetting Game...","info");
@@ -135,7 +147,6 @@ const $q = document.querySelector.bind(document);
 		DalyasGame.NumberOfRounds = 0;
 		DalyasGame.GetTopScore();
 		DalyasGame.BeginAdvancedRound();
-		$q("#inputAction").innerHTML = "guess";
 		DalyasGame.FocusInputElement(true);
 
 	},
@@ -283,7 +294,8 @@ const $q = document.querySelector.bind(document);
 
 	//runs after the a player has guessed the correct #, and lets them choose another
 	StartNextRound: function (isSkip) {
-
+		DalyasGame.DiscardedLetters=[];
+		
 		DalyasGame.SetRandomWord();
 		DalyasGame.ListOfChances = [];
 		if(!isSkip){
@@ -294,6 +306,7 @@ const $q = document.querySelector.bind(document);
 		DalyasGame.WriteToConsole( `Points for word set to  ${DalyasGame.CurrentPointValue.MaxPointsForWord}`);
 		DalyasGame.PointsForCurrentWord=DalyasGame.CurrentPointValue.MaxPointsForWord;
 		$q("#playerScoreCount").innerHTML=DalyasGame.NumberOfRounds.toString();
+		$q("#letterText").innerHTML='';
 
 	},
 
@@ -361,9 +374,7 @@ const $q = document.querySelector.bind(document);
 	},
 
 	// counts down to the beginning of the game
-	BeginAdvancedRound: function () {
-
-		
+	BeginAdvancedRound: function () {		
 		DalyasGame.CountdownNumber = 0;
 		$q("#gameText").setAttribute("disabled", true);
 
@@ -537,7 +548,7 @@ const $q = document.querySelector.bind(document);
 					DalyasGame.GameState = 'high_score';
 					document.querySelector("#inputInner").classList.add("has-cursor");
 					DalyasGame.FocusInputElement(false);
-					$q("#inputAction").innerHTML = "initials";
+					//$q("#inputAction").innerHTML = "initials";
 					DalyasGame.WriteToConsole(`Congratulations! you are ranked number ${DalyasGame.CurrentRank} on our list of all time champs!
 													Please enter your initials`, "bonus");
 				}			
@@ -587,9 +598,14 @@ const $q = document.querySelector.bind(document);
 
 	DisplayInputResults: function ($gameTextElem, text, className) {
 
+		const emojis = document.querySelectorAll(".game-emoji");
+		
+		for(const emoji of emojis){
+			emoji.classList.add("flatten-emoji");
+		}		
 		window.setTimeout(e => {
 			$gameTextElem.value = "";
-			$q("#resultsDisplay").style.display="none";
+	
 			$q("#gameText").style.visibility="visible";
 			//$q("#mainBody label").style.display="block";
 			$q("#inputInner").className = "has-cursor";
@@ -714,12 +730,7 @@ const $q = document.querySelector.bind(document);
 		const regex = /^[a-zA-Z]{3}$/;
 		let gameText = $gameTextElem.value;
 		if (!regex.test(gameText)) {
-			DalyasGame.WriteToConsole("Invalid entry - 5 second penalty!", "error");
-			DalyasGame.AddSecondsToTime(-5);
-			$gameTextElem.value = "";
-			$q("#inputInner").className = "has-cursor";
-			DalyasGame.FocusInputElement(false);
-
+			DalyasGame.WriteToConsole("Invalid entry", "error");
 		}
 		else {
 
@@ -754,6 +765,7 @@ const $q = document.querySelector.bind(document);
 					DalyasGame.AddSecondsToTime(15);
 
 				}
+				DalyasGame.ClearSvgValues();
 				DalyasGame.StartNextRound();
 				return;
 
@@ -764,18 +776,23 @@ const $q = document.querySelector.bind(document);
 				if (ourGameText[i].toLowerCase() === computerGameText[i].toLowerCase() ) {
 					whatIsHappening += `<br/>Number ${i + 1} was right!.  The computer chose ${computerGameText[i]} and you chose ${ourGameText[i]}<br/>`;
 					resultsCode += '&#128522;';
-					$q("#resultImg-"+i).src="/img/happy.svg";
+					DalyasGame.PushToDiscardedLetterArray(ourGameText[i].toLowerCase(),'right');
+
+					$q("#resultImg-"+i).innerHTML=$happySvg;
 
 				}
 				else if ((ourGameText[i].toLowerCase() !== computerGameText[i].toLowerCase()) && DalyasGame.OurRandomWord.toLowerCase().indexOf(ourGameText[i].toLowerCase()) !== -1) {
 					whatIsHappening += `<br/>Number ${i + 1} not totally right - it is there, but not in the same place!.  The computer chose ${computerGameText[i]} and you chose ${ourGameText[i]}<br/>`;
 					resultsCode += '&#128579;';
-					$q("#resultImg-"+i).src="/img/close.svg";
+					DalyasGame.PushToDiscardedLetterArray(ourGameText[i].toLowerCase(),'almost');
+					$q("#resultImg-"+i).innerHTML=$closeSvg;
+
 				}
 				else {
 					whatIsHappening += `<br/>Number ${i + 1} was wrong!.  The computer chose ${computerGameText[i]} and you chose ${ourGameText[i]}<br/>`;
 					resultsCode += '&#128577;';
-					$q("#resultImg-"+i).src="/img/angry.svg";
+					DalyasGame.PushToDiscardedLetterArray(ourGameText[i].toLowerCase(),'wrong');
+					$q("#resultImg-"+i).innerHTML=$angrySvg;
 
 				}
 
@@ -784,6 +801,8 @@ const $q = document.querySelector.bind(document);
 			resultsCode = `${resultsCode} (${gameText})`;
 
 			DalyasGame.ListOfChances.push(resultsCode);
+
+			DalyasGame.WriteDiscardedLettersToScreen();
 
 
 			//$gameTextElem.value = resultsCode.split(' ')[0];
@@ -812,6 +831,15 @@ const $q = document.querySelector.bind(document);
 		}
 
 	},
+
+	WriteDiscardedLettersToScreen(){
+
+		const spanOpen = (exp)=>`<span class="${exp} discarded-letter">`;
+		const spanClose="</span>"
+		const joinVal = DalyasGame.DiscardedLetters.reduce((t,c)=>  t + `${spanOpen(c.val)}${c.letter}${spanClose}` ,'');
+		$q("#letterText").innerHTML=joinVal;
+	},
+
 
 	//the hs buttom alternatives between rules and high scores, change back and forth between keypress
 	ToggleHighScoreButton:function(){
@@ -870,6 +898,13 @@ const $q = document.querySelector.bind(document);
 			case 'ease-up':
 				$q("#legend").classList.remove("easeUpLegend");
 				break;
+			case 'flatten-emoji':
+				const emojis = document.querySelectorAll(".game-emoji");
+				for(const emoji of emojis){
+					emoji.classList.add("flatten-emoji");
+				}	
+				$q("#resultsDisplay").style.height="10px";
+				break;
 		}
 	},
 
@@ -896,6 +931,18 @@ const $q = document.querySelector.bind(document);
 			$innerElem.innerHTML ="GAME OVER";
 		}
 		return $elem;
+	},
+
+	PushToDiscardedLetterArray(letter, val){
+		 DalyasGame.DiscardedLetters= DalyasGame.DiscardedLetters.filter(e=>e.letter!==letter);
+		 DalyasGame.DiscardedLetters.push({letter,val});
+
+	},
+	ClearSvgValues(){
+
+		for(i=0;i<3;i ++){
+		$q("#resultImg-"+i).innerHTML='';
+		}
 	},
 
 	IsDesktop:function(){

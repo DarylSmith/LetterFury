@@ -6,6 +6,7 @@
 5.animation styles
 6.keyframes
 7.responsive styles
+8.svg styles
 */
 
 /*global styles*/
@@ -14,6 +15,8 @@ body {
 	background-color:#778878;
 	font-size: 16px;
 	font-family: 'Orbitron', sans-serif;
+
+
 }
 
 h4 {
@@ -109,8 +112,23 @@ h1:after {
 .bonus {
 	color: #ffffff !important;
 }
+.wrong{
+	color:#bcbec0 !important;
+}
+.almost{
+	color:#f26522 !important;
+}
+.right {
+	color:#32CD3C !important;
+}
 
+.discarded-letter{font-size:25px;}
 
+#letterText{
+	width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
 
 #consoleContainer {
 	width: 45%;
@@ -140,8 +158,8 @@ h1:after {
 }
 
 #resultsDisplay{
-display:none;
 justify-content: center;
+position:relative;
 
 }
 
@@ -189,6 +207,7 @@ justify-content: center;
 	letter-spacing: 2px;
     font-size: 25px;
     font-weight: 300;
+	width:66px;
 }
 
 #skipWordLink {
@@ -626,6 +645,37 @@ font-size: 25px;
 	}
 }
 
+@keyframes flatten-emoji {
+	0% {
+		top: 0px;
+		transform: scaley(1);
+	}
+
+	50% {
+		top: 0px;
+		transform: scaley(1);
+	}
+	75% {
+		
+		transform: scalex(1);
+	}
+	100% {
+		top: -40px;
+		transform: scale(.2);
+
+	}
+}
+
+@keyframes drop-emoji {
+	0% {
+		top: 0px;
+	
+	}
+	100% {
+		top: 40px;
+	}
+}
+
 @keyframes ease-out-right {
 	0% {
 		left: 0px;
@@ -664,6 +714,7 @@ font-size: 25px;
 	#resultsDisplay{
 		position:relative;
 		bottom:6px;
+		height:10px  !important;
 	}
 
 	.has-cursor {
@@ -688,7 +739,7 @@ font-size: 25px;
 	}
 	#letterContainer {
 		font-size: 12px;
-		height: 10px;
+		height: 100px;
 	}
 	#timerLabel {
 		display: none !important;
@@ -752,4 +803,18 @@ font-size: 25px;
 	animation-fill-mode: forwards;
 	
 }
+
+/*svg styles*/
+.game-emoji{
+	height:100px;
+	position:relative;
+}
+
+.flatten-emoji {
+	animation:  flatten-emoji 1s linear;
+	animation-fill-mode: forwards;	
+}
+
+
+
 
