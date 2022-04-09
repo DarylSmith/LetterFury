@@ -468,6 +468,9 @@ const $q = document.querySelector.bind(document);
 		$q("#inputInner").classList.add("has-cursor");
 		DalyasGame.FocusInputElement(false);
 		DalyasGame.ClearGameText()
+		DalyasGame.ClearSvgValues();
+		$q("#letterText").innerHTML='';
+		DalyasGame.WriteToConsole(`The final word was ${DalyasGame.OurRandomWord}`);
 		DalyasGame.WriteToConsole(`If you would like to play again, type YES into the input box.
 								 To go back to the homepage and high, scores, type NO `, "info");
 		DalyasGame.ClearGameText();
