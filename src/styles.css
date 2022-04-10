@@ -704,9 +704,13 @@ font-size: 25px;
 /*responsive classes */
 
 @media (max-width:961px) {
-	.header h1 {
-		font-size: 30px;
+	
+
+	.header h1.easeUpTitle{
+		font-size: 19px !important;
+   		 min-height: 47px;
 	}
+	
 	#consoleLabel {
 		display: none !important;
 	}
@@ -778,6 +782,10 @@ font-size: 25px;
 	.scoreContainer {
 		bottom: 32px;
 	}
+	#skipWordLink,#timer{
+		font-size:15px;
+	}
+	
 	.buttonContainer button {
 		font-size: 22px;
 		height: 78px;
@@ -794,6 +802,10 @@ font-size: 25px;
 	}
 	#highScoreCount:before {
 		content: "HI:";
+	}
+
+	.game-emoji{
+		height:50px;
 	}
 	
 }
@@ -815,6 +827,8 @@ font-size: 25px;
 	animation-fill-mode: forwards;	
 }
 
-
+.svg-container{
+	display:none;
+}
 
 
