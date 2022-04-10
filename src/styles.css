@@ -804,6 +804,10 @@ font-size: 25px;
 		content: "HI:";
 	}
 
+	#inputContainer{
+	padding-bottom: 33px;
+	}
+
 	.game-emoji{
 		height:50px;
 	}
