@@ -36,6 +36,10 @@ h4 {
 	display: none;
 }
 
+#groupGameSection{
+	display:none;
+}
+
 .header {
 	background-color: #041005;
 	text-align: right;
@@ -69,6 +73,8 @@ h1:after {
 #terminal,
 #inputContainer,
 #letterContainer,
+#groupGameContainer,
+#groupUserContainer,
 #consoleContainer,
 #legend {
 	color: #32CD3C;
@@ -89,6 +95,21 @@ h1:after {
 	-webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 	-moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+#groupGameContainer,
+#groupUserContainer{
+    font-size: 34px !important;
+    width: 50% !important;
+    height: 50px;
+    min-height: 0px !important;
+	bottom: 0px !important;
+}
+.groupGameLabel{
+margin: 20px auto;
+width: 50%;
+font-weight: 900;
+line-height: 1.8;
 }
 
 #consoleText {
@@ -274,7 +295,7 @@ font-size: 25px;
 	border-radius: 37px;
 	height: 101px;
 	/* width: 262px; */
-	font-size: 38px;
+	font-size: 22px;
 	padding: 20px;
 	color: #ffffff;
 	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);

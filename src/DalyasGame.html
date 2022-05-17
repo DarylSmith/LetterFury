@@ -25,9 +25,13 @@
 
 			DalyasGame.ShowIntro();
 
-			document.querySelector(".start-game").addEventListener('click', (event) => {
+			document.querySelector(".start-game-single").addEventListener('click', (event) => {
 
 				DalyasGame.Init();
+			});
+			document.querySelector(".start-game-multi").addEventListener('click', (event) => {
+
+				DalyasGame.InitGroupGame();
 			});
 
 			window.onanimationend = (e) => {
@@ -78,12 +82,35 @@
 				Loading...
 			</div>
 			<div class="buttonContainer">
-				<button class="start-game" id="startGameButton">I'm ready!</button>
+				<button class="start-game-single" id="startGameButton">Single-player</button>
+				<button class="start-game-multi" id="startGameButton">Multi-player</button>
 				<button id="highScoreButton">High Scores</button>
 			</div>
 
 		</section>
 		<!--end rules/highscore page-->
+		<!--begin group game page-->
+		<section id="groupGameSection">
+
+		<div class="groupGameLabel" id="groupGameInstructions">
+			This is your Letter Fury game id <br/> 
+			You can let anyone else play by giving them this code,
+			and asking them to enter it at letterfury.com/code
+		</div>
+		<div id="groupGameContainer"></div> 
+
+		
+		<div class="groupGameLabel" id="groupUserInstructions">
+			Your Letter Fury Name is:
+		</div>
+		<div id="groupUserContainer"></div> 
+		<div class="buttonContainer">
+			<button id="startGroupGame">Start</button>
+		</div>
+
+
+		</section>
+		<!--end group game page-->
 		<!--begin game page-->
 		<section id="gameSection">
 

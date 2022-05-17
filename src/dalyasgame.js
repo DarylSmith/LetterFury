@@ -1,8 +1,11 @@
 //abbreviates the native DOM selector for easier use
 const $q = document.querySelector.bind(document);
 
+window.NameUI=[];
 
  DalyasGame = {
+
+	
 
 	//
 	ListOfWords : DalyasGameWordList(),
@@ -42,6 +45,15 @@ const $q = document.querySelector.bind(document);
 		SecondIndex:0
 
 	},
+
+	// this object contains data for group games
+	GroupGame:{
+
+		IsGroupGame:false,
+		GroupGameName:'',
+		GroupUserName:''
+	},
+
 	// number of high scores to be diplayed on list
 	NumberOfHighScores: 10,
 	
@@ -151,7 +163,18 @@ const $q = document.querySelector.bind(document);
 
 	},
 
-	
+	InitGroupGame:function(){
+
+		DalyasGame.GroupGame.GroupGameName=DalyasGame.CreateRandomNames().toLowerCase();
+		DalyasGame.GroupGame.GroupUserName=DalyasGame.CreateRandomNames().toLowerCase();
+		DalyasGame.NavigateToGroupGamePage();
+		setTimeout(function(){
+		DalyasGame.BuildRandomNameUI("groupGameContainer",DalyasGame.GroupGame.GroupGameName);
+		//DalyasGame.WriteToConsole(DalyasGame.GroupGame.GroupGameName,"group-code-item", "#groupGameContainer",100);
+		//DalyasGame.WriteToConsole(DalyasGame.GroupGame.GroupUserName,"group-code-item", "#groupUserContainer",110);
+		},500);
+
+	},
 
 	GetTopScore:function(){
 
@@ -193,6 +216,14 @@ const $q = document.querySelector.bind(document);
 
 	},
 
+	NavigateToGroupGamePage: function(){
+		$q("#gameSection").style.display="none";
+		$q("#ruleSection").style.display="none";
+		$q("#groupGameSection").style.display="block";
+		$q("#groupGameContainer").classList.add("easeInRight");
+		$q("#groupUserContainer").classList.add("easeInLeft");
+
+	},
 	//removes animation classes from home navigation after completion
 	NavigateToHomePageEnd: function () {
 
@@ -339,9 +370,12 @@ const $q = document.querySelector.bind(document);
 
 	// this writes to the main console, and high score console. it takes the text, writes char by char, and applies 
 	//the class passed in (elemClass) to apply the correct colour
-	WriteToConsole: function (text, elemClass, target) {
+	WriteToConsole: function (text, elemClass, target, timeoutTime, staggerLetters) {
 		if (target === undefined) {
 			target = "#consoleText";
+		}
+		if (timeoutTime === undefined) {
+			imeoutTime=10;
 		}
 
 		let id = `comment--${Math.floor(Math.random() * 10000000)}`;
@@ -365,7 +399,7 @@ const $q = document.querySelector.bind(document);
 					$currentElem.innerHTML = currentText;
 
 
-				}, 10 * index);
+				}, timeoutTime * index);
 			})(index);
 
 		});
@@ -834,6 +868,7 @@ const $q = document.querySelector.bind(document);
 		}
 
 	},
+	
 
 	WriteDiscardedLettersToScreen(){
 
@@ -941,6 +976,66 @@ const $q = document.querySelector.bind(document);
 		 DalyasGame.DiscardedLetters.push({letter,val});
 
 	},
+	
+	CreateRandomNames:function(){
+		const wordCount = DalyasGame.ListOfWords.length-1;
+		const wordArr=[];
+		for(i=0;i<3;i++){
+			const rand = Math.floor(Math.random() * wordCount);
+			wordArr.push(DalyasGame.ListOfWords[rand]);
+		}
+		return wordArr.join('');
+	},
+
+	BuildRandomNameUI(id,val){
+
+		let alphabet='abcdefghijklmnopqrstuvwxyz'.split('');
+		let valArr = val.split('');
+		let itemFound=[];
+		for(i=0;i<valArr.length;i++){
+			itemFound.push('');
+		}
+		let counter=0;
+
+		window.NameUI[val]=setInterval(function(counter) {
+			return function() {
+				
+				if(counter === alphabet.length){
+					console.log('Stopping Array')
+					window.clearInterval(window.NameUI[val]);
+				}
+
+				const currentLetter = alphabet[counter];
+				console.log('Current Letter is '+ currentLetter );
+				const currentWordArr=[];
+
+				for (i=0;i<valArr.length;i++){
+					if(itemFound[i]!==''){
+						currentWordArr.push(itemFound[i]);
+					}
+					else{
+						currentWordArr.push(currentLetter)
+						if(currentLetter ===valArr[i]){
+
+							itemFound[i]=currentLetter;
+						}
+
+					}
+					
+				}
+
+				const currentWord = currentWordArr.join('');
+
+				console.log('Current Word is '+ currentWord );
+				const $currentElem = $q("#" + id);
+				$currentElem.innerHTML = currentWord;
+				
+				++counter;
+			};
+		}(0), 100);
+
+	},
+
 	ClearSvgValues(){
 
 		for(i=0;i<3;i ++){
