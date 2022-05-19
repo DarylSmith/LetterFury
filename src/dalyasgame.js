@@ -169,9 +169,8 @@ window.NameUI=[];
 		DalyasGame.GroupGame.GroupUserName=DalyasGame.CreateRandomNames().toLowerCase();
 		DalyasGame.NavigateToGroupGamePage();
 		setTimeout(function(){
-		DalyasGame.BuildRandomNameUI("groupGameContainer",DalyasGame.GroupGame.GroupGameName);
-		//DalyasGame.WriteToConsole(DalyasGame.GroupGame.GroupGameName,"group-code-item", "#groupGameContainer",100);
-		//DalyasGame.WriteToConsole(DalyasGame.GroupGame.GroupUserName,"group-code-item", "#groupUserContainer",110);
+		DalyasGame.BuildRandomNameUI("groupGameVal",DalyasGame.GroupGame.GroupGameName);
+		DalyasGame.BuildRandomNameUI("groupUserVal",DalyasGame.GroupGame.GroupUserName);
 		},500);
 
 	},
@@ -221,7 +220,6 @@ window.NameUI=[];
 		$q("#ruleSection").style.display="none";
 		$q("#groupGameSection").style.display="block";
 		$q("#groupGameContainer").classList.add("easeInRight");
-		$q("#groupUserContainer").classList.add("easeInLeft");
 
 	},
 	//removes animation classes from home navigation after completion
@@ -1032,7 +1030,7 @@ window.NameUI=[];
 				
 				++counter;
 			};
-		}(0), 100);
+		}(0), 50);
 
 	},
 

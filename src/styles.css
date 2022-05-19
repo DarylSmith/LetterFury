@@ -97,13 +97,16 @@ h1:after {
 	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
-#groupGameContainer,
-#groupUserContainer{
-    font-size: 34px !important;
-    width: 50% !important;
-    height: 50px;
-    min-height: 0px !important;
-	bottom: 0px !important;
+#groupGameSection #groupGameContainer
+{
+    font-size: 34px;
+    width: 50%;
+    height: 200px;
+    min-height: 0px ;
+	bottom: 0px;
+	font-size: 16px;
+    letter-spacing: 4;
+    text-align: left;
 }
 .groupGameLabel{
 margin: 20px auto;
@@ -347,6 +350,11 @@ font-size: 25px;
 
 .high-score-item {
 	font-size: 15px;
+	letter-spacing: 5px;
+}
+
+.group-code-item {
+	font-size: 35px;
 	letter-spacing: 5px;
 }
 
@@ -730,6 +738,20 @@ font-size: 25px;
 	.header h1.easeUpTitle{
 		font-size: 19px !important;
    		 min-height: 47px;
+	}
+
+	.groupGameLabel{
+		width:80%;
+		font-size: 12px;
+	}
+
+	#groupGameContainer {
+		font-size: 14px !important;
+		width: 80% !important;
+		height: 70px;
+		min-height: 0px !important;
+		bottom: 0px !important;
+		letter-spacing: 14px;
 	}
 	
 	#consoleLabel {
