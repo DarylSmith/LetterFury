@@ -1,0 +1,6 @@
+{
+  "name": "LetterFury",
+  "dependencies": {
+    "typescript": "^4.6.4"
+  }
+}
