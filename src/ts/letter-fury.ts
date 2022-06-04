@@ -1,3 +1,6 @@
+import { IntroJson } from './classes/IntroJsonItem.js';
+import {WordsEn} from './classes/words-en.js'
+import { GroupGame } from './interfaces/group-game.js';
 
 export class LetterFury{
 
@@ -7,7 +10,7 @@ export class LetterFury{
 	// holds high scores retrived from endoint
 	public HighScores:any[]= [];
 
-    public ListOfWords:string[]=[];
+    public ListOfWords:string[]=WordsEn();
 	
 	// endoint for  retrieving high scores. TODO add to config file
 	public HighScoresEndpoint:string = 'https://6dmnrf7ylc.execute-api.us-east-1.amazonaws.com/default';
@@ -30,6 +33,8 @@ export class LetterFury{
 	
     public NumberOfSkips:number = 0;
 
+    public wordIntervalArr:any={};
+
     
 	// if set to true, outputs comments about game logic to console
 	private _testMode:boolean =false;
@@ -42,7 +47,7 @@ export class LetterFury{
     }
 
     // this object contains data for group games
-	public GroupGame:any={
+	public GroupGame:GroupGame={
 
 		IsGroupGame:false,
 		GroupGameName:'',
@@ -72,7 +77,7 @@ export class LetterFury{
 	//this is a list of discarded letters for a round
 	public DiscardedLetters:any[]=[];
 
-    public IntroJson:any={
+    public IntroJson:IntroJson={
         Items:  this.GetIntroJsonItems(
             ()=>{
                 this.ResetRandomNumber(60,40,()=>{this.$q("#terminal")!.innerHTML = !this.ElementIsHidden(this.$q("#rules"))? this.OurRandomWord:'';});
@@ -1007,12 +1012,12 @@ export class LetterFury{
 		}
 		let counter=0;
 
-		(window as any).NameUI[val]=setInterval(function(counter) {
+		that.wordIntervalArr[val]=setInterval(function(counter) {
 			return ()=> {
 				
 				if(counter === alphabet.length){
 				
-					(window as any).clearInterval((window as any).NameUI[val]);
+					clearInterval(that.wordIntervalArr[val]);
 				}
 
 				const currentLetter = alphabet[counter];

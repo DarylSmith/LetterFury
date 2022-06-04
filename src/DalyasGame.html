@@ -17,32 +17,34 @@
 	<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="styles.css" />
 	<script  src="words.js"></script>
-	<script  src="dalyasgame.js"></script>
+	<script type="module">
+	
 
-	<script>
+		import {LetterFury} from './js/letter-fury.js';
 
+		 const letterFury = new LetterFury();
 		document.addEventListener("DOMContentLoaded", () => {
 
-			DalyasGame.ShowIntro();
+			letterFury.ShowIntro();
 
 			document.querySelector(".start-game-single").addEventListener('click', (event) => {
 
-				DalyasGame.Init();
+				letterFury.Init();
 			});
 			document.querySelector(".start-game-multi").addEventListener('click', (event) => {
 
-				DalyasGame.InitGroupGame();
+				letterFury.InitGroupGame();
 			});
 
 			window.onanimationend = (e) => {
 
-				DalyasGame.HandleAnimationEnding(e);
+				letterFury.HandleAnimationEnding(e);
 	
 			}
 
 			document.querySelector("#highScoreButton").addEventListener('click', (event) => {
 
-				DalyasGame.ToggleHighScoreButton();
+				letterFury.ToggleHighScoreButton();
 
 			});
 
@@ -53,7 +55,7 @@
 
 			document.querySelector("#gameText").addEventListener('keyup', (event) => {
 
-				DalyasGame.HandleKeyPressEvent(event);
+				letterFury.HandleKeyPressEvent(event);
 
 			});
 		});
@@ -122,7 +124,7 @@
 							<div id="inputDisplayContainer">
 							
 								<div class="scoreContainer">
-									<a id="skipWordLink" href="javascript:DalyasGame.SkipWord();">Skip</a></label> 
+									<a id="skipWordLink" href="javascript:letterFury.SkipWord();">Skip</a></label> 
 								<div id="timer">
 								</div>
 									<div class="inputItem scoreItem" id="playerScoreCount">0</div>

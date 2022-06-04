@@ -1,13 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LetterFury = void 0;
-class LetterFury {
+import { WordsEn } from './classes/words-en.js';
+export class LetterFury {
     constructor() {
         //abbreviates the native DOM selector for easier use
         this.$q = document.querySelector.bind(document);
         // holds high scores retrived from endoint
         this.HighScores = [];
-        this.ListOfWords = [];
+        this.ListOfWords = WordsEn();
         // endoint for  retrieving high scores. TODO add to config file
         this.HighScoresEndpoint = 'https://6dmnrf7ylc.execute-api.us-east-1.amazonaws.com/default';
         //Random Word generated for game
@@ -21,6 +19,7 @@ class LetterFury {
         // number of times a word can be skipped
         this.SkipsAllowed = 3;
         this.NumberOfSkips = 0;
+        this.wordIntervalArr = {};
         // if set to true, outputs comments about game logic to console
         this._testMode = false;
         this.CurrentPointValue = {
@@ -727,10 +726,10 @@ class LetterFury {
             itemFound.push('');
         }
         let counter = 0;
-        window.NameUI[val] = setInterval(function (counter) {
+        that.wordIntervalArr[val] = setInterval(function (counter) {
             return () => {
                 if (counter === alphabet.length) {
-                    window.clearInterval(window.NameUI[val]);
+                    clearInterval(that.wordIntervalArr[val]);
                 }
                 const currentLetter = alphabet[counter];
                 console.log('Current Letter is ' + currentLetter);
@@ -770,4 +769,3 @@ class LetterFury {
         return true;
     }
 }
-exports.LetterFury = LetterFury;

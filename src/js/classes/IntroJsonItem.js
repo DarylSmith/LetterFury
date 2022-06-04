@@ -1,1 +1,5 @@
-"use strict";
+export class IntroJson {
+    constructor() {
+        this.Items = [];
+    }
+}
