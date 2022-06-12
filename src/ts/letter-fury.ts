@@ -1,5 +1,9 @@
+import { DataAccess } from './classes/data-access.js';
 import { IntroJson } from './classes/IntroJsonItem.js';
 import {WordsEn} from './classes/words-en.js'
+import { GroupGameFunction } from './enums/group-game-function.js';
+import { GroupGamePayload } from './interfaces/group-game-payload.js';
+import { GroupGameResult } from './interfaces/group-game-result.js';
 import { GroupGame } from './interfaces/group-game.js';
 
 export class LetterFury{
@@ -35,9 +39,22 @@ export class LetterFury{
 
     public wordIntervalArr:any={};
 
+    private _dataAccess = new DataAccess();
+
     
 	// if set to true, outputs comments about game logic to console
 	private _testMode:boolean =false;
+
+	constructor(){
+
+		document.addEventListener('socketEvent', (event:CustomEvent)=>{
+		const details = event.detail as GroupGameResult;
+		if(details.event=== GroupGameFunction.PlayerName){
+			this.WritePlayersToGroupScreen(details);
+		}
+		});
+	}
+
 
     public CurrentPointValue: any={
         MaxPointsForWord:10,
@@ -180,13 +197,20 @@ export class LetterFury{
 
 	private InitGroupGame(){
 
-
 		this.GroupGame.GroupGameName=this.CreateRandomNames().toLowerCase();
 		this.GroupGame.GroupUserName=this.CreateRandomNames().toLowerCase();
 		this.NavigateToGroupGamePage();
 		setTimeout(()=>{
 		this.BuildRandomNameUI("groupGameVal",this.GroupGame.GroupGameName);
 		this.BuildRandomNameUI("groupUserVal",this.GroupGame.GroupUserName);
+        
+        this._dataAccess.StartGroupGame(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName)
+        .then(r=>{
+            this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName);
+
+
+        });
+        
 		},500);
 
 	}
@@ -892,6 +916,13 @@ export class LetterFury{
 		const spanClose="</span>"
 		const joinVal = this.DiscardedLetters.reduce((t,c)=>  t + `${spanOpen(c.val)}${c.letter}${spanClose}` ,'');
 		this.$q("#letterText").innerHTML=joinVal;
+	}
+
+	private WritePlayersToGroupScreen(payload:GroupGameResult){
+		let players=this.$q("#groupPlayersVal").innerHTML;
+		players += `${payload.player} has joined`;
+		this.$q("#groupPlayersVal").innerHTML=players;
+
 	}
 
 
