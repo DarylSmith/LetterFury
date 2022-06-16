@@ -23,9 +23,21 @@
 		import {LetterFury} from './js/letter-fury.js';
 
 		 const letterFury = new LetterFury();
+
+		 window.SubmitGroupEvent =function(){
+			letterFury.StartGroupGame();
+
+		 }
+		
+
 		document.addEventListener("DOMContentLoaded", () => {
 
+			if(window.location.hash==="#code"){
+				letterFury.AddPlayerToGame();
+			}
+			else{
 			letterFury.ShowIntro();
+			}
 
 			document.querySelector(".start-game-single").addEventListener('click', (event) => {
 
@@ -99,6 +111,11 @@
 			You can let anyone else play by giving them this code,
 			and asking them to enter it at letterfury.com/code
 		</div>
+		
+		<div id="groupGameId">
+			<input type="text" id="groupGameIdText"  placeholder="enter code"/>
+		</div>
+	
 		<div id="groupGameContainer">
 			<div class="groupGameELem">Game ID: <span id="groupGameVal"></span></div>
 			<div class="groupGameElem">User ID: <span id="groupUserVal"></span></div>
@@ -107,7 +124,7 @@
 
 		</div> 
 		<div class="buttonContainer">
-			<button id="startGroupGame">Start</button>
+			<button id="startGroupGame" onclick="SubmitGroupEvent()">Start</button>
 		</div>
 
 

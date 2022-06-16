@@ -22,8 +22,17 @@ public  StartGroupGame(gameId:string,playerId:string):Promise<Response>{
 }
 public InvokeSocketConnection(gameId:string,playerId:string){
     
-    const that = this;
     this._gameSocket = new WebSocket(`${this._gameSocketEndpoint}?game=${gameId}`);
+
+    this._gameSocket.onerror=(event:MessageEvent<any>)=>{
+        let socketEvent = new CustomEvent("socketError");
+        document.dispatchEvent(socketEvent);
+    }
+
+    this._gameSocket.onopen=(event:MessageEvent<any>)=>{
+        let socketEvent = new CustomEvent("socketOpen");
+        document.dispatchEvent(socketEvent);
+    }
 
     this._gameSocket.onmessage =  (event:MessageEvent<any>)=> {
 

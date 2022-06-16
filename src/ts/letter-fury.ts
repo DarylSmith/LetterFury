@@ -53,6 +53,17 @@ export class LetterFury{
 			this.WritePlayersToGroupScreen(details);
 		}
 		});
+
+		document.addEventListener('socketError', ()=>{
+		
+		this.$q("#groupGameIdText").value="ID NOT VALID";
+
+		setTimeout(()=>{
+			this.$q("#groupGameIdText").value="";
+
+		},1500)
+
+			});
 	}
 
 
@@ -68,7 +79,9 @@ export class LetterFury{
 
 		IsGroupGame:false,
 		GroupGameName:'',
-		GroupUserName:''
+		GroupUserName:'',
+		GroupUserStatus:null,
+		GroupUserConnected:false
 	}
     // number of high scores to be diplayed on list
 	public NumberOfHighScores:number= 10;
@@ -182,9 +195,6 @@ export class LetterFury{
 		this.$angrySvg = this.$q("#angrysvg").innerHTML;
 		this.$closeSvg = this.$q("#closesvg").innerHTML;
 
-
-
-
 		this.WriteToConsole("Resetting Game...","info");
 		this.SetRandomWord();
 		this.ListOfChances = [];
@@ -195,10 +205,36 @@ export class LetterFury{
 
 	}
 
-	private InitGroupGame(){
+	public AddPlayerToGame(){
+		this.GroupGame.GroupUserStatus="player";
+		this.GroupGame.GroupUserName=this.CreateRandomNames().toLowerCase();
+		this.NavigateToGroupGamePage();
+
+		
+	}
+
+	public StartGroupGame(){
+		if(this.GroupGame.GroupUserStatus==="player"){
+
+			this.GroupGame.GroupGameName= this.$q("#groupGameIdText").value;
+			this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName);
+
+
+			setTimeout(()=>{
+				
+
+				
+				this.BuildRandomNameUI("groupUserVal",this.GroupGame.GroupUserName);		  
+		},500);
+
+		}
+	}
+
+	public InitGroupGame(){
 
 		this.GroupGame.GroupGameName=this.CreateRandomNames().toLowerCase();
 		this.GroupGame.GroupUserName=this.CreateRandomNames().toLowerCase();
+		this.GroupGame.GroupUserStatus="host";
 		this.NavigateToGroupGamePage();
 		setTimeout(()=>{
 		this.BuildRandomNameUI("groupGameVal",this.GroupGame.GroupGameName);
@@ -206,6 +242,9 @@ export class LetterFury{
         
         this._dataAccess.StartGroupGame(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName)
         .then(r=>{
+
+			//set this user as host and upgrade to websocket connection
+			this.GroupGame.GroupUserStatus="host";
             this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName);
 
 
@@ -256,6 +295,18 @@ export class LetterFury{
 	}
 
 	private NavigateToGroupGamePage(){
+		if(this.GroupGame.GroupUserStatus=="player"){
+
+			this.$q("#groupGameId").classList.add("easeInLeft");
+			this.$q("#groupGameInstructions").innerText="Please enter your game code and press submit to join";	
+			this.$q("#groupGameContainer").style.display="none";
+			this.$q("#groupGameId").focus();
+		}
+		else
+		{
+			this.$q("#groupGameId").style.display="none";
+			this.$q("#groupGameContainer").classList.add("idSelected");
+		}
 		this.$q("#gameSection").style.display="none";
 		this.$q("#ruleSection").style.display="none";
 		this.$q("#groupGameSection").style.display="block";
@@ -277,8 +328,9 @@ export class LetterFury{
 	}
 
 	// shows the intro.rules via a timer
-	private ShowIntro()  {
+	public ShowIntro()  {
 
+		
 		const $body = this.$q("body");
 
 		document.querySelector("#terminal")!.classList.remove("flattenConsole");
@@ -295,8 +347,7 @@ export class LetterFury{
 			this.IntroIndex = this.IntroIndex >= this.IntroJson.Items.length - 1 ? 0 : this.IntroIndex + 1;
 
 		}, 4000)
-
-
+	
 	}
 	
 
@@ -919,9 +970,22 @@ export class LetterFury{
 	}
 
 	private WritePlayersToGroupScreen(payload:GroupGameResult){
+		
+		if(this.GroupGame.GroupUserStatus==="player"  && !this.GroupGame.GroupUserConnected){
+			this.$q("#groupGameId").classList.remove("easeInLeft");
+			this.$q("#groupGameId").classList.add("scatter-console-1");
+			this.$q("#groupGameContainer").style.display="block";
+			this.$q("#groupGameContainer").classList.add("drop-frame");
+			this.BuildRandomNameUI("groupGameVal",this.GroupGame.GroupGameName);
+			this.BuildRandomNameUI("groupUserVal",this.GroupGame.GroupUserName);
+			}
+
+		this.GroupGame.GroupUserConnected=true;
 		let players=this.$q("#groupPlayersVal").innerHTML;
-		players += `${payload.player} has joined`;
+		players = `${payload.player} has joined<br/>` + players ;
 		this.$q("#groupPlayersVal").innerHTML=players;
+
+
 
 	}
 
@@ -972,6 +1036,11 @@ export class LetterFury{
 				break;
 			case 'ease-left':
 				this.NavigateToGamePageEnd();
+				break;
+			case 'scatter-console-1':
+
+			this.$q("#groupGameId").style.display="none";
+
 				break;
 			case 'ease-out-left':
 				this.NavigateToHomePageEnd();
@@ -1046,12 +1115,12 @@ export class LetterFury{
 		that.wordIntervalArr[val]=setInterval(function(counter) {
 			return ()=> {
 				
-				if(counter === alphabet.length){
+				const currentLetter = alphabet[counter];
+				if(counter === alphabet.length || !currentLetter){
 				
 					clearInterval(that.wordIntervalArr[val]);
 				}
 
-				const currentLetter = alphabet[counter];
 				console.log('Current Letter is '+ currentLetter );
 				const currentWordArr=[];
 

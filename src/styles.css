@@ -92,9 +92,36 @@ h1:after {
 	line-height: 1.9;
 	border-radius: 10px;
 	width: 32%;
-	-webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-	-moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+
 	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+#groupGameId{
+	margin: 0px auto 20px auto;
+    line-height: 1.9;
+	position:relative;
+    border-radius: 10px;
+	width: 53%;
+	position:relative;
+    height: 54px;
+	box-shadow: 10px 10px 5px 0px rgb(0 0 0 / 75%);
+  
+  
+}
+
+#groupGameIdText {
+	width: 100%;
+	height:100%;
+    background-color: #000;
+    border: 1px solid #737373;
+    color: #32CD3C;
+    font-weight: 900;
+	box-shadow: 10px 10px 5px 0px rgb(0 0 0 / 75%);
+	font-weight: 900;
+	font-family: 'Orbitron', sans-serif;
+	font-size:22px;
+	padding-left:20px;
+
 }
 
 #groupGameSection #groupGameContainer
@@ -107,6 +134,7 @@ h1:after {
 	font-size: 16px;
     letter-spacing: 4;
     text-align: left;
+	padding-left:20px;
 }
 .groupGameLabel{
 margin: 20px auto;
@@ -297,7 +325,7 @@ font-size: 25px;
 .buttonContainer button {
 	border-radius: 37px;
 	height: 101px;
-	/* width: 262px; */
+	width: 262px; 
 	font-size: 22px;
 	padding: 20px;
 	color: #ffffff;
@@ -497,6 +525,13 @@ font-size: 25px;
 
 
 /*animation styles*/
+
+.drop-frame{
+
+	animation: ease-down .5s linear;
+	animation-fill-mode: forwards;
+}
+
 .scatter-console-1 {
 	animation: scatter-console-1 .5s linear;
 	animation-fill-mode: forwards;
@@ -752,6 +787,12 @@ font-size: 25px;
 		min-height: 0px !important;
 		bottom: 0px !important;
 		letter-spacing: 14px;
+		overflow:hidden;
+	}
+
+	#groupGameContainer.idSelected .groupIdSelected{
+		display:none;
+
 	}
 	
 	#consoleLabel {
