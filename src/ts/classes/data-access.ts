@@ -41,7 +41,7 @@ public InvokeSocketConnection(gameId:string,playerId:string){
         document.dispatchEvent(socketEvent);
     };
 
-    this._gameSocket.onopen=  (event:MessageEvent<any>)=> {
+    this._gameSocket.onopen= (event:MessageEvent<any>)=> {
 
     const startObj:GroupGamePayload = {
         action:'sendmessage',
@@ -53,6 +53,18 @@ public InvokeSocketConnection(gameId:string,playerId:string){
     this.SendGameMessage(startObj);
 
     };
+}
+
+public InvokeSocketGameStart(word:string, game:string){
+
+    const startObj:GroupGamePayload = {
+        action:'sendmessage',
+        function: GroupGameFunction.GameStart,
+        data:word,
+        game:game
+    }
+
+    this.SendGameMessage(startObj);
 }
 
 public SendGameMessage(payloadObj:GroupGamePayload):void{

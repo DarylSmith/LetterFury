@@ -49,8 +49,15 @@ export class LetterFury{
 
 		document.addEventListener('socketEvent', (event:CustomEvent)=>{
 		const details = event.detail as GroupGameResult;
-		if(details.event=== GroupGameFunction.PlayerName){
-			this.WritePlayersToGroupScreen(details);
+		switch(details.event){
+			case GroupGameFunction.PlayerName:
+				this.WritePlayersToGroupScreen(details);
+				break;
+			case GroupGameFunction.GameStart:
+				this.OurRandomWord = details.word;
+				this.InitGame();
+				break;
+
 		}
 		});
 
@@ -178,8 +185,8 @@ export class LetterFury{
 		}
     
 
-	// this is the function to start a new game.  Should probably be changed to GameInit
-	private Init () {
+	// this is the function to start a new game. 
+	private InitGame () {
 
 		if ((window as any).IntroText) {
 			(window as any).clearInterval((window as any).IntroText);
@@ -196,7 +203,11 @@ export class LetterFury{
 		this.$closeSvg = this.$q("#closesvg").innerHTML;
 
 		this.WriteToConsole("Resetting Game...","info");
-		this.SetRandomWord();
+
+		if(!this.GroupGame.IsGroupGame){
+			this.SetRandomWord();
+		}
+
 		this.ListOfChances = [];
 		this.NumberOfRounds = 0;
 		this.GetTopScore();
@@ -209,8 +220,6 @@ export class LetterFury{
 		this.GroupGame.GroupUserStatus="player";
 		this.GroupGame.GroupUserName=this.CreateRandomNames().toLowerCase();
 		this.NavigateToGroupGamePage();
-
-		
 	}
 
 	public StartGroupGame(){
@@ -219,15 +228,15 @@ export class LetterFury{
 			this.GroupGame.GroupGameName= this.$q("#groupGameIdText").value;
 			this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName);
 
-
 			setTimeout(()=>{
-				
-
-				
 				this.BuildRandomNameUI("groupUserVal",this.GroupGame.GroupUserName);		  
 		},500);
-
 		}
+		else{
+			this.SetRandomWord();
+			this._dataAccess.InvokeSocketGameStart(this.OurRandomWord.toLowerCase(), this.GroupGame.GroupGameName);
+		}
+
 	}
 
 	public InitGroupGame(){
@@ -268,8 +277,9 @@ export class LetterFury{
 	// begins changing page  to the game
 	private NavigateToGamePageStart()  {
 
-		this.$q("#gameSection").style.display = "block";
 		this.$q("#ruleSection").style.display = "none";
+		this.$q("#groupGameSection").style.display = "none";
+		this.$q("#gameSection").style.display = "block";
 		this.$q("#consoleContainer").classList.add("easeInRight");
 		this.$q("#letterContainer").classList.add("easeInLeft");
 		this.$q("#inputContainer").classList.add("easeInLeft");
@@ -1018,7 +1028,7 @@ export class LetterFury{
 			this.MakeSelection();
 		}
 		else if (event.target.value.toUpperCase() === 'YES' && this.GameState === 'game_over') {
-			this.Init();
+			this.InitGame();
 		}
 		else if (event.target.value.toUpperCase() === 'NO' && this.GameState === 'game_over') {
 			this.NavigateToHomePageStart();
