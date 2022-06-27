@@ -6,4 +6,5 @@ game?:string,
 function:string;
 action:string;
 
+
 }

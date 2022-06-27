@@ -27,7 +27,7 @@ export class LetterFury{
 
 	
 	//Number of times a player guesses during a turn. TODO: make this private
-	public NumberOfRounds:number =  0;
+	public PlayerScore:number =  0;
 
 	// Counter for the intro (rules)
 	public IntroIndex:number = 1;
@@ -43,7 +43,7 @@ export class LetterFury{
 
     
 	// if set to true, outputs comments about game logic to console
-	private _testMode:boolean =false;
+	private _testMode:boolean =true;
 
 	constructor(){
 
@@ -51,11 +51,28 @@ export class LetterFury{
 		const details = event.detail as GroupGameResult;
 		switch(details.event){
 			case GroupGameFunction.PlayerName:
-				this.WritePlayersToGroupScreen(details);
+					this.WritePlayersToGroupScreen(details);
 				break;
 			case GroupGameFunction.GameStart:
 				this.OurRandomWord = details.word;
+				this.GroupGame.IsGroupGame=true;
 				this.InitGame();
+			case GroupGameFunction.WordGuessed:
+				this.WriteToConsole( `${details.player} successfully guessed ${this.OurRandomWord.toLowerCase() }`);
+				this.OurRandomWord = details.word;
+				let index = 0;
+				if(details.player!==this.GroupGame.GroupUserName){
+						(window as any).WordInput = (window as any).setInterval(() => {
+							index++;
+							this.DisplayRandomWord();
+							if(index===20){
+								clearInterval((window as any).WordInput);
+								this.$q("#gameText").value = '';
+							}
+		
+						}, 40);
+				}
+				this.StartNextRound(false);
 				break;
 
 		}
@@ -151,12 +168,14 @@ export class LetterFury{
 			Items: [
 				{
 					'Console': 'Setting up Random Words...', 'Action': () => {
-		
-		
-						(window as any).InitInput = (window as any).setInterval(() => {
-		
+
+						// if this is a solo game, set up a random workd
+						if(!this.GroupGame.IsGroupGame){
 							this.SetRandomWord();
-							this.$q("#gameText").value = this.OurRandomWord;
+						}
+						(window as any).InitInput = (window as any).setInterval(() => {
+							
+							this.DisplayRandomWord();
 		
 						}, 40);
 					}
@@ -185,6 +204,11 @@ export class LetterFury{
 		}
     
 
+	private DisplayRandomWord() {
+		const num = Math.floor(Math.random() * (this.ListOfWords.length - 1));
+		this.$q("#gameText").value = this.ListOfWords[num];
+	}
+
 	// this is the function to start a new game. 
 	private InitGame () {
 
@@ -209,7 +233,7 @@ export class LetterFury{
 		}
 
 		this.ListOfChances = [];
-		this.NumberOfRounds = 0;
+		this.PlayerScore = 0;
 		this.GetTopScore();
 		this.BeginAdvancedRound();
 		this.FocusInputElement(true);
@@ -365,8 +389,11 @@ export class LetterFury{
 		var x = 0;
         
 		var intervalID = (window as any).setInterval( ()=> {
-	
-			this.SetRandomWord();
+			
+
+			if(!this.GroupGame.IsGroupGame){
+				this.SetRandomWord();
+			}
 			elementReset();
 	
 		   if (++x === repetitions) {
@@ -427,17 +454,14 @@ export class LetterFury{
 	//runs after the a player has guessed the correct #, and lets them choose another
 	private StartNextRound(isSkip:boolean) {
 		this.DiscardedLetters=[];
-		
-		this.SetRandomWord();
-		this.ListOfChances = [];
-		if(!isSkip){
-		this.WriteToConsole( `You earned ${this.CurrentPointValue.PointsForCurrentWord}`);
-		this.NumberOfRounds+=this.CurrentPointValue.PointsForCurrentWord;
+
+		if(!this.GroupGame.IsGroupGame){
+			this.SetRandomWord();
 		}
-		
+		this.ListOfChances = [];	
 		this.WriteToConsole( `Points for word set to  ${this.CurrentPointValue.MaxPointsForWord}`);
 		this.CurrentPointValue.PointsForCurrentWord=this.CurrentPointValue.MaxPointsForWord;
-		this.$q("#playerScoreCount").innerHTML=this.NumberOfRounds.toString();
+		this.$q("#playerScoreCount").innerHTML=this.PlayerScore.toString();
 		this.$q("#letterText").innerHTML='';
 
 	}
@@ -466,6 +490,8 @@ export class LetterFury{
 
 	   const num= Math.floor(Math.random() *  (this.ListOfWords.length-1));
 	   this.OurRandomWord  = this.ListOfWords[num];
+
+	   console.log(`word is ${this.OurRandomWord}`);
 
 	}
 
@@ -514,9 +540,9 @@ export class LetterFury{
 		this.$q("#gameText").setAttribute("disabled", true);
 
 		// reset game score if this is not the first game
-		this.NumberOfRounds=0;
+		this.PlayerScore=0;
 		this.NumberOfSkips = this.SkipsAllowed;
-		this.$q("#playerScoreCount").innerHTML=this.NumberOfRounds.toString();
+		this.$q("#playerScoreCount").innerHTML=this.PlayerScore.toString();
 		(window as any).Countdown = setInterval(() => {
 
 
@@ -678,7 +704,7 @@ export class LetterFury{
 			.then((data)=>{
 				this.RemoveLoadingIcon( this.$q("#inputContainer"),"lds-facebook");
 				this.$q("#inputContainerInner").style.display="block";
-				const hasHighScore = this.HasHighScore(this.NumberOfRounds,data);
+				const hasHighScore = this.HasHighScore(this.PlayerScore,data);
 				if (!hasHighScore) {
 					this.InitGameOver();
 				}
@@ -717,7 +743,7 @@ export class LetterFury{
    			 'Accept': 'application/json, text/plain, */*',
    			 'Content-Type': 'application/json'
   			},
-  			body: JSON.stringify({name: initials, highscore: this.NumberOfRounds})
+  			body: JSON.stringify({name: initials, highscore: this.PlayerScore})
 			}).then((res)=>{
 				this.RemoveLoadingIcon( this.$q("#inputContainer"),"lds-facebook");
 				this.$q("#inputContainerInner").style.display="block";
@@ -872,7 +898,7 @@ export class LetterFury{
 		}
 		else {
 
-			//take the number that the we made and split it into 3 piecies
+		
 			//take the number computer made and split that into 3 pieces
 			//then compare the computer number against our number
 
@@ -887,9 +913,10 @@ export class LetterFury{
 			($gameTextElem as any).value = '';
 
 			if (this.OurRandomWord.toString().toLowerCase() === gameText.toLowerCase()) {
-
+				
+				this.PlayerScore+=this.CurrentPointValue.PointsForCurrentWord;
 				this.DisplayInputResults($gameTextElem, "Congrats! Code successfully unlocked. Resetting to new number", "victory");
-				this.ResetRandomNumber(40,12,()=>{this.$q("#gameText").value = this.OurRandomWord;});
+				this.ResetRandomNumber(40,12,()=>{this.DisplayRandomWord();});
 
 
 				if (this.ListOfChances.length < 4) {
@@ -904,7 +931,13 @@ export class LetterFury{
 
 				}
 				this.ClearSvgValues();
-				this.StartNextRound(false);
+				if(!this.GroupGame.IsGroupGame){
+					this.StartNextRound(false);
+				}
+				else{
+					this.SetRandomWord();
+					this._dataAccess.InvokeSocketWordGuessed(this.OurRandomWord, this.GroupGame.GroupUserName, this.GroupGame.GroupGameName,this.PlayerScore);
+				}
 				return;
 
 			}
@@ -991,9 +1024,12 @@ export class LetterFury{
 			}
 
 		this.GroupGame.GroupUserConnected=true;
-		let players=this.$q("#groupPlayersVal").innerHTML;
-		players = `${payload.player} has joined<br/>` + players ;
-		this.$q("#groupPlayersVal").innerHTML=players;
+
+		if(this.GroupGame.GroupUserName!==payload.player){
+			let players=this.$q("#groupPlayersVal").innerHTML;
+			players = `${payload.player} has joined<br/>` + players ;
+			this.$q("#groupPlayersVal").innerHTML=players;
+		}
 
 
 
@@ -1125,8 +1161,13 @@ export class LetterFury{
 		that.wordIntervalArr[val]=setInterval(function(counter) {
 			return ()=> {
 				
+				
 				const currentLetter = alphabet[counter];
-				if(counter === alphabet.length || !currentLetter){
+
+				if(currentLetter===undefined){
+					that.clearAllIntervals();
+				}
+				if(counter === alphabet.length){
 				
 					clearInterval(that.wordIntervalArr[val]);
 				}
@@ -1165,6 +1206,16 @@ export class LetterFury{
 
 		for(let i=0;i<3;i ++){
 		this.$q("#resultImg-"+i).innerHTML='';
+		}
+	}
+
+	private clearAllIntervals(){
+		// Get a reference to the last interval + 1
+		const interval_id = window.setInterval(function(){}, Number.MAX_SAFE_INTEGER);
+
+// Clear any timeout/interval up to that id
+		for (let i = 1; i < interval_id; i++) {
+ 			 window.clearInterval(i);
 		}
 	}
 
