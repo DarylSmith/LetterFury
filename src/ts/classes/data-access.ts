@@ -67,6 +67,17 @@ public InvokeSocketGameStart(word:string, game:string){
     this.SendGameMessage(startObj);
 }
 
+public InvokeSocketGameEnd(game:string){
+
+    const startObj:GroupGamePayload = {
+        action:'sendmessage',
+        function: GroupGameFunction.GameEnd,
+        game:game
+    }
+
+    this.SendGameMessage(startObj);
+}
+
 public InvokeSocketWordGuessed(word:string, playerName:string, game:string, score:number){
 
     const startObj:GroupGamePayload = {

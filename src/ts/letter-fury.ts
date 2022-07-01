@@ -74,6 +74,13 @@ export class LetterFury{
 				}
 				this.StartNextRound(false);
 				break;
+			case GroupGameFunction.GameEnd:
+				this.GroupGameEnd(details.value);
+				window.setTimeout(()=>{
+				this.NavigateToGroupGamePage();
+			}, 5000)
+			
+			break;
 
 		}
 		});
@@ -118,7 +125,7 @@ export class LetterFury{
 
 	// number used for countdown timer
 	public CountdownNumber:number= 0;
-	public LengthOfGameInMinutes= 3;
+	public LengthOfGameInMinutes= .25;
 
 	//these variables contain the emoji svg
 	public $happySvg:string = '';
@@ -591,7 +598,18 @@ export class LetterFury{
 				(window as any).setTimeout(()=>{
 				
 				this.$q("#consoleText").innerHTML='';
-				this.CheckForHighScore(0);
+
+				// only solo games can log high scores
+				// if this is a group game check for the winner
+				if(this.GroupGame.IsGroupGame){
+					this.CheckForHighScore(0);
+				}
+				if(this.GroupGame.IsGroupGame && this.GroupGame.GroupUserStatus==='host'){
+
+					this._dataAccess.InvokeSocketGameEnd(this.GroupGame.GroupGameName);
+				}
+			
+
 				},2000);
 			}
 			else {
@@ -1105,6 +1123,22 @@ export class LetterFury{
 				this.$q("#resultsDisplay").style.height="10px";
 				break;
 		}
+	}
+
+	private GroupGameEnd(results:any){
+		if(results.topPlayers.includes(this.GroupGame.GroupUserName)){
+
+			this.WriteToConsole("YOU WIN!","bonus");
+		}
+		else{
+			this.WriteToConsole("YOU LOSE!");
+		}
+
+		const resultWinners = results.topPlayers.join(',');
+		const resultText=` The winners are ${resultWinners} with a score of ${results.topScore}`;
+		this.WriteToConsole(resultText);
+
+
 	}
 
 	private GameOverText(){

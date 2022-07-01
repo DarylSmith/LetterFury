@@ -3,6 +3,7 @@ export interface GroupGameResult{
     event:string;
     action:string;
     word?:string;
+    value?: any;
     
   
     }
