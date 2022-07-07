@@ -18,6 +18,9 @@ jobs:
         with: 
           node-version: 12
       - 
+        name: yarn install
+        run: yarn install
+      -
         name: "tsc compile"
         uses: iCrawl/action-tsc@v1
         with: 
