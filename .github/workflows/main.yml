@@ -11,6 +11,17 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
+     - name: install node v12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+            run: yarn install
+    - name: tsc
+      uses: icrawl/action-tsc@v1
+    - name: tsc compile
+      uses: iCrawl/action-tsc@v1
+      with:
+        project: ./
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
