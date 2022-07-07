@@ -56,6 +56,7 @@ export class LetterFury{
 			case GroupGameFunction.GameStart:
 				this.OurRandomWord = details.word;
 				this.GroupGame.IsGroupGame=true;
+				this.GroupGame.GroupGameStatus="inprogress";
 				this.InitGame();
 			case GroupGameFunction.WordGuessed:
 				this.WriteToConsole( `${details.player} successfully guessed ${this.OurRandomWord.toLowerCase() }`);
@@ -77,6 +78,7 @@ export class LetterFury{
 			case GroupGameFunction.GameEnd:
 				this.GroupGameEnd(details.value);
 				window.setTimeout(()=>{
+				this.GroupGame.GroupGameStatus="completed";
 				this.NavigateToGroupGamePage();
 			}, 5000)
 			
@@ -112,7 +114,8 @@ export class LetterFury{
 		GroupGameName:'',
 		GroupUserName:'',
 		GroupUserStatus:null,
-		GroupUserConnected:false
+		GroupUserConnected:false,
+		GroupGameStatus:"notstarted"
 	}
     // number of high scores to be diplayed on list
 	public NumberOfHighScores:number= 10;
@@ -125,7 +128,7 @@ export class LetterFury{
 
 	// number used for countdown timer
 	public CountdownNumber:number= 0;
-	public LengthOfGameInMinutes= .25;
+	public LengthOfGameInMinutes= 2;
 
 	//these variables contain the emoji svg
 	public $happySvg:string = '';
@@ -254,6 +257,14 @@ export class LetterFury{
 	}
 
 	public StartGroupGame(){
+
+		//if the game is not ready, add a mess
+		const isNotReady:boolean =(this.GroupGame.GroupUserStatus==="player" && this.GroupGame.GroupUserConnected)
+		if(isNotReady){
+			this.WriteToGroupGameConsole("Still waiting for players...<br/>");
+			return;
+		}
+								  
 		if(this.GroupGame.GroupUserStatus==="player"){
 
 			this.GroupGame.GroupGameName= this.$q("#groupGameIdText").value;
@@ -336,7 +347,7 @@ export class LetterFury{
 	}
 
 	private NavigateToGroupGamePage(){
-		if(this.GroupGame.GroupUserStatus=="player"){
+		if(this.GroupGame.GroupUserStatus==="player"  && this.GroupGame.GroupGameStatus==="notstarted"){
 
 			this.$q("#groupGameId").classList.add("easeInLeft");
 			this.$q("#groupGameInstructions").innerText="Please enter your game code and press submit to join";	
@@ -937,12 +948,12 @@ export class LetterFury{
 				this.ResetRandomNumber(40,12,()=>{this.DisplayRandomWord();});
 
 
-				if (this.ListOfChances.length < 4) {
+				if (this.ListOfChances.length < 4 && !this.GroupGame.IsGroupGame) {
 
 					this.DisplayInputResults($gameTextElem, "30 second bonus for guessing in under 4 tries", "bonus");
 					this.AddSecondsToTime(30);
 				}
-				else if (this.ListOfChances.length > 3 && this.ListOfChances.length < 7) {
+				else if (this.ListOfChances.length > 3 && this.ListOfChances.length < 7  &&!this.GroupGame.IsGroupGame) {
 
 					this.DisplayInputResults($gameTextElem, "15 second bonus for guessing in under 7 tries", "bonus");
 					this.AddSecondsToTime(15);
@@ -1043,14 +1054,17 @@ export class LetterFury{
 
 		this.GroupGame.GroupUserConnected=true;
 
-		if(this.GroupGame.GroupUserName!==payload.player){
-			let players=this.$q("#groupPlayersVal").innerHTML;
-			players = `${payload.player} has joined<br/>` + players ;
-			this.$q("#groupPlayersVal").innerHTML=players;
+		if(this.GroupGame.GroupUserName!==payload.player){		
+			const message = `${payload.player} has joined<br/>`;
+			this.WriteToGroupGameConsole(message);			
 		}
 
+	}
 
-
+	private WriteToGroupGameConsole(message:string){
+		let currentText=this.$q("#groupPlayersVal").innerHTML;
+		currentText = message + currentText;
+		this.$q("#groupPlayersVal").innerHTML=currentText;
 	}
 
 
