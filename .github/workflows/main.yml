@@ -1,34 +1,34 @@
-name: Upload Website
-
-on:
-  push:
-    branches:
-    - master
-
-jobs:
-  deploy:
+--- 
+jobs: 
+  deploy: 
     runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-     - name: install node v12
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-            run: yarn install
-    - name: tsc
-      uses: icrawl/action-tsc@v1
-    - name: tsc compile
-      uses: iCrawl/action-tsc@v1
-      with:
-        project: ./
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-        aws-region: ap-southeast-1
-
-    - name: Deploy static site to S3 bucket
-      run: aws s3 sync ./src/ s3://letterfury.com --delete
+    steps: 
+      - 
+        name: Checkout
+        uses: actions/checkout@v1
+      - 
+        name: "install node v12"
+        run: "yarn install"
+        uses: actions/setup-node@v1
+        with: 
+          node-version: 12
+      - 
+        name: "tsc compile"
+        uses: iCrawl/action-tsc@v1
+        with: 
+          project: ./
+      - 
+        name: "Configure AWS Credentials"
+        uses: aws-actions/configure-aws-credentials@v1
+        with: 
+          aws-access-key-id: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          aws-region: ap-southeast-1
+          aws-secret-access-key: "${{ secrets.AWS_SECRET_KEY }}"
+      - 
+        name: "Deploy static site to S3 bucket"
+        run: "aws s3 sync ./src/ s3://letterfury.com --delete"
+name: "Upload Website"
+true: 
+  push: 
+    branches: 
+      - master
