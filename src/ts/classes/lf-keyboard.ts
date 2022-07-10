@@ -16,7 +16,7 @@ public BuildKeyboard():string{
 
         const line=`<div class='line${ind+1}'>`;
         keyboardLines.push(keyLine.reduce<string>((prev,curr)=>
-        { return prev + `<span class='lf-key-init' id='lf-lett-${curr}' click='enterLetter(${curr})'>${curr}</span>`},line));
+        { return prev + `<span class='lf-key-init' id='lf-lett-${curr}' onclick='EnterLetter("${curr}")'>${curr}</span>`},line));
 
     });
 

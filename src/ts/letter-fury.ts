@@ -42,6 +42,8 @@ export class LetterFury{
 
     private _dataAccess = new DataAccess();
 
+	private readonly _wordLength=3;
+
     
 	// if set to true, outputs comments about game logic to console
 	private _testMode:boolean =true;
@@ -213,6 +215,26 @@ export class LetterFury{
 			]
 		
 		}
+
+	public EnterLetterInConsole(letter:string){
+
+		const console:HTMLInputElement = this.$q('#gameText');
+		let val=console.value;
+
+	 	let contentLength = val.split('').length;
+
+		if (!console.disabled && contentLength<this._wordLength){
+
+			 val=console.value+ letter;
+			 console.value = val;
+			 contentLength++;
+
+		}
+		if(contentLength===this._wordLength){
+			this.MakeSelection();
+		}
+		
+	}
     
 
 	private DisplayRandomWord() {
@@ -1096,7 +1118,7 @@ export class LetterFury{
 
 	private HandleKeyPressEvent(event:any){
 
-		if (event.target.value.length >= 3 && this.GameState === 'game_play') {
+		if (event.target.value.length >= this._wordLength && this.GameState === 'game_play') {
 			this.MakeSelection();
 		}
 		else if (event.target.value.toUpperCase() === 'YES' && this.GameState === 'game_over') {
@@ -1105,7 +1127,7 @@ export class LetterFury{
 		else if (event.target.value.toUpperCase() === 'NO' && this.GameState === 'game_over') {
 			this.NavigateToHomePageStart();
 		}
-		else if (event.target.value.length == 3 && this.GameState === 'high_score') {
+		else if (event.target.value.length == this._wordLength && this.GameState === 'high_score') {
 			this.SetScores(event.target.value);
 		}
 	}

@@ -7,7 +7,7 @@ export class LetterFuryKeyboard {
         let keyboardLines = [];
         this.letterArr.forEach((keyLine, ind) => {
             const line = `<div class='line${ind + 1}'>`;
-            keyboardLines.push(keyLine.reduce((prev, curr) => { return prev + `<span class='lf-key-init' id='lf-lett-${curr}' click='enterLetter(${curr})'>${curr}</span>`; }, line));
+            keyboardLines.push(keyLine.reduce((prev, curr) => { return prev + `<span class='lf-key-init' id='lf-lett-${curr}' onclick='EnterLetter("${curr}")'>${curr}</span>`; }, line));
         });
         return keyboardLines.join('</div>') + '</div>';
     }

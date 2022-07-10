@@ -25,6 +25,7 @@ export class LetterFury {
         this.NumberOfSkips = 0;
         this.wordIntervalArr = {};
         this._dataAccess = new DataAccess();
+        this._wordLength = 3;
         // if set to true, outputs comments about game logic to console
         this._testMode = true;
         this.CurrentPointValue = {
@@ -146,6 +147,19 @@ export class LetterFury {
             { 'Console': '  ', 'Text': 'Your goal is to get &#128522; &#128522; &#128522; as many times as you can in 2 minutes.', 'HTML': '<img src="img/happy.svg"  height="120"/><img src="img/happy.svg"  height="120"/><img src="img/happy.svg"  height="120"/>' },
             { 'Console': '  ', 'Text': 'Are you ready to accept the challenge?', 'HTML': '<span onclick="DalyasGame.Init();" id="clickToStart">Click to start</button>' }
         ];
+    }
+    EnterLetterInConsole(letter) {
+        const console = this.$q('#gameText');
+        let val = console.value;
+        let contentLength = val.split('').length;
+        if (!console.disabled && contentLength < this._wordLength) {
+            val = console.value + letter;
+            console.value = val;
+            contentLength++;
+        }
+        if (contentLength === this._wordLength) {
+            this.MakeSelection();
+        }
     }
     DisplayRandomWord() {
         const num = Math.floor(Math.random() * (this.ListOfWords.length - 1));
@@ -780,7 +794,7 @@ export class LetterFury {
         }
     }
     HandleKeyPressEvent(event) {
-        if (event.target.value.length >= 3 && this.GameState === 'game_play') {
+        if (event.target.value.length >= this._wordLength && this.GameState === 'game_play') {
             this.MakeSelection();
         }
         else if (event.target.value.toUpperCase() === 'YES' && this.GameState === 'game_over') {
@@ -789,7 +803,7 @@ export class LetterFury {
         else if (event.target.value.toUpperCase() === 'NO' && this.GameState === 'game_over') {
             this.NavigateToHomePageStart();
         }
-        else if (event.target.value.length == 3 && this.GameState === 'high_score') {
+        else if (event.target.value.length == this._wordLength && this.GameState === 'high_score') {
             this.SetScores(event.target.value);
         }
     }
