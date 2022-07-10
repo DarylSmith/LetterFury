@@ -1,6 +1,7 @@
 import { DataAccess } from './classes/data-access.js';
 import { WordsEn } from './classes/words-en.js';
 import { GroupGameFunction } from './enums/group-game-function.js';
+import { LetterFuryKeyboard } from './classes/lf-keyboard.js';
 export class LetterFury {
     constructor() {
         //abbreviates the native DOM selector for easier use
@@ -14,6 +15,7 @@ export class LetterFury {
         this.OurRandomWord = ''; // 
         //container for each chance per random number
         this.ListOfChances = [];
+        this.keyboard = new LetterFuryKeyboard();
         //Number of times a player guesses during a turn. TODO: make this private
         this.PlayerScore = 0;
         // Counter for the intro (rules)
@@ -227,6 +229,9 @@ export class LetterFury {
         this.$q("#letterContainer").classList.add("easeInLeft");
         this.$q("#inputContainer").classList.add("easeInLeft");
         this.$q("#title").classList.add("easeUpTitle");
+        const keys = this.keyboard.BuildKeyboard();
+        this.$q("#lf-keyboard").innerHTML = keys;
+        this.keyboard.DisplayLettersOnKeyboard();
     }
     //ends changing the page  to the game (removes animation classes when it completeds )
     NavigateToGamePageEnd() {

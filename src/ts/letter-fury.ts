@@ -2,7 +2,7 @@ import { DataAccess } from './classes/data-access.js';
 import { IntroJson } from './classes/IntroJsonItem.js';
 import {WordsEn} from './classes/words-en.js'
 import { GroupGameFunction } from './enums/group-game-function.js';
-import { GroupGamePayload } from './interfaces/group-game-payload.js';
+import { LetterFuryKeyboard } from './classes/lf-keyboard.js';
 import { GroupGameResult } from './interfaces/group-game-result.js';
 import { GroupGame } from './interfaces/group-game.js';
 
@@ -25,7 +25,8 @@ export class LetterFury{
 	//container for each chance per random number
 	public ListOfChances:any[]= [];
 
-	
+	public keyboard = new LetterFuryKeyboard();
+
 	//Number of times a player guesses during a turn. TODO: make this private
 	public PlayerScore:number =  0;
 
@@ -326,6 +327,9 @@ export class LetterFury{
 		this.$q("#letterContainer").classList.add("easeInLeft");
 		this.$q("#inputContainer").classList.add("easeInLeft");
 		this.$q("#title").classList.add("easeUpTitle");
+		const keys = this.keyboard.BuildKeyboard();
+		this.$q("#lf-keyboard").innerHTML=keys;
+		this.keyboard.DisplayLettersOnKeyboard();
 	}
 
 	//ends changing the page  to the game (removes animation classes when it completeds )

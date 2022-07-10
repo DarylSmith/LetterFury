@@ -47,7 +47,7 @@ public InvokeSocketConnection(gameId:string,playerId:string){
         action:'sendmessage',
         function: GroupGameFunction.PlayerName,
         data:playerId,
-        game:gameId
+        game:gameId.toLowerCase()
     }
 
     this.SendGameMessage(startObj);

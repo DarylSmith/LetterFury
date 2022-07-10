@@ -7,6 +7,7 @@
 6.keyframes
 7.responsive styles
 8.svg styles
+9.mobile keyboard
 */
 
 /*global styles*/
@@ -628,6 +629,20 @@ font-size: 25px;
 	}
 }
 
+
+@keyframes  display-key {
+	0% {
+		width: 17px;
+	}
+	75% {
+		width: 60px;
+
+	}
+	100% {
+		width: 17px;
+	}
+}
+
 @keyframes extend-console {
 	0% {
 		height: 276px;
@@ -920,3 +935,75 @@ font-size: 25px;
 }
 
 
+/*mobile keyboard
+based on https://codepen.io/kulpreets/pen/MKgqqB
+*/
+
+  
+  .base {
+	border-radius: 10px;
+	background: #1d281e;
+	display: flex;
+	width: 100%;
+	height: auto;
+	flex-direction: column;
+	padding: 15px 7px;
+	font-size: 20px;
+	font-family: 'Orbitron', sans-serif;
+	box-shadow: 0px 40px 45px rgba(0, 0, 0, .4);
+  }
+  
+  div[class*='line'] {
+	display: flex;
+	justify-content: space-around;
+  }
+  
+  div[class*='line'] + div[class*='line'] {
+	margin-top: 15px;
+  }
+
+
+  
+  .line1,
+  .line3 {
+	padding: 0 15px;
+  }
+  
+  .line2 {
+	padding: 0 30px;
+  }
+  
+  div[class*='line'] span {
+	box-shadow: 0px 3px 3px rgb(0 0 0 / 70%);
+    color: #32CD3C;
+    padding: 10px;
+    margin: 2px;
+    background: #000000;
+    border-radius: 12px;
+    width: 25px;
+    text-shadow: 0px 0px 40px #32cd3c, 0px 0px 80px #32cd3c;
+    text-align: center;
+}
+
+.lf-key-init{visibility:hidden;}
+.lf-key-visible{
+	animation: display-key .2s linear;
+	animation-fill-mode:forwards;
+}
+  
+  
+  div[class*='line'] span:hover {
+	/*   box-shadow: 0px 2px 10px #040404;*/
+	
+	background: #2F3336;
+	text-shadow: 1px 2px 60px #32CD3C, 0px 0px 60px rgba(0, 188, 212, .9), 0px 0px 60px rgba(0, 188, 212, .9), 10px 10px 60px rgba(0, 188, 212, .9);
+	cursor: pointer
+  }
+  
+  div[class*='line'] span:active {
+	transform: scale(.9);
+  }
+  
+ 
+
+  

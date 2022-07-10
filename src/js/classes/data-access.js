@@ -32,7 +32,7 @@ export class DataAccess {
                 action: 'sendmessage',
                 function: GroupGameFunction.PlayerName,
                 data: playerId,
-                game: gameId
+                game: gameId.toLowerCase()
             };
             this.SendGameMessage(startObj);
         };
