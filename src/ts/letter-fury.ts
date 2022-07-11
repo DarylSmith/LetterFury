@@ -218,6 +218,7 @@ export class LetterFury{
 
 	public EnterLetterInConsole(letter:string){
 
+		document.querySelector("#inputInner")!.classList.remove("has-cursor");
 		const console:HTMLInputElement = this.$q('#gameText');
 		let val=console.value;
 
@@ -498,6 +499,7 @@ export class LetterFury{
 	//runs after the a player has guessed the correct #, and lets them choose another
 	private StartNextRound(isSkip:boolean) {
 		this.DiscardedLetters=[];
+		this.keyboard.RemoveAllKeyClasses();
 
 		if(!this.GroupGame.IsGroupGame){
 			this.SetRandomWord();
@@ -836,39 +838,6 @@ export class LetterFury{
 
 	}
 
-	//taken from https://stackoverflow.com/questions/8335834/how-can-i-hide-the-android-keyboard-using-javascript
-	private HideKeyboard() {
-		//this set timeout needed for case when hideKeyborad
-		//is called inside of 'onfocus' event handler
-		setTimeout(function () {
-
-			//creating temp field
-			var field = document.createElement('input');
-			field.setAttribute('type', 'text');
-			//hiding temp field from peoples eyes
-			//-webkit-user-modify is nessesary for Android 4.x
-			field.setAttribute('style', 'position:absolute; top: 0px; opacity: 0; -webkit-user-modify: read-write-plaintext-only; left:0px;');
-			document.body.appendChild(field);
-
-			//adding onfocus event handler for out temp field
-			field.onfocus = function () {
-				//this timeout of 200ms is nessasary for Android 2.3.x
-				setTimeout(function () {
-
-					field.setAttribute('style', 'display:none;');
-					setTimeout(function () {
-						document.body.removeChild(field);
-						document.body.focus();
-					}, 14);
-
-				}, 200);
-			};
-			//focusing it
-			field.focus();
-
-		}, 50);
-	}
-
 	// gets the high scores from the db and displays them on the highscore console
 	private DisplayScores() {
 		if ((window as any).IntroText) {
@@ -943,7 +912,7 @@ export class LetterFury{
 	// checks if input correct, and then processes result
 	private MakeSelection() {
 
-		this.HideKeyboard();
+	
 		let $gameTextElem:HTMLElement = this.$q("#gameText");
 
 		const regex = /^[a-zA-Z]{3}$/;
@@ -1003,8 +972,8 @@ export class LetterFury{
 					whatIsHappening += `<br/>Number ${i + 1} was right!.  The computer chose ${computerGameText[i]} and you chose ${ourGameText[i]}<br/>`;
 					resultsCode += '&#128522;';
 					this.PushToDiscardedLetterArray(ourGameText[i].toLowerCase(),'right');
-
 					this.$q("#resultImg-"+i).innerHTML=this.$happySvg;
+					this.keyboard.AddKeyClass(ourGameText[i].toLowerCase(),'correct');
 
 				}
 				else if ((ourGameText[i].toLowerCase() !== computerGameText[i].toLowerCase()) && this.OurRandomWord.toLowerCase().indexOf(ourGameText[i].toLowerCase()) !== -1) {
@@ -1012,6 +981,7 @@ export class LetterFury{
 					resultsCode += '&#128579;';
 					this.PushToDiscardedLetterArray(ourGameText[i].toLowerCase(),'almost');
 					this.$q("#resultImg-"+i).innerHTML=this.$closeSvg;
+					this.keyboard.AddKeyClass(ourGameText[i].toLowerCase(),'close');
 
 				}
 				else {
@@ -1019,6 +989,7 @@ export class LetterFury{
 					resultsCode += '&#128577;';
 					this.PushToDiscardedLetterArray(ourGameText[i].toLowerCase(),'wrong');
 					this.$q("#resultImg-"+i).innerHTML=this.$angrySvg;
+					this.keyboard.AddKeyClass(ourGameText[i].toLowerCase(),'incorrect');
 
 				}
 
@@ -1164,6 +1135,7 @@ export class LetterFury{
 				break;
 		}
 	}
+
 
 	private GroupGameEnd(results:any){
 		if(results.topPlayers.includes(this.GroupGame.GroupUserName)){

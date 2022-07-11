@@ -149,6 +149,7 @@ export class LetterFury {
         ];
     }
     EnterLetterInConsole(letter) {
+        document.querySelector("#inputInner").classList.remove("has-cursor");
         const console = this.$q('#gameText');
         let val = console.value;
         let contentLength = val.split('').length;
@@ -346,6 +347,7 @@ export class LetterFury {
     //runs after the a player has guessed the correct #, and lets them choose another
     StartNextRound(isSkip) {
         this.DiscardedLetters = [];
+        this.keyboard.RemoveAllKeyClasses();
         if (!this.GroupGame.IsGroupGame) {
             this.SetRandomWord();
         }
@@ -713,18 +715,21 @@ export class LetterFury {
                     resultsCode += '&#128522;';
                     this.PushToDiscardedLetterArray(ourGameText[i].toLowerCase(), 'right');
                     this.$q("#resultImg-" + i).innerHTML = this.$happySvg;
+                    this.keyboard.AddKeyClass(ourGameText[i].toLowerCase(), 'correct');
                 }
                 else if ((ourGameText[i].toLowerCase() !== computerGameText[i].toLowerCase()) && this.OurRandomWord.toLowerCase().indexOf(ourGameText[i].toLowerCase()) !== -1) {
                     whatIsHappening += `<br/>Number ${i + 1} not totally right - it is there, but not in the same place!.  The computer chose ${computerGameText[i]} and you chose ${ourGameText[i]}<br/>`;
                     resultsCode += '&#128579;';
                     this.PushToDiscardedLetterArray(ourGameText[i].toLowerCase(), 'almost');
                     this.$q("#resultImg-" + i).innerHTML = this.$closeSvg;
+                    this.keyboard.AddKeyClass(ourGameText[i].toLowerCase(), 'close');
                 }
                 else {
                     whatIsHappening += `<br/>Number ${i + 1} was wrong!.  The computer chose ${computerGameText[i]} and you chose ${ourGameText[i]}<br/>`;
                     resultsCode += '&#128577;';
                     this.PushToDiscardedLetterArray(ourGameText[i].toLowerCase(), 'wrong');
                     this.$q("#resultImg-" + i).innerHTML = this.$angrySvg;
+                    this.keyboard.AddKeyClass(ourGameText[i].toLowerCase(), 'incorrect');
                 }
             }
             resultsCode = `${resultsCode} (${gameText})`;
