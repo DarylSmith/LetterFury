@@ -837,7 +837,7 @@ font-size: 25px;
 		flex-direction: column;
 	}
 	#consoleContainer {
-		height: 200px;
+		height: 150px;
 		width: 85%;
 		margin: 0px auto 10px auto;
 	}

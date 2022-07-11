@@ -270,7 +270,7 @@ export class LetterFury{
 		this.PlayerScore = 0;
 		this.GetTopScore();
 		this.BeginAdvancedRound();
-		this.FocusInputElement(true);
+		this.FocusInputElement(false);
 
 	}
 
@@ -783,7 +783,7 @@ export class LetterFury{
 
 	// puts focus on input element for each turn. disabled on mobile because the keyboard pops up and hides console
 	private FocusInputElement(allowMobileFocus: boolean){
-		if(this.IsDesktop || allowMobileFocus===true){
+		if((window as any).matchMedia('(min-width: 961px)').matches){
 
 			this.$q("#gameText").focus();
 		}
