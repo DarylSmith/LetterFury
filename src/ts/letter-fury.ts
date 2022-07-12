@@ -46,7 +46,7 @@ export class LetterFury{
 
     
 	// if set to true, outputs comments about game logic to console
-	private _testMode:boolean =true;
+	private _testMode:boolean =false;
 
 	constructor(){
 
@@ -131,7 +131,7 @@ export class LetterFury{
 
 	// number used for countdown timer
 	public CountdownNumber:number= 0;
-	public LengthOfGameInMinutes= 2;
+	public LengthOfGameInMinutes= .2;
 
 	//these variables contain the emoji svg
 	public $happySvg:string = '';
@@ -640,7 +640,7 @@ export class LetterFury{
 
 				// only solo games can log high scores
 				// if this is a group game check for the winner
-				if(this.GroupGame.IsGroupGame){
+				if(!this.GroupGame.IsGroupGame){
 					this.CheckForHighScore(0);
 				}
 				if(this.GroupGame.IsGroupGame && this.GroupGame.GroupUserStatus==='host'){

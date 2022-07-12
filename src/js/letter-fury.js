@@ -27,7 +27,7 @@ export class LetterFury {
         this._dataAccess = new DataAccess();
         this._wordLength = 3;
         // if set to true, outputs comments about game logic to console
-        this._testMode = true;
+        this._testMode = false;
         this.CurrentPointValue = {
             MaxPointsForWord: 10,
             SecondsForPointChange: 15,
@@ -51,7 +51,7 @@ export class LetterFury {
         this.CurrentRank = 0;
         // number used for countdown timer
         this.CountdownNumber = 0;
-        this.LengthOfGameInMinutes = 2;
+        this.LengthOfGameInMinutes = .2;
         //these variables contain the emoji svg
         this.$happySvg = '';
         this.$closeSvg = '';
@@ -447,7 +447,7 @@ export class LetterFury {
                     this.$q("#consoleText").innerHTML = '';
                     // only solo games can log high scores
                     // if this is a group game check for the winner
-                    if (this.GroupGame.IsGroupGame) {
+                    if (!this.GroupGame.IsGroupGame) {
                         this.CheckForHighScore(0);
                     }
                     if (this.GroupGame.IsGroupGame && this.GroupGame.GroupUserStatus === 'host') {
