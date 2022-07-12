@@ -996,6 +996,12 @@ based on https://codepen.io/kulpreets/pen/MKgqqB
     text-align: center;
 }
 
+div[class*='line'] span:active {
+background-color: #97999a;
+}
+
+
+
 .lf-key-init{visibility:hidden;}
 .lf-key-visible{
 	animation: display-key .2s linear;

@@ -759,7 +759,6 @@ window.NameUI=[];
 	// checks if input correct, and then processes result
 	MakeSelection: function () {
 
-		DalyasGame.HideKeyboard();
 		let $gameTextElem = $q("#gameText");
 
 		const regex = /^[a-zA-Z]{3}$/;

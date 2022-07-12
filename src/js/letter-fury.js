@@ -186,7 +186,7 @@ export class LetterFury {
         this.PlayerScore = 0;
         this.GetTopScore();
         this.BeginAdvancedRound();
-        this.FocusInputElement(true);
+        this.FocusInputElement(false);
     }
     AddPlayerToGame() {
         this.GroupGame.GroupUserStatus = "player";
@@ -549,7 +549,7 @@ export class LetterFury {
     }
     // puts focus on input element for each turn. disabled on mobile because the keyboard pops up and hides console
     FocusInputElement(allowMobileFocus) {
-        if (this.IsDesktop || allowMobileFocus === true) {
+        if (window.matchMedia('(min-width: 961px)').matches) {
             this.$q("#gameText").focus();
         }
     }
@@ -590,33 +590,6 @@ export class LetterFury {
             this.WriteToConsole(text, className);
             this.$q("#gameText").focus();
         }, 1000);
-    }
-    //taken from https://stackoverflow.com/questions/8335834/how-can-i-hide-the-android-keyboard-using-javascript
-    HideKeyboard() {
-        //this set timeout needed for case when hideKeyborad
-        //is called inside of 'onfocus' event handler
-        setTimeout(function () {
-            //creating temp field
-            var field = document.createElement('input');
-            field.setAttribute('type', 'text');
-            //hiding temp field from peoples eyes
-            //-webkit-user-modify is nessesary for Android 4.x
-            field.setAttribute('style', 'position:absolute; top: 0px; opacity: 0; -webkit-user-modify: read-write-plaintext-only; left:0px;');
-            document.body.appendChild(field);
-            //adding onfocus event handler for out temp field
-            field.onfocus = function () {
-                //this timeout of 200ms is nessasary for Android 2.3.x
-                setTimeout(function () {
-                    field.setAttribute('style', 'display:none;');
-                    setTimeout(function () {
-                        document.body.removeChild(field);
-                        document.body.focus();
-                    }, 14);
-                }, 200);
-            };
-            //focusing it
-            field.focus();
-        }, 50);
     }
     // gets the high scores from the db and displays them on the highscore console
     DisplayScores() {
@@ -671,7 +644,6 @@ export class LetterFury {
     // this the primary function for guessing an item. it gets the input value
     // checks if input correct, and then processes result
     MakeSelection() {
-        this.HideKeyboard();
         let $gameTextElem = this.$q("#gameText");
         const regex = /^[a-zA-Z]{3}$/;
         let gameText = $gameTextElem.value;
