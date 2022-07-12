@@ -5,7 +5,7 @@ private assignedLetters:[string,number][]=[];
 private keyboardInterval:any;
 
 private readonly _letterArr:string[][]=
-[['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['z','x','c','v','b','n','m']]
+[['q','w','e','r','t','y','u','i','o'],['a','s','d','f','g','h','j','k','l'],['z','x','c','v','b','n','m','p']]
 
 private get _singleLetterArray():string[]{
     return this._letterArr[0].concat(this._letterArr[1]).concat(this._letterArr[2]);

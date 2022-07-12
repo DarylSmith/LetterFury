@@ -1,7 +1,7 @@
 export class LetterFuryKeyboard {
     constructor() {
         this.assignedLetters = [];
-        this._letterArr = [['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], ['z', 'x', 'c', 'v', 'b', 'n', 'm']];
+        this._letterArr = [['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o'], ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], ['z', 'x', 'c', 'v', 'b', 'n', 'm', 'p']];
     }
     get _singleLetterArray() {
         return this._letterArr[0].concat(this._letterArr[1]).concat(this._letterArr[2]);
