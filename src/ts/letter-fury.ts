@@ -57,6 +57,8 @@ export class LetterFury{
 					this.WritePlayersToGroupScreen(details);
 				break;
 			case GroupGameFunction.GameStart:
+				this.RemoveLoadingIcon( this.$q("#inputContainer"),"lds-facebook");
+				this.$q("#inputContainerInner").style.display="block";
 				this.OurRandomWord = details.word;
 				this.GroupGame.IsGroupGame=true;
 				this.GroupGame.GroupGameStatus="inprogress";
@@ -82,6 +84,7 @@ export class LetterFury{
 				this.GroupGameEnd(details.value);
 				window.setTimeout(()=>{
 				this.GroupGame.GroupGameStatus="completed";
+				this. InitGameOver();
 				this.NavigateToGroupGamePage();
 			}, 5000)
 			
@@ -687,11 +690,14 @@ export class LetterFury{
 		this.FocusInputElement(false);
 		this.ClearGameText()
 		this.ClearSvgValues();
+
+		if(!this.GroupGame.IsGroupGame){
 		this.$q("#letterText").innerHTML='';
 		this.WriteToConsole(`The final word was ${this.OurRandomWord}`);
 		this.WriteToConsole(`If you would like to play again, type YES into the input box.
 								 To go back to the homepage and high, scores, type NO `, "info");
-		this.ClearGameText();
+		}
+		 this.ClearGameText();
 	}
 
 	// adds seconds if a player has gotten a bonus

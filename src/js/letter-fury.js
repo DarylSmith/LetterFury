@@ -51,7 +51,7 @@ export class LetterFury {
         this.CurrentRank = 0;
         // number used for countdown timer
         this.CountdownNumber = 0;
-        this.LengthOfGameInMinutes = 2;
+        this.LengthOfGameInMinutes = .2;
         //these variables contain the emoji svg
         this.$happySvg = '';
         this.$closeSvg = '';
@@ -100,6 +100,8 @@ export class LetterFury {
                     this.WritePlayersToGroupScreen(details);
                     break;
                 case GroupGameFunction.GameStart:
+                    this.RemoveLoadingIcon(this.$q("#inputContainer"), "lds-facebook");
+                    this.$q("#inputContainerInner").style.display = "block";
                     this.OurRandomWord = details.word;
                     this.GroupGame.IsGroupGame = true;
                     this.GroupGame.GroupGameStatus = "inprogress";
@@ -124,6 +126,7 @@ export class LetterFury {
                     this.GroupGameEnd(details.value);
                     window.setTimeout(() => {
                         this.GroupGame.GroupGameStatus = "completed";
+                        this.InitGameOver();
                         this.NavigateToGroupGamePage();
                     }, 5000);
                     break;
@@ -481,10 +484,12 @@ export class LetterFury {
         this.FocusInputElement(false);
         this.ClearGameText();
         this.ClearSvgValues();
-        this.$q("#letterText").innerHTML = '';
-        this.WriteToConsole(`The final word was ${this.OurRandomWord}`);
-        this.WriteToConsole(`If you would like to play again, type YES into the input box.
+        if (!this.GroupGame.IsGroupGame) {
+            this.$q("#letterText").innerHTML = '';
+            this.WriteToConsole(`The final word was ${this.OurRandomWord}`);
+            this.WriteToConsole(`If you would like to play again, type YES into the input box.
 								 To go back to the homepage and high, scores, type NO `, "info");
+        }
         this.ClearGameText();
     }
     // adds seconds if a player has gotten a bonus
