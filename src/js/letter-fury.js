@@ -51,7 +51,7 @@ export class LetterFury {
         this.CurrentRank = 0;
         // number used for countdown timer
         this.CountdownNumber = 0;
-        this.LengthOfGameInMinutes = .2;
+        this.LengthOfGameInMinutes = 2;
         //these variables contain the emoji svg
         this.$happySvg = '';
         this.$closeSvg = '';
@@ -548,7 +548,7 @@ export class LetterFury {
             this.RemoveLoadingIcon(this.$q("#inputContainer"), "lds-facebook");
             this.$q("#inputContainerInner").style.display = "block";
             const hasHighScore = this.HasHighScore(this.PlayerScore, data);
-            if (hasHighScore) {
+            if (!hasHighScore) {
                 this.InitGameOver();
             }
             else {
