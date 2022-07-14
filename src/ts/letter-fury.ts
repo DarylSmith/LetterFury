@@ -219,6 +219,19 @@ export class LetterFury{
 		
 		}
 
+	public InviteUsers(){
+
+		const shareData = {
+			title: 'Letter Fury Invite',
+			text: `Play Letter Fury! Go to this link and enter game code: ${this.GroupGame.GroupGameName}`,
+			url: 'https://letterfury.com#code'
+		  }
+
+		  navigator.share(shareData).then(()=>{
+			console.log('Item is shared!')
+		  })
+	}
+
 	public EnterLetterInConsole(letter:string){
 
 		document.querySelector("#inputInner")!.classList.remove("has-cursor");
@@ -393,6 +406,11 @@ export class LetterFury{
 		this.$q("#ruleSection").style.display="none";
 		this.$q("#groupGameSection").style.display="block";
 		this.$q("#groupGameContainer").classList.add("easeInRight");
+
+		if(this.GroupGame.GroupUserStatus==="player"  ){
+			
+			this.$q("#inviteGroupGame").style.display="none";
+		}
 
 	}
 	//removes animation classes from home navigation after completion

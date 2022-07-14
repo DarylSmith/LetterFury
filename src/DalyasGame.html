@@ -35,7 +35,11 @@
 			letterFury.EnterLetterInConsole(letter);
 
 		 }
-		
+
+		 window.InviteUsers= function(){
+			letterFury.InviteUsers();
+		 }
+	
 
 		document.addEventListener("DOMContentLoaded", () => {
 
@@ -116,7 +120,7 @@
 		<div class="groupGameLabel" id="groupGameInstructions">
 			This is your Letter Fury game id <br/> 
 			You can let anyone else play by giving them this code,
-			and asking them to enter it at letterfury.com/code
+			and asking them to enter it at letterfury.com#code
 		</div>
 		
 		<div id="groupGameId">
@@ -131,6 +135,7 @@
 
 		</div> 
 		<div class="buttonContainer">
+			<button id="inviteGroupGame" onclick="InviteUsers()">Invite Players</button>
 			<button id="startGroupGame" onclick="SubmitGroupEvent()">Start</button>
 		</div>
 
