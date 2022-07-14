@@ -247,9 +247,8 @@ export class LetterFury{
 			 contentLength++;
 
 		}
-		if(contentLength===this._wordLength){
-			this.MakeSelection();
-		}
+		this.HandleKeyPressEvent(contentLength,val);
+		
 		
 	}
     
@@ -1111,19 +1110,19 @@ export class LetterFury{
 		}
 	}
 
-	private HandleKeyPressEvent(event:any){
+	private HandleKeyPressEvent(eventLength:number,eventValue:string){
 
-		if (event.target.value.length >= this._wordLength && this.GameState === 'game_play') {
+		if (eventLength >= this._wordLength && this.GameState === 'game_play') {
 			this.MakeSelection();
 		}
-		else if (event.target.value.toUpperCase() === 'YES' && this.GameState === 'game_over') {
+		else if (eventValue.toUpperCase() === 'YES' && this.GameState === 'game_over') {
 			this.InitGame();
 		}
-		else if (event.target.value.toUpperCase() === 'NO' && this.GameState === 'game_over') {
+		else if (eventValue.toUpperCase() === 'NO' && this.GameState === 'game_over') {
 			this.NavigateToHomePageStart();
 		}
-		else if (event.target.value.length == this._wordLength && this.GameState === 'high_score') {
-			this.SetScores(event.target.value);
+		else if (eventLength== this._wordLength && this.GameState === 'high_score') {
+			this.SetScores(eventValue);
 		}
 	}
 	// checks which css animation has completed and routes to correct fn

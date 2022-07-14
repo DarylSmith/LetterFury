@@ -78,7 +78,7 @@
 
 			document.querySelector("#gameText").addEventListener('keyup', (event) => {
 
-				letterFury.HandleKeyPressEvent(event);
+				letterFury.HandleKeyPressEvent(event.target.value.length,event.target.value);
 
 			});
 		});
