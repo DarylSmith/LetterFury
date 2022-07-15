@@ -74,6 +74,7 @@ export class LetterFury{
 							if(index===20){
 								clearInterval((window as any).WordInput);
 								this.$q("#gameText").value = '';
+								this.keyboard.RemoveAllKeyClasses();
 							}
 		
 						}, 40);
@@ -306,7 +307,7 @@ export class LetterFury{
 								  
 		if(this.GroupGame.GroupUserStatus==="player"){
 
-			this.GroupGame.GroupGameName= this.$q("#groupGameIdText").value;
+			this.GroupGame.GroupGameName= this.$q("#groupGameIdText").value.toLowerCase();
 			this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName);
 
 			setTimeout(()=>{
@@ -793,6 +794,7 @@ export class LetterFury{
 					document.querySelector("#inputInner")!.classList.add("has-cursor");
 					this.FocusInputElement(false);
 					//this.$q("#inputAction").innerHTML = "initials";
+					this.$q("#consoleText").innerHTML='';
 					this.WriteToConsole(`Congratulations! you are ranked number ${this.CurrentRank} on our list of all time champs!
 													Please enter your initials`, "bonus");
 				}			
