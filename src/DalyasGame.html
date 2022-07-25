@@ -39,6 +39,28 @@
 		 window.InviteUsers= function(){
 			letterFury.InviteUsers();
 		 }
+
+		 window.ShowGameModal= function(){
+
+			document.querySelector("#button-modal").classList.add("modal-window-active");
+		 }
+
+		 window.AddPlayerToGame= function(){
+
+			letterFury.AddPlayerToGame();
+		 }
+
+		 window.moveRule= function(moveForward){
+
+			letterFury.ChangeIntroItem(moveForward);
+		 }
+
+		 window.onclick = function(event) {
+			let modal = document.querySelector("#button-modal");
+   		 if (event.target == modal) {
+        	document.querySelector("#button-modal").classList.remove("modal-window-active");
+    	}
+}
 	
 
 		document.addEventListener("DOMContentLoaded", () => {
@@ -100,15 +122,18 @@
 		<!--end header component-->
 		<!--begin rules/highscore page-->
 		<section id="ruleSection">
-
-
+		
+			<div class="terminal-container">
+			<img src="img/chevron-left.svg" height="70px" onclick="moveRule(false)"  id="rules-back">
 			<div id="terminal">___</div>
+			<img src="img/chevron-right.svg" height="70px" onclick="moveRule(true)" id="rules-forward">
+			</div>
 			<div id="rules">
 				Loading...
 			</div>
 			<div class="buttonContainer">
-				<button class="start-game-single" id="startGameButton">Single-player</button>
-				<button class="start-game-multi" id="startGameButton">Multi-player</button>
+				<button class="show-game-modal" onclick="ShowGameModal()" id="InvokeGameButtonModal">Start Game</button>
+				<button class="add-player" onclick="AddPlayerToGame()"  id="StartGroupGameButton">Join Game</button>
 				<button id="highScoreButton">High Scores</button>
 			</div>
 
@@ -257,6 +282,21 @@
 			</g>
 		  </svg>		  
 		</div>
+
+	<!--modal window-->
+<div class="modal-window" id="button-modal">
+
+	<div class="startContainer">
+
+		<label for="startSoloGameButton">Play against yourself and go for high score</label>
+		<button class="start-game-single" id="startSoloGameButton">Single-player</button>
+		
+		<label for="startGroupGameButton">Invite friends and compete</label>
+		<button class="start-game-multi" id="startGroupGameButton">Multi-player</button>
+	</div>
+
+
+</div>
 
 </body>
 

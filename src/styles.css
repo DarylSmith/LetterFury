@@ -8,6 +8,7 @@
 7.responsive styles
 8.svg styles
 9.mobile keyboard
+10.modal window
 */
 
 /*global styles*/
@@ -95,6 +96,15 @@ h1:after {
 	width: 32%;
 
 	box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.terminal-container{
+	display:flex;
+}
+
+#rules-forward, #rules-back{
+	margin-top:30px;
+	cursor:pointer;
 }
 
 #groupGameId{
@@ -216,6 +226,8 @@ position:relative;
 
 }
 
+
+
 #inputDisplayContainer{
 	display: flex;
     /* width: 100px; */
@@ -323,7 +335,7 @@ font-size: 25px;
 	padding: 6px;
 }
 
-.buttonContainer button {
+.buttonContainer button, .startContainer button {
 	border-radius: 37px;
 	height: 101px;
 	width: 262px; 
@@ -872,8 +884,8 @@ font-size: 25px;
 		margin: 0px auto;
 	}
 	#terminal {
-		font-size: 65px;
-		min-height: 120px;
+		font-size: 30px;
+		min-height: 90px;
 		width: 80%;
 	}
 	#rules {
@@ -1037,6 +1049,68 @@ background-color: #97999a;
 	transform: scale(.9);
   }
   
+/*modal window */
+.modal-window {
+	position: fixed;
+	background-color: rgba(255, 255, 255, 0.25);
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 999;
+	visibility:hidden;
+	opacity: 0;
+	pointer-events: none;
+	transition: all 0.3s;
+  }
+
+  .modal-window label {
+	font-weight: 900;
+	display:block;
+	margin: 20 0px 10 0;
+  }
+
+  .modal-window label:nth-child(2) {
+
+	margin-top:25px;
+
+  }
+  .modal-window-active {
+	visibility: visible;
+	opacity: 1;
+	pointer-events: auto;
+  }
+  .modal-window > div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 7%;
+    transform: translate(-50%, -50%);
+    padding: 2em;
+    background: white;
+}
+  .modal-window header {
+	font-weight: bold;
+  }
+  .modal-window h1 {
+	font-size: 150%;
+	margin: 0 0 15px;
+  }
+  
+  .modal-close {
+	color: #aaa;
+	line-height: 50px;
+	font-size: 80%;
+	position: absolute;
+	right: 0;
+	text-align: center;
+	top: 0;
+	width: 70px;
+	text-decoration: none;
+  }
+  .modal-close:hover {
+	color: black;
+  }
  
 
   

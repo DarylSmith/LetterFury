@@ -2,13 +2,15 @@ import { DataAccess } from './classes/data-access.js';
 import { WordsEn } from './classes/words-en.js';
 import { GroupGameFunction } from './enums/group-game-function.js';
 import { LetterFuryKeyboard } from './classes/lf-keyboard.js';
+import { LfIntro } from './classes/lf-intro.js';
 export class LetterFury {
     constructor() {
         //abbreviates the native DOM selector for easier use
         this.$q = document.querySelector.bind(document);
         // holds high scores retrived from endoint
         this.HighScores = [];
-        this.ListOfWords = WordsEn();
+        this.ListOfWords = WordsEn().filter(e => e.usedInGame).map(e => e.word);
+        this.AcceptableWords = WordsEn().map(e => e.word);
         // endoint for  retrieving high scores. TODO add to config file
         this.HighScoresEndpoint = 'https://6dmnrf7ylc.execute-api.us-east-1.amazonaws.com/default';
         //Random Word generated for game
@@ -16,6 +18,7 @@ export class LetterFury {
         //container for each chance per random number
         this.ListOfChances = [];
         this.keyboard = new LetterFuryKeyboard();
+        this.introJson = new LfIntro();
         //Number of times a player guesses during a turn. TODO: make this private
         this.PlayerScore = 0;
         // Counter for the intro (rules)
@@ -59,7 +62,7 @@ export class LetterFury {
         //this is a list of discarded letters for a round
         this.DiscardedLetters = [];
         this.IntroJson = {
-            Items: this.GetIntroJsonItems(() => {
+            Items: this.introJson.GetIntroJsonItems(() => {
                 this.ResetRandomNumber(60, 40, () => { this.$q("#terminal").innerHTML = !this.ElementIsHidden(this.$q("#rules")) ? this.OurRandomWord : ''; });
             })
         };
@@ -140,18 +143,6 @@ export class LetterFury {
             }, 1500);
         });
     }
-    GetIntroJsonItems(introFunction) {
-        return [
-            { 'Console': introFunction, 'Text': 'The computer has chosen a 3-letter word.', 'HTML': '' },
-            { 'Console': '???', 'Text': 'You need to guess what it is.', 'HTML': '' },
-            { 'Console': '  ', 'Text': 'The computer will give you am emoji with some clues. ', 'HTML': '<img src="img/happy.svg"  height="120"/><img src="img/angry.svg"  height="120"/><img src="img/close.svg"  height="120"/>' },
-            { 'Console': '  ', 'Text': 'The emoji &#128577; means the letter is NOT in the word.', 'HTML': '<img src="img/angry.svg"  height="120"/>' },
-            { 'Console': '  ', 'Text': 'The emoji &#128579;  means the letter is in the word, but in the wrong place.', 'HTML': '<img src="img/close.svg"  height="120"/>' },
-            { 'Console': '  ', 'Text': '&#128522;  Means the letter is in the right place.', 'HTML': '<img src="img/happy.svg"  height="120"/>' },
-            { 'Console': '  ', 'Text': 'Your goal is to get &#128522; &#128522; &#128522; as many times as you can in 2 minutes.', 'HTML': '<img src="img/happy.svg"  height="120"/><img src="img/happy.svg"  height="120"/><img src="img/happy.svg"  height="120"/>' },
-            { 'Console': '  ', 'Text': 'Are you ready to accept the challenge?', 'HTML': '<span onclick="DalyasGame.Init();" id="clickToStart">Click to start</button>' }
-        ];
-    }
     InviteUsers() {
         const shareData = {
             title: 'Letter Fury Invite',
@@ -180,6 +171,7 @@ export class LetterFury {
     }
     // this is the function to start a new game. 
     InitGame() {
+        document.querySelector("#button-modal").classList.remove("modal-window-active");
         if (window.IntroText) {
             window.clearInterval(window.IntroText);
         }
@@ -225,6 +217,7 @@ export class LetterFury {
         }
     }
     InitGroupGame() {
+        document.querySelector("#button-modal").classList.remove("modal-window-active");
         this.GroupGame.GroupGameName = this.CreateRandomNames().toLowerCase();
         this.GroupGame.GroupUserName = this.CreateRandomNames().toLowerCase();
         this.GroupGame.GroupUserStatus = "host";
@@ -308,10 +301,27 @@ export class LetterFury {
         document.querySelector("#terminal").classList.remove("flattenConsole");
         this.RenderConsoleText(this.IntroJson.Items[0]);
         window.IntroText = window.setInterval(() => {
+            console.log(`index starts at ${this.IntroIndex}`);
             const currentItem = this.IntroJson.Items[this.IntroIndex];
             this.RenderConsoleText(currentItem);
             this.IntroIndex = this.IntroIndex >= this.IntroJson.Items.length - 1 ? 0 : this.IntroIndex + 1;
+            console.log(`index is at ${this.IntroIndex}`);
         }, 4000);
+    }
+    ChangeIntroItem(moveForward) {
+        if (moveForward) {
+            console.log(`index advances at ${this.IntroIndex}`);
+            const currentItem = this.IntroJson.Items[this.IntroIndex];
+            this.RenderConsoleText(currentItem);
+            this.IntroIndex = this.IntroIndex >= this.IntroJson.Items.length - 1 ? 0 : this.IntroIndex + 1;
+        }
+        else {
+            const newIntroIndex = this.IntroIndex - 2;
+            this.IntroIndex = newIntroIndex < 0 ? 0 : newIntroIndex;
+            const currentItem = this.IntroJson.Items[this.IntroIndex];
+            this.RenderConsoleText(currentItem);
+            console.log(`index goes back at ${this.IntroIndex}`);
+        }
     }
     ResetRandomNumber(delay, repetitions, elementReset) {
         var x = 0;
@@ -601,13 +611,17 @@ export class LetterFury {
             emoji.classList.add("flatten-emoji");
         }
         window.setTimeout(() => {
-            $gameTextElem.value = "";
-            this.$q("#gameText").style.visibility = "visible";
-            //this.$q("#mainBody label").style.display="block";
-            this.$q("#inputInner").className = "has-cursor";
-            this.WriteToConsole(text, className);
-            this.$q("#gameText").focus();
+            this.ClearTextConsole($gameTextElem, text, className);
+            $gameTextElem.classList.remove('error');
         }, 1000);
+    }
+    ClearTextConsole($gameTextElem, text, className) {
+        $gameTextElem.value = "";
+        this.$q("#gameText").style.visibility = "visible";
+        //this.$q("#mainBody label").style.display="block";
+        this.$q("#inputInner").className = "has-cursor";
+        this.WriteToConsole(text, className);
+        this.$q("#gameText").focus();
     }
     // gets the high scores from the db and displays them on the highscore console
     DisplayScores() {
@@ -665,8 +679,11 @@ export class LetterFury {
         let $gameTextElem = this.$q("#gameText");
         const regex = /^[a-zA-Z]{3}$/;
         let gameText = $gameTextElem.value;
-        if (!regex.test(gameText)) {
-            this.WriteToConsole("Invalid entry", "error");
+        if (!regex.test(gameText) || !this.AcceptableWords.includes(gameText)) {
+            $gameTextElem.classList.add('error');
+            window.setTimeout(() => {
+                this.DisplayInputResults($gameTextElem, "Invalid word", "error");
+            }, 500);
         }
         else {
             //take the number computer made and split that into 3 pieces
