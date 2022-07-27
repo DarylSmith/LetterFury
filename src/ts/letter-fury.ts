@@ -55,6 +55,14 @@ export class LetterFury{
 
 	constructor(){
 
+		//if this is a group game invite, parse now
+		if(window.location.hash.includes('gameid'))
+		{
+			const gameId = window.location.hash.split('=')[1];
+			this.GroupGame.GroupGameName=gameId;
+			console.log(`Group game is ${this.GroupGame.GroupGameName}`);
+		}
+
 		document.addEventListener('socketEvent', (event:CustomEvent)=>{
 		const details = event.detail as GroupGameResult;
 		switch(details.event){
@@ -209,8 +217,8 @@ export class LetterFury{
 
 		const shareData = {
 			title: 'Letter Fury Invite',
-			text: `Play Letter Fury! Go to this link and enter game code: ${this.GroupGame.GroupGameName}`,
-			url: 'https://letterfury.com#code'
+			text: `Play Letter Fury! Go to this link and watch intructions. Click Join Game when you're ready`,
+			url: `https://letterfury.com#gameid=${this.GroupGame.GroupGameName}`
 		  }
 
 		  navigator.share(shareData).then(()=>{
@@ -294,7 +302,10 @@ export class LetterFury{
 								  
 		if(this.GroupGame.GroupUserStatus==="player"){
 
-			this.GroupGame.GroupGameName= this.$q("#groupGameIdText").value.toLowerCase();
+			if(this.GroupGame.GroupGameName===''){
+				this.GroupGame.GroupGameName=this.$q("#groupGameIdText").value.toLowerCase();
+			}
+
 			this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName);
 
 			setTimeout(()=>{
@@ -399,6 +410,9 @@ export class LetterFury{
 		if(this.GroupGame.GroupUserStatus==="player"  ){
 			
 			this.$q("#inviteGroupGame").style.display="none";
+			{
+				this.StartGroupGame()
+			}
 		}
 
 	}
@@ -1097,8 +1111,9 @@ export class LetterFury{
 			this.$q("#groupGameId").classList.add("scatter-console-1");
 			this.$q("#groupGameContainer").style.display="block";
 			this.$q("#groupGameContainer").classList.add("drop-frame");
+			this.$q("#groupGameInstructions").innerText="The game will start shortly! Please wait for players to join...";	
 			this.BuildRandomNameUI("groupGameVal",this.GroupGame.GroupGameName);
-			this.BuildRandomNameUI("groupUserVal",this.GroupGame.GroupUserName);
+			this.BuildRandomNameUI("groupUserVal",this.GroupGame.GroupUserName); 
 			}
 
 		this.GroupGame.GroupUserConnected=true;
