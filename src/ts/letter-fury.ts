@@ -1145,10 +1145,11 @@ export class LetterFury{
 
 	private WritePlayersToGroupScreen(payload:GroupGameResult){
 		
-		if(this.GroupGame.GroupUserStatus==="player"  && !this.GroupGame.GroupUserConnected){
+		if(this.GroupGame.GroupUserStatus==="player"  && !this.GroupGame.GroupUserConnected &&this.GroupGame.GroupUserName=== payload.player){
 			this.$q("#groupGameId").classList.remove("easeInLeft");
 			this.$q("#groupGameId").classList.add("scatter-console-1");
 			this.$q("#groupGameContainer").style.display="block";
+			this.$q("#startGroupGame").style.display="none";
 			this.$q("#groupGameContainer").classList.add("drop-frame");
 			this.$q("#groupGameInstructions").innerText="The game will start shortly! Please wait for players to join...";	
 			this.BuildRandomNameUI("groupGameVal",this.GroupGame.GroupGameName);
