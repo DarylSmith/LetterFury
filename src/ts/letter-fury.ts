@@ -24,6 +24,7 @@ export class LetterFury{
 	
 	//Random Word generated for game
 	public OurRandomWord:string = '';// 
+	private OurPreviousRandomWord:string='';
 	
 	//container for each chance per random number
 	public ListOfChances:any[]= [];
@@ -77,18 +78,14 @@ export class LetterFury{
 				this.GroupGame.GroupGameStatus="inprogress";
 				this.InitGame();
 			case GroupGameFunction.WordGuessed:
-				this.WriteToConsole( `${details.player} successfully guessed ${this.OurRandomWord.toLowerCase() }`);
-				this.OurRandomWord = details.word;
+				//this.WriteToConsole( `${details.player} successfully guessed ${this.OurRandomWord.toLowerCase() }`);
+				this.InvokeGroupPointAwarded(details);
+			
 				let index = 0;
 				if(details.player!==this.GroupGame.GroupUserName){
 						(window as any).WordInput = (window as any).setInterval(() => {
 							index++;
-							this.DisplayRandomWord();
-							if(index===20){
-								clearInterval((window as any).WordInput);
-								this.$q("#gameText").value = '';
-								this.keyboard.RemoveAllKeyClasses();
-							}
+					
 		
 						}, 40);
 				}
@@ -96,11 +93,6 @@ export class LetterFury{
 				break;
 			case GroupGameFunction.GameEnd:
 				this.GroupGameEnd(details.value);
-				window.setTimeout(()=>{
-				this.GroupGame.GroupGameStatus="completed";
-				this. InitGameOver();
-				this.NavigateToGroupGamePage();
-			}, 5000)
 			
 			break;
 
@@ -560,6 +552,51 @@ export class LetterFury{
 
 	}
 
+	private  InvokeGroupPointAwarded(result:GroupGameResult){
+
+		if(!result.player)
+			return;
+
+		let index=0;
+		const consoleCont:HTMLElement = document.querySelector("#consoleContainer");
+		const consoleText:HTMLElement = document.querySelector("#consoleText");
+
+		const guessedWord = result.player===this.GroupGame.GroupUserName?this.OurPreviousRandomWord:this.OurRandomWord;
+		consoleText.innerHTML=`<span class="point-text">${result.player} guessed ${guessedWord }</span>`;
+
+		(window as any).PointView = setInterval(()=>{
+
+			this.DisplayRandomWord();
+
+			if(index%6==0){
+			if(consoleCont.classList.contains("console-point-highlight")){
+
+				consoleCont.classList.remove("console-point-highlight");
+
+			}
+			else
+			{
+				consoleCont.classList.add("console-point-highlight");
+			}
+		}
+			index++;
+			if (index===50){
+				clearInterval((window as any).PointView);
+				consoleText.innerHTML='';
+				consoleCont.classList.remove("console-point-highlight");this.$q("#gameText").value = '';
+				this.keyboard.RemoveAllKeyClasses();
+				this.OurRandomWord = result.word;
+				this.StartNextRound(false);
+				
+			};
+		},40);
+
+
+
+		
+
+	}
+
 	// animation that runs when the game ends
 	private InvokeConsoleScatter(){
 
@@ -582,6 +619,8 @@ export class LetterFury{
 
 	private SetRandomWord()  {
 
+	   //store the previous random word
+	   this.OurPreviousRandomWord=  this.OurRandomWord;
 	   const num= Math.floor(Math.random() *  (this.ListOfWords.length-1));
 	   this.OurRandomWord  = this.ListOfWords[num];
 
@@ -1204,18 +1243,34 @@ export class LetterFury{
 	}
 
 
-	private GroupGameEnd(results:any){
-		if(results.topPlayers.includes(this.GroupGame.GroupUserName)){
+	private GroupGameEnd(results:any[]){
 
-			this.WriteToConsole("YOU WIN!","bonus");
-		}
-		else{
-			this.WriteToConsole("YOU LOSE!");
-		}
+		const $console = this.$q("#consoleText");
 
-		const resultWinners = results.topPlayers.join(',');
-		const resultText=` The winners are ${resultWinners} with a score of ${results.topScore}`;
-		this.WriteToConsole(resultText);
+		// sort all the users by date
+		let items = results.sort((a,b)=>b.points-a.points);
+
+		//remove first place item
+		const firstPlace = items.shift();
+
+		$console.innerHTML='';
+		//iterate from last place to second
+		for(let i=items.length-1; i>=0;i--){
+			const item = items[i];
+			this.WriteToConsole(`${item.player} is #${i+2}  with ${item.points}`);
+			this.WriteToConsole(item.player);
+		
+		}
+		const resultText=` The winner is ${firstPlace.player} with a score of ${firstPlace.points}`;
+		this.WriteToConsole(resultText,"winner");
+			window.setTimeout(()=>{
+				document.querySelectorAll(".console-comment").forEach(elem=>{
+					elem.classList.add('scatter-console-1');
+				});
+				this.GroupGame.GroupGameStatus="completed";
+				this. InitGameOver();
+				this.NavigateToGroupGamePage();
+			}, 7000)
 
 
 	}

@@ -15,6 +15,7 @@ export class LetterFury {
         this.HighScoresEndpoint = 'https://6dmnrf7ylc.execute-api.us-east-1.amazonaws.com/default';
         //Random Word generated for game
         this.OurRandomWord = ''; // 
+        this.OurPreviousRandomWord = '';
         //container for each chance per random number
         this.ListOfChances = [];
         this.keyboard = new LetterFuryKeyboard();
@@ -116,29 +117,18 @@ export class LetterFury {
                     this.GroupGame.GroupGameStatus = "inprogress";
                     this.InitGame();
                 case GroupGameFunction.WordGuessed:
-                    this.WriteToConsole(`${details.player} successfully guessed ${this.OurRandomWord.toLowerCase()}`);
-                    this.OurRandomWord = details.word;
+                    //this.WriteToConsole( `${details.player} successfully guessed ${this.OurRandomWord.toLowerCase() }`);
+                    this.InvokeGroupPointAwarded(details);
                     let index = 0;
                     if (details.player !== this.GroupGame.GroupUserName) {
                         window.WordInput = window.setInterval(() => {
                             index++;
-                            this.DisplayRandomWord();
-                            if (index === 20) {
-                                clearInterval(window.WordInput);
-                                this.$q("#gameText").value = '';
-                                this.keyboard.RemoveAllKeyClasses();
-                            }
                         }, 40);
                     }
                     this.StartNextRound(false);
                     break;
                 case GroupGameFunction.GameEnd:
                     this.GroupGameEnd(details.value);
-                    window.setTimeout(() => {
-                        this.GroupGame.GroupGameStatus = "completed";
-                        this.InitGameOver();
-                        this.NavigateToGroupGamePage();
-                    }, 5000);
                     break;
             }
         });
@@ -393,6 +383,37 @@ export class LetterFury {
         this.$q("#playerScoreCount").innerHTML = this.PlayerScore.toString();
         this.$q("#letterText").innerHTML = '';
     }
+    InvokeGroupPointAwarded(result) {
+        if (!result.player)
+            return;
+        let index = 0;
+        const consoleCont = document.querySelector("#consoleContainer");
+        const consoleText = document.querySelector("#consoleText");
+        const guessedWord = result.player === this.GroupGame.GroupUserName ? this.OurPreviousRandomWord : this.OurRandomWord;
+        consoleText.innerHTML = `<span class="point-text">${result.player} guessed ${guessedWord}</span>`;
+        window.PointView = setInterval(() => {
+            this.DisplayRandomWord();
+            if (index % 6 == 0) {
+                if (consoleCont.classList.contains("console-point-highlight")) {
+                    consoleCont.classList.remove("console-point-highlight");
+                }
+                else {
+                    consoleCont.classList.add("console-point-highlight");
+                }
+            }
+            index++;
+            if (index === 50) {
+                clearInterval(window.PointView);
+                consoleText.innerHTML = '';
+                consoleCont.classList.remove("console-point-highlight");
+                this.$q("#gameText").value = '';
+                this.keyboard.RemoveAllKeyClasses();
+                this.OurRandomWord = result.word;
+                this.StartNextRound(false);
+            }
+            ;
+        }, 40);
+    }
     // animation that runs when the game ends
     InvokeConsoleScatter() {
         this.$q("#consoleText").insertBefore(this.GameOverText(), this.$q("#consoleText").firstChild);
@@ -408,6 +429,8 @@ export class LetterFury {
         }, 500);
     }
     SetRandomWord() {
+        //store the previous random word
+        this.OurPreviousRandomWord = this.OurRandomWord;
         const num = Math.floor(Math.random() * (this.ListOfWords.length - 1));
         this.OurRandomWord = this.ListOfWords[num];
         console.log(`word is ${this.OurRandomWord}`);
@@ -862,15 +885,28 @@ export class LetterFury {
         }
     }
     GroupGameEnd(results) {
-        if (results.topPlayers.includes(this.GroupGame.GroupUserName)) {
-            this.WriteToConsole("YOU WIN!", "bonus");
+        const $console = this.$q("#consoleText");
+        // sort all the users by date
+        let items = results.sort((a, b) => b.points - a.points);
+        //remove first place item
+        const firstPlace = items.shift();
+        $console.innerHTML = '';
+        //iterate from last place to second
+        for (let i = items.length - 1; i >= 0; i--) {
+            const item = items[i];
+            this.WriteToConsole(`${item.player} is #${i + 2}  with ${item.points}`);
+            this.WriteToConsole(item.player);
         }
-        else {
-            this.WriteToConsole("YOU LOSE!");
-        }
-        const resultWinners = results.topPlayers.join(',');
-        const resultText = ` The winners are ${resultWinners} with a score of ${results.topScore}`;
-        this.WriteToConsole(resultText);
+        const resultText = ` The winner is ${firstPlace.player} with a score of ${firstPlace.points}`;
+        this.WriteToConsole(resultText, "winner");
+        window.setTimeout(() => {
+            document.querySelectorAll(".console-comment").forEach(elem => {
+                elem.classList.add('scatter-console-1');
+            });
+            this.GroupGame.GroupGameStatus = "completed";
+            this.InitGameOver();
+            this.NavigateToGroupGamePage();
+        }, 7000);
     }
     GameOverText() {
         let $elem = document.createElement("div");

@@ -184,6 +184,10 @@ line-height: 1.8;
 .right {
 	color:#32CD3C !important;
 }
+.winner {
+	color: #ffffff !important;
+	font-size:30px;
+}
 
 .discarded-letter{font-size:25px;}
 
@@ -202,6 +206,15 @@ line-height: 1.8;
 	letter-spacing: 2px;
 	min-height: 0px !important;
 	bottom: 73px !important;
+}
+.console-point-highlight{
+	
+	background-color: #32CD3C !important;
+	color: #000 !important;
+
+}
+.point-text{
+	font-size:20px;
 }
 
 #letterContainer, #usedLetterContainer{
