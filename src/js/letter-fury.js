@@ -161,6 +161,14 @@ export class LetterFury {
         }
         this.HandleKeyPressEvent(contentLength, val);
     }
+    RemoveLetter() {
+        const console = this.$q('#gameText');
+        let valArr = console.value.split('');
+        if (valArr.length > 0) {
+            valArr.pop();
+        }
+        console.value = valArr.join('');
+    }
     DisplayRandomWord() {
         const num = Math.floor(Math.random() * (this.ListOfWords.length - 1));
         this.$q("#gameText").value = this.ListOfWords[num];

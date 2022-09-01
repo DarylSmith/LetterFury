@@ -237,6 +237,16 @@ export class LetterFury{
 		
 		
 	}
+
+	public RemoveLetter(){
+		const console:HTMLInputElement = this.$q('#gameText');
+		let valArr = console.value.split('');
+		if (valArr.length>0){
+		valArr.pop();
+		}
+		console.value =valArr.join('');
+
+	}
     
 
 	private DisplayRandomWord() {
