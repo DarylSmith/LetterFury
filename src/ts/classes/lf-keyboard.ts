@@ -25,6 +25,8 @@ public BuildKeyboard():string{
 
     });
 
+     // add the back button at the end
+    keyboardLines[keyboardLines.length-1]+=`<span class='lf-key-init' id='lf-back' onclick='RemoveLetter()'><img src='/img/back.svg'/></span>`;
     return keyboardLines.join('</div>') +'</div>';
 }
 
@@ -58,6 +60,8 @@ public DisplayLettersOnKeyboard(): void{
         document.querySelector(`#lf-lett-${currentLetter}`).classList.add('lf-key-visible');
     
         if(this.assignedLetters.length===0){
+            document.querySelector(`#lf-back`).classList.remove('lf-key-init');
+              document.querySelector(`#lf-back`).classList.add('lf-key-visible');
             clearInterval(this.keyboardInterval);
         }
         
