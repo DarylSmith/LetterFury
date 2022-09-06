@@ -99,6 +99,9 @@ export class LetterFury {
         };
         //if this is a group game invite, parse now
         if (window.location.hash.includes('gameid')) {
+            //hide the startgame button
+            const createGameBtn = this.$q('#createGameBtn');
+            createGameBtn.style.display = "none";
             const gameId = window.location.hash.split('=')[1];
             this.GroupGame.GroupGameName = gameId;
             console.log(`Group game is ${this.GroupGame.GroupGameName}`);

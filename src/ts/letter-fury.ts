@@ -438,6 +438,12 @@ export class LetterFury{
 		
 		const $body = this.$q("body");
 
+			//hide the startgame button, if person has a game code
+		if(this.GroupGame.GroupGameName!==''){
+		const createGameBtn:HTMLElement = this.$q('#createGameBtn');
+		createGameBtn.style.display="none";
+		}
+
 		document.querySelector("#terminal")!.classList.remove("flattenConsole");
 
 		this.RenderConsoleText(this.IntroJson.Items[0]);

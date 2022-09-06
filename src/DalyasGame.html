@@ -121,7 +121,7 @@
 
 		<!--begin header  component-->
 		<div class="header">
-			<h1 id="title">Letter Fury</h1>
+			<h1 onclick="window.location='/';" id="title">Letter Fury</h1>
 	
 		</div>
 		<!--end header component-->
@@ -137,8 +137,8 @@
 				Loading...
 			</div>
 			<div class="buttonContainer">
-				<button class="show-game-modal" onclick="ShowGameModal()" id="InvokeGameButtonModal">Start Game</button>
-				<button class="add-player" onclick="AddPlayerToGame()"  id="StartGroupGameButton">Join Game</button>
+				<button id="createGameBtn" class="show-game-modal" onclick="ShowGameModal()" id="InvokeGameButtonModal">Start Game</button>
+				<button  id="joinGameBtn" class="add-player" onclick="AddPlayerToGame()"  id="StartGroupGameButton">Join Game</button>
 				<button id="highScoreButton">High Scores</button>
 			</div>
 
