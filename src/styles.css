@@ -50,6 +50,33 @@ h4 {
 	box-shadow: 2px 2px 1px #041005;
 }
 
+.buy-coffee{ 
+	height:50px;
+	position:relative;
+	bottom:7px;
+}
+
+.buy-coffee span{
+	margin:0px;
+    font-weight: 900;
+	padding:0px;
+	font-size:12px;
+	font-family: 'Orbitron', sans-serif;
+	letter-spacing:normal;
+	white-space: pre;
+	
+}
+
+.buy-coffee span a{
+	color:#32CD3C;
+}
+
+.buy-coffee span:before{
+
+	content:url('/img/coffee.svg');
+}
+
+
 h1 {
 	font-weight: 900;
     text-shadow: -0.2em 0.3em 0 rgb(0 0 0 / 20%);

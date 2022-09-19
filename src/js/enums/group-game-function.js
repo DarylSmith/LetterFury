@@ -4,4 +4,5 @@ export var GroupGameFunction;
     GroupGameFunction["GameStart"] = "gameStart";
     GroupGameFunction["WordGuessed"] = "wordGuessed";
     GroupGameFunction["GameEnd"] = "gameEnded";
+    GroupGameFunction["PlayerExit"] = "playerExit";
 })(GroupGameFunction || (GroupGameFunction = {}));

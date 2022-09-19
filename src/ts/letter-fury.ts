@@ -6,6 +6,7 @@ import { LetterFuryKeyboard } from './classes/lf-keyboard.js';
 import { GroupGameResult } from './interfaces/group-game-result.js';
 import { GroupGame } from './interfaces/group-game.js';
 import { LfIntro } from './classes/lf-intro.js';
+import { GroupGameStatus } from './enums/group-game-status.js';
 
 export class LetterFury{
 
@@ -156,7 +157,8 @@ export class LetterFury{
     public IntroJson:IntroJson={
         Items:  this.introJson.GetIntroJsonItems(
             ()=>{
-                this.ResetRandomNumber(60,40,()=>{this.$q("#terminal")!.innerHTML = !this.ElementIsHidden(this.$q("#rules"))? this.OurRandomWord:'';});
+				const buyCoffeeHTML = this.$q("#buy-coffee-template")!.innerHTML;
+                this.ResetRandomNumber(60,40,()=>{this.$q("#terminal")!.innerHTML =  buyCoffeeHTML + !this.ElementIsHidden(this.$q("#rules"))? this.OurRandomWord:'';});
 
               })
   
@@ -290,7 +292,7 @@ export class LetterFury{
 	public AddPlayerToGame(){
 		this.GroupGame.GroupUserStatus="player";
 		this.GroupGame.GroupUserName=this.CreateRandomNames().toLowerCase();
-		this.NavigateToGroupGamePage();
+		this.NavigateToGroupGamePage(false);
 	}
 
 	public StartGroupGame(){
@@ -328,7 +330,7 @@ export class LetterFury{
 		this.GroupGame.GroupGameName=this.CreateRandomNames().toLowerCase();
 		this.GroupGame.GroupUserName=this.CreateRandomNames().toLowerCase();
 		this.GroupGame.GroupUserStatus="host";
-		this.NavigateToGroupGamePage();
+		this.NavigateToGroupGamePage(false);
 		setTimeout(()=>{
 		this.BuildRandomNameUI("groupGameVal",this.GroupGame.GroupGameName);
 		this.BuildRandomNameUI("groupUserVal",this.GroupGame.GroupUserName);
@@ -391,11 +393,17 @@ export class LetterFury{
 
 	}
 
-	private NavigateToGroupGamePage(){
+	private NavigateToGroupGamePage(isRestart:boolean){
 		if(this.GroupGame.GroupUserStatus==="player"  && this.GroupGame.GroupGameStatus==="notstarted"){
 
 			this.$q("#groupGameId").classList.add("easeInLeft");
+
+			if(isRestart){
+			this.$q("#groupGameInstructions").innerText="Next is about to start. Please get ready!";	
+			}
+			else{
 			this.$q("#groupGameInstructions").innerText="Please enter your game code and press submit to join";	
+			}
 			this.$q("#groupGameContainer").style.display="none";
 			this.$q("#groupGameId").focus();
 		}
@@ -511,6 +519,8 @@ export class LetterFury{
 		const $currentElem = this.$q("#terminal");
 		$rulesElem.innerHTML = obj.Text;
 
+		const buyCoffeeHTML = this.$q("#buy-coffee-template").innerHTML;
+
 		if(typeof(obj.Console)==='string'){
 
 		obj.Console.split('').forEach((item:string, index:number, arr:any[]) => {
@@ -519,12 +529,12 @@ export class LetterFury{
 				(window as any).setTimeout(() => {
 
 					if (index === arr.length - 1 && obj.HTML !== '' && !this.ElementIsHidden($rulesElem)) {
-						$currentElem.innerHTML = obj.HTML;
+						$currentElem.innerHTML = buyCoffeeHTML + obj.HTML;
 
 					}
 					else if(!this.ElementIsHidden($rulesElem)) {
 						const currentText = obj.Console.substring(0, index + 1);
-						$currentElem.innerHTML = currentText;
+						$currentElem.innerHTML = buyCoffeeHTML + currentText;
 					}
 
 
@@ -1167,7 +1177,12 @@ export class LetterFury{
 			this.$q("#groupGameContainer").style.display="block";
 			this.$q("#startGroupGame").style.display="none";
 			this.$q("#groupGameContainer").classList.add("drop-frame");
+			if(payload.status===GroupGameStatus.GameInProgress){
+				this.$q("#groupGameInstructions").innerText="Game currently in progress! Please wait until next game...";	
+			}
+			else{
 			this.$q("#groupGameInstructions").innerText="The game will start shortly! Please wait for players to join...";	
+			}
 			this.BuildRandomNameUI("groupGameVal",this.GroupGame.GroupGameName);
 			this.BuildRandomNameUI("groupUserVal",this.GroupGame.GroupUserName); 
 			}
@@ -1286,7 +1301,7 @@ export class LetterFury{
 				});
 				this.GroupGame.GroupGameStatus="completed";
 				this. InitGameOver();
-				this.NavigateToGroupGamePage();
+				this.NavigateToGroupGamePage(true);
 			}, 7000)
 
 
