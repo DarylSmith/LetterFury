@@ -12,7 +12,7 @@ export class DataAccess {
             body: JSON.stringify({ gameId, playerId })
         });
     }
-    InvokeSocketConnection(gameId, playerId) {
+    InvokeSocketConnection(gameId, playerId, role) {
         this._gameSocket = new WebSocket(`${this._gameSocketEndpoint}?game=${gameId}`);
         this._gameSocket.onerror = (event) => {
             let socketEvent = new CustomEvent("socketError");
@@ -32,6 +32,7 @@ export class DataAccess {
                 action: 'sendmessage',
                 function: GroupGameFunction.PlayerName,
                 data: playerId,
+                playerRole: role,
                 game: gameId.toLowerCase()
             };
             this.SendGameMessage(startObj);

@@ -20,7 +20,7 @@ public  StartGroupGame(gameId:string,playerId:string):Promise<Response>{
         });
 
 }
-public InvokeSocketConnection(gameId:string,playerId:string){
+public InvokeSocketConnection(gameId:string,playerId:string, role:string){
     
     this._gameSocket = new WebSocket(`${this._gameSocketEndpoint}?game=${gameId}`);
 
@@ -47,6 +47,7 @@ public InvokeSocketConnection(gameId:string,playerId:string){
         action:'sendmessage',
         function: GroupGameFunction.PlayerName,
         data:playerId,
+        playerRole:role,
         game:gameId.toLowerCase()
     }
 

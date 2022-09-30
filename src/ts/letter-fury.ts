@@ -310,7 +310,7 @@ export class LetterFury{
 				this.GroupGame.GroupGameName=this.$q("#groupGameIdText").value.toLowerCase();
 			}
 
-			this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName);
+			this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName, this.GroupGame.GroupGameStatus);
 
 			setTimeout(()=>{
 				this.BuildRandomNameUI("groupUserVal",this.GroupGame.GroupUserName);		  
@@ -340,7 +340,7 @@ export class LetterFury{
 
 			//set this user as host and upgrade to websocket connection
 			this.GroupGame.GroupUserStatus="host";
-            this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName);
+            this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName,this.GroupGame.GroupUserStatus);
 
 
         });

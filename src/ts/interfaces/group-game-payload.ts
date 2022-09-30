@@ -5,6 +5,7 @@ playerName?:string,
 game?:string,
 function:string;
 action:string;
+playerRole?:string;
 
 
 }
