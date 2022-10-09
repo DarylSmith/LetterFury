@@ -4,5 +4,5 @@ export enum GroupGameFunction{
     GameStart='gameStart',
     WordGuessed = 'wordGuessed',
     GameEnd ='gameEnded',
-    PlayerExit ="playerExit"
+    PlayerDisconnect ="playerDisconnect",
 }

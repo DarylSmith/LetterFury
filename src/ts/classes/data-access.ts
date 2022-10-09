@@ -20,9 +20,15 @@ public  StartGroupGame(gameId:string,playerId:string):Promise<Response>{
         });
 
 }
+
+public CloseSocket(): void{
+
+    this._gameSocket.close();
+}
+
 public InvokeSocketConnection(gameId:string,playerId:string, role:string){
     
-    this._gameSocket = new WebSocket(`${this._gameSocketEndpoint}?game=${gameId}`);
+    this._gameSocket = new WebSocket(`${this._gameSocketEndpoint}?game=${gameId}&role=${role}`);
 
     this._gameSocket.onerror=(event:MessageEvent<any>)=>{
         let socketEvent = new CustomEvent("socketError");
@@ -35,8 +41,9 @@ public InvokeSocketConnection(gameId:string,playerId:string, role:string){
     }
 
     this._gameSocket.onmessage =  (event:MessageEvent<any>)=> {
-
+       
         let payload:GroupGamePayload = JSON.parse(event.data);
+        console.log(payload);
         let socketEvent = new CustomEvent("socketEvent",{detail: payload});
         document.dispatchEvent(socketEvent);
     };

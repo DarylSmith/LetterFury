@@ -5,5 +5,5 @@ export  interface GroupGame{
     GroupUserName:string;
     GroupUserStatus:"host"| "player"|null;
     GroupUserConnected:boolean;
-    GroupGameStatus:"notstarted"|"inprogress"|"completed";
+    GroupGameStatus:"notstarted"|"inprogress"|"completed"|"expired";
 }

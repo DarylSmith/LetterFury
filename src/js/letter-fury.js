@@ -40,14 +40,7 @@ export class LetterFury {
             SecondIndex: 0
         };
         // this object contains data for group games
-        this.GroupGame = {
-            IsGroupGame: false,
-            GroupGameName: '',
-            GroupUserName: '',
-            GroupUserStatus: null,
-            GroupUserConnected: false,
-            GroupGameStatus: "notstarted"
-        };
+        this.GroupGame = this.ResetGroupGame();
         // number of high scores to be diplayed on list
         this.NumberOfHighScores = 10;
         // the state the game is in. Values: intro game_play, game_over, high_score
@@ -132,6 +125,10 @@ export class LetterFury {
                 case GroupGameFunction.GameEnd:
                     this.GroupGameEnd(details.value);
                     break;
+                case GroupGameFunction.PlayerDisconnect:
+                    if (details.status === GroupGameStatus.GameExpired) {
+                        this.GroupGame.GroupGameStatus = "expired";
+                    }
             }
         });
         document.addEventListener('socketError', () => {
@@ -170,6 +167,16 @@ export class LetterFury {
             valArr.pop();
         }
         console.value = valArr.join('');
+    }
+    ResetGroupGame() {
+        return {
+            IsGroupGame: false,
+            GroupGameName: '',
+            GroupUserName: '',
+            GroupUserStatus: null,
+            GroupUserConnected: false,
+            GroupGameStatus: "notstarted"
+        };
     }
     DisplayRandomWord() {
         const num = Math.floor(Math.random() * (this.ListOfWords.length - 1));
@@ -269,11 +276,13 @@ export class LetterFury {
     }
     // changes page to home
     NavigateToHomePageStart() {
+        this.ResetGroupGame();
         this.$q("#consoleContainer").classList.add("easeOutRight");
         this.$q("#letterContainer").classList.add("easeOutLeft");
         this.$q("#inputContainer").classList.add("easeOutLeft");
     }
     NavigateToGroupGamePage(isRestart) {
+        this.$q("#returnToHomescreen").style.display = "none";
         if (this.GroupGame.GroupUserStatus === "player" && this.GroupGame.GroupGameStatus === "notstarted") {
             this.$q("#groupGameId").classList.add("easeInLeft");
             if (isRestart) {
@@ -284,6 +293,9 @@ export class LetterFury {
             }
             this.$q("#groupGameContainer").style.display = "none";
             this.$q("#groupGameId").focus();
+        }
+        else if (this.GroupGame.GroupGameStatus === "expired") {
+            this.ShowGameExpiredMessage();
         }
         else {
             this.$q("#groupGameId").style.display = "none";
@@ -299,6 +311,14 @@ export class LetterFury {
                 this.StartGroupGame();
             }
         }
+    }
+    ShowGameExpiredMessage() {
+        this.$q("#groupGameId").classList.remove("easeInLeft");
+        this.$q("#groupGameId").classList.add("scatter-console-1");
+        this.$q("#groupGameInstructions").innerText =
+            "This game has expired as the host has left the game. Return to home screen to begin new game.";
+        this.$q("#returnToHomescreen").style.display = "block";
+        this.$q("#startGroupGame").style.display = "none";
     }
     //removes animation classes from home navigation after completion
     NavigateToHomePageEnd() {
@@ -823,6 +843,10 @@ export class LetterFury {
         this.$q("#letterText").innerHTML = joinVal;
     }
     WritePlayersToGroupScreen(payload) {
+        if (payload.status === "expired") {
+            this.ShowGameExpiredMessage();
+            return;
+        }
         if (this.GroupGame.GroupUserStatus === "player" && !this.GroupGame.GroupUserConnected && this.GroupGame.GroupUserName === payload.player) {
             this.$q("#groupGameId").classList.remove("easeInLeft");
             this.$q("#groupGameId").classList.add("scatter-console-1");

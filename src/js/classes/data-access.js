@@ -12,8 +12,11 @@ export class DataAccess {
             body: JSON.stringify({ gameId, playerId })
         });
     }
+    CloseSocket() {
+        this._gameSocket.close();
+    }
     InvokeSocketConnection(gameId, playerId, role) {
-        this._gameSocket = new WebSocket(`${this._gameSocketEndpoint}?game=${gameId}`);
+        this._gameSocket = new WebSocket(`${this._gameSocketEndpoint}?game=${gameId}&role=${role}`);
         this._gameSocket.onerror = (event) => {
             let socketEvent = new CustomEvent("socketError");
             document.dispatchEvent(socketEvent);
@@ -24,6 +27,7 @@ export class DataAccess {
         };
         this._gameSocket.onmessage = (event) => {
             let payload = JSON.parse(event.data);
+            console.log(payload);
             let socketEvent = new CustomEvent("socketEvent", { detail: payload });
             document.dispatchEvent(socketEvent);
         };

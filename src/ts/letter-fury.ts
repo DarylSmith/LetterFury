@@ -94,8 +94,11 @@ export class LetterFury{
 				break;
 			case GroupGameFunction.GameEnd:
 				this.GroupGameEnd(details.value);
-			
 			break;
+			case GroupGameFunction.PlayerDisconnect:
+				if(details.status ===GroupGameStatus.GameExpired){
+					this.GroupGame.GroupGameStatus="expired";
+				}
 
 		}
 		});
@@ -121,15 +124,8 @@ export class LetterFury{
     }
 
     // this object contains data for group games
-	public GroupGame:GroupGame={
+	public GroupGame:GroupGame= this.ResetGroupGame();
 
-		IsGroupGame:false,
-		GroupGameName:'',
-		GroupUserName:'',
-		GroupUserStatus:null,
-		GroupUserConnected:false,
-		GroupGameStatus:"notstarted"
-	}
     // number of high scores to be diplayed on list
 	public NumberOfHighScores:number= 10;
 	
@@ -248,6 +244,18 @@ export class LetterFury{
 		}
 		console.value =valArr.join('');
 
+	}
+
+	private ResetGroupGame():GroupGame{
+		return{
+
+			IsGroupGame:false,
+			GroupGameName:'',
+			GroupUserName:'',
+			GroupUserStatus:null,
+			GroupUserConnected:false,
+			GroupGameStatus:"notstarted"
+		}
 	}
     
 
@@ -385,7 +393,9 @@ export class LetterFury{
 	}
 
 	// changes page to home
-	private NavigateToHomePageStart()  {
+	public NavigateToHomePageStart()  {
+
+		this.ResetGroupGame();
 
 		this.$q("#consoleContainer").classList.add("easeOutRight");
 		this.$q("#letterContainer").classList.add("easeOutLeft");
@@ -394,6 +404,9 @@ export class LetterFury{
 	}
 
 	private NavigateToGroupGamePage(isRestart:boolean){
+		
+		this.$q("#returnToHomescreen").style.display="none";
+
 		if(this.GroupGame.GroupUserStatus==="player"  && this.GroupGame.GroupGameStatus==="notstarted"){
 
 			this.$q("#groupGameId").classList.add("easeInLeft");
@@ -406,6 +419,11 @@ export class LetterFury{
 			}
 			this.$q("#groupGameContainer").style.display="none";
 			this.$q("#groupGameId").focus();
+		}
+		else if (this.GroupGame.GroupGameStatus==="expired"){
+			
+			this.ShowGameExpiredMessage();	
+
 		}
 		else
 		{
@@ -426,9 +444,19 @@ export class LetterFury{
 		}
 
 	}
+	private ShowGameExpiredMessage() {
+		this.$q("#groupGameId").classList.remove("easeInLeft");
+		this.$q("#groupGameId").classList.add("scatter-console-1");
+		this.$q("#groupGameInstructions").innerText =
+			"This game has expired as the host has left the game. Return to home screen to begin new game.";
+		this.$q("#returnToHomescreen").style.display = "block";
+		this.$q("#startGroupGame").style.display="none";
+	}
+
 	//removes animation classes from home navigation after completion
 	private NavigateToHomePageEnd() {
 
+		
 		this.$q("#terminal").classList.remove("extendConsole");
 		this.$q("#consoleContainer").classList.remove("easeOutRight");
 		this.$q("#letterContainer").classList.remove("easeOutLeft");
@@ -1170,7 +1198,12 @@ export class LetterFury{
 	}
 
 	private WritePlayersToGroupScreen(payload:GroupGameResult){
-		
+
+		if(payload.status==="expired"){	
+			
+				this.ShowGameExpiredMessage();
+				return;	
+		}	
 		if(this.GroupGame.GroupUserStatus==="player"  && !this.GroupGame.GroupUserConnected &&this.GroupGame.GroupUserName=== payload.player){
 			this.$q("#groupGameId").classList.remove("easeInLeft");
 			this.$q("#groupGameId").classList.add("scatter-console-1");
