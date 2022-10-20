@@ -98,6 +98,13 @@ export class LetterFury{
 			case GroupGameFunction.PlayerDisconnect:
 				if(details.status ===GroupGameStatus.GameExpired){
 					this.GroupGame.GroupGameStatus="expired";
+					
+					// if the host leaves in the middle of game, end game immediately
+					if(this.GameState==="game_play"){
+						this.GameState="game_over";
+						this.$q("#groupGameContainer").style.display="none";
+						this.NavigateToGroupGamePage(false);
+					}
 				}
 
 		}
@@ -314,11 +321,11 @@ export class LetterFury{
 								  
 		if(this.GroupGame.GroupUserStatus==="player"){
 
-			if(this.GroupGame.GroupGameName===''){
-				this.GroupGame.GroupGameName=this.$q("#groupGameIdText").value.toLowerCase();
+			this.GroupGame.GroupGameName=this.$q("#groupGameIdText").value.toLowerCase();
+			if(this.GroupGame.GroupGameName!==''){
+			
+				this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName, this.GroupGame.GroupGameStatus);
 			}
-
-			this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName, this.GroupGame.GroupGameStatus);
 
 			setTimeout(()=>{
 				this.BuildRandomNameUI("groupUserVal",this.GroupGame.GroupUserName);		  
