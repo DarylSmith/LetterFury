@@ -100,11 +100,10 @@ export class LetterFury{
 					this.GroupGame.GroupGameStatus="expired";
 					
 					// if the host leaves in the middle of game, end game immediately
-					if(this.GameState==="game_play"){
 						this.GameState="game_over";
 						this.$q("#groupGameContainer").style.display="none";
 						this.NavigateToGroupGamePage(false);
-					}
+					
 				}
 
 		}
