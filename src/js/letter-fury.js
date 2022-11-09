@@ -222,7 +222,9 @@ export class LetterFury {
             return;
         }
         if (this.GroupGame.GroupUserStatus === "player") {
-            this.GroupGame.GroupGameName = this.$q("#groupGameIdText").value.toLowerCase();
+            this.GroupGame.GroupGameName = this.GroupGame.GroupGameName !== '' ?
+                this.GroupGame.GroupGameName :
+                this.$q("#groupGameIdText").value.toLowerCase();
             if (this.GroupGame.GroupGameName !== '') {
                 this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName, this.GroupGame.GroupUserName, this.GroupGame.GroupGameStatus);
             }

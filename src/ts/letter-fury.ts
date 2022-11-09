@@ -63,6 +63,7 @@ export class LetterFury{
 			const gameId = window.location.hash.split('=')[1];
 			this.GroupGame.GroupGameName=gameId;
 			console.log(`Group game is ${this.GroupGame.GroupGameName}`);
+			
 		}
 
 		document.addEventListener('socketEvent', (event:CustomEvent)=>{
@@ -320,7 +321,10 @@ export class LetterFury{
 								  
 		if(this.GroupGame.GroupUserStatus==="player"){
 
-			this.GroupGame.GroupGameName=this.$q("#groupGameIdText").value.toLowerCase();
+			this.GroupGame.GroupGameName= this.GroupGame.GroupGameName!==''?
+					this.GroupGame.GroupGameName:
+					this.$q("#groupGameIdText").value.toLowerCase();
+					
 			if(this.GroupGame.GroupGameName!==''){
 			
 				this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName,this.GroupGame.GroupUserName, this.GroupGame.GroupGameStatus);
