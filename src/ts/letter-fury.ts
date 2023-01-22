@@ -1129,7 +1129,7 @@ export class LetterFury{
 				}
 				else{
 					this.SetRandomWord();
-					this._dataAccess.InvokeSocketWordGuessed(this.OurRandomWord, this.GroupGame.GroupUserName, this.GroupGame.GroupGameName,this.PlayerScore);
+					this._dataAccess.InvokeSocketWordGuessed(gameText,this.OurRandomWord, this.GroupGame.GroupUserName, this.GroupGame.GroupGameName,this.PlayerScore);
 				}
 				return;
 

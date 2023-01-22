@@ -59,14 +59,15 @@ export class DataAccess {
         };
         this.SendGameMessage(startObj);
     }
-    InvokeSocketWordGuessed(word, playerName, game, score) {
+    InvokeSocketWordGuessed(guessedWord, nextWord, playerName, game, score) {
         const startObj = {
             action: 'sendmessage',
             function: GroupGameFunction.WordGuessed,
-            data: word,
+            data: nextWord,
             game: game,
             playerName: playerName,
-            score: score
+            score: score,
+            guessedWord: guessedWord
         };
         this.SendGameMessage(startObj);
     }
