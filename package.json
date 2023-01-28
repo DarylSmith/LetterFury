@@ -1,6 +1,7 @@
 {
   "name": "LetterFury",
   "dependencies": {
+    "google-auth-library": "^8.7.0",
     "typescript": "^4.6.4"
   },
   "devDependencies": {

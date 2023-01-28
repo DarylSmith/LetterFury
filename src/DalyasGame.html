@@ -25,13 +25,54 @@
 
 	<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="styles.css" />
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
 	<script  src="words.js"></script>
+
+	<script>
+		const clientID='84307234225-8kake2gv6i21cupfpiu5f1v5qkn9oios.apps.googleusercontent.com';
+        const clientSecret='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';
+		let client;
+		window.onload = function () {
+		client =google.accounts.oauth2.initTokenClient({
+			client_id: clientID,
+			scope:'https://www.googleapis.com/auth/userinfo.email',
+			callback: (response)=>{
+				window.GoogleResponse = response;
+				const token = response.access_token;
+				console.log(response);
+				var xhr = new XMLHttpRequest();
+       		 xhr.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+			const responseObj = JSON.parse(this.responseText);
+			localStorage.setItem("lf_username",responseObj.email);
+			if(window.IsStartGame){
+				window.ShowModal('start');
+			}
+			else{
+				window.AddPlayerToGame();
+			}
+          }
+        };
+        	xhr.open('GET', `https://openidconnect.googleapis.com/v1/userinfo?access_token=${token}`);
+        	xhr.send();
+
+			}
+		  });
+		  
+		};
+
+
+	  </script>
+
 	<script type="module">
 	
 
 		import {LetterFury} from './js/letter-fury.js';
 
 		 const letterFury = new LetterFury();
+
+		 window.IsStartGame=false;
 
 		 window.SubmitGroupEvent =function(){
 			letterFury.StartGroupGame();
@@ -54,14 +95,55 @@
 			letterFury.InviteUsers();
 		 }
 
+
 		 window.ReturnToHomescreen= function(){
 			window.location.reload();
 		 }
 
-		 window.ShowGameModal= function(){
+		 window.InitGameplay=function(isStartGame){
 
+			window.IsStartGame=isStartGame;
+
+			const username = localStorage.getItem("lf_username");		
+			// if the user has already logged in, continue
+			if(!username){
+				window.ShowModal('identity');
+			}
+
+			//if this is user has an identity and wants to 
+			if (username && isStartGame)
+
+				window.ShowModal('start')
+
+		 }
+
+		 window.InitAnonGame= function(){
+
+			if(window.IsStartGame){
+				window.ShowModal('start')
+			}
+			else{
+				AddPlayerToGame();
+			}
+		 }
+
+		 window.ShowModal= function(modalType, isStartGame){
+
+			const idHtml=document.querySelector(`#${modalType}-menu`).innerHTML;
+			document.querySelector("#button-modal").innerHTML=idHtml;
 			document.querySelector("#button-modal").classList.add("modal-window-active");
 		 }
+
+		 window.InitGame=function(gameType){
+
+			if (gameType==="group"){
+				letterFury.InitGroupGame();
+			}
+			else{
+				letterFury.InitGame();
+			}
+		 }
+
 
 		 window.AddPlayerToGame= function(){
 
@@ -90,14 +172,6 @@
 			letterFury.ShowIntro();
 			}
 
-			document.querySelector(".start-game-single").addEventListener('click', (event) => {
-
-				letterFury.InitGame();
-			});
-			document.querySelector(".start-game-multi").addEventListener('click', (event) => {
-
-				letterFury.InitGroupGame();
-			});
 
 			window.onanimationend = (e) => {
 
@@ -152,8 +226,8 @@
 				Loading...
 			</div>
 			<div class="buttonContainer">
-				<button id="createGameBtn" class="show-game-modal" onclick="ShowGameModal()" id="InvokeGameButtonModal">Start Game</button>
-				<button  id="joinGameBtn" class="add-player" onclick="AddPlayerToGame()"  id="StartGroupGameButton">Join Game</button>
+				<button id="createGameBtn" class="show-game-modal" onclick="InitGameplay(true)" id="InvokeGameButtonModal">Start Game</button>
+				<button  id="joinGameBtn" class="add-player" onclick="InitGameplay(false)"  id="StartGroupGameButton">Join Game</button>
 				<button id="highScoreButton">High Scores</button>
 			</div>
 
@@ -307,17 +381,29 @@
 	<!--modal window-->
 <div class="modal-window" id="button-modal">
 
+</div>
+
+<template id="start-menu">
 	<div class="startContainer">
 
 		<label for="startSoloGameButton">Play against yourself and go for high score</label>
-		<button class="start-game-single" id="startSoloGameButton">Single-player</button>
+		<button class="start-game-single" onclick="InitGame('single');" id="startSoloGameButton">Single-player</button>
 		
 		<label for="startGroupGameButton">Invite friends and compete</label>
-		<button class="start-game-multi" id="startGroupGameButton">Multi-player</button>
+		<button class="start-game-multi" onclick="InitGame('group');"  id="startGroupGameButton">Multi-player</button>
 	</div>
+</template>
 
+<template id="identity-menu">SS
+	<div class="identityContainer">
 
-</div>
+		<a href="javascript:;"  class="start-game-anon" id="startAnonGameButton" onclick="window.InitAnonGame();">Play anonymously.</a>
+		
+		<label for="startGameId">Sign in and play for real.</label>
+		<img class="start-game-id" onclick="client.requestAccessToken();" src="img/btn_google.png" id="startIdGameButton"/>
+	</div>
+</template>
+
 
 <template id="buy-coffee-template">
 	<div class="buy-coffee">

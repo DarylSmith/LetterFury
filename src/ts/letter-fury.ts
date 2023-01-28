@@ -305,8 +305,9 @@ export class LetterFury{
 	}
 
 	public AddPlayerToGame(){
+		const savedName = localStorage.getItem("lf_username");
 		this.GroupGame.GroupUserStatus="player";
-		this.GroupGame.GroupUserName=this.CreateRandomNames().toLowerCase();
+		this.GroupGame.GroupUserName= savedName?savedName.toLocaleLowerCase():this.CreateRandomNames().toLowerCase();
 		this.NavigateToGroupGamePage(false);
 	}
 
@@ -345,8 +346,10 @@ export class LetterFury{
 
 		document.querySelector("#button-modal").classList.remove("modal-window-active");
 
+		const savedName = localStorage.getItem("lf_username");
 		this.GroupGame.GroupGameName=this.CreateRandomNames().toLowerCase();
-		this.GroupGame.GroupUserName=this.CreateRandomNames().toLowerCase();
+		this.GroupGame.GroupUserName=savedName?savedName.toLowerCase():this.CreateRandomNames().toLowerCase();
+
 		this.GroupGame.GroupUserStatus="host";
 		this.NavigateToGroupGamePage(false);
 		setTimeout(()=>{
@@ -1393,7 +1396,7 @@ export class LetterFury{
 
 	BuildRandomNameUI(id:string,val: string){
         const that = this;
-		let alphabet='abcdefghijklmnopqrstuvwxyz'.split('');
+		let alphabet='abcdefghijklmnopqrstuvwxyz@.1234567890-_!#$%&*+-/=?^_`{|}~'.split('');
 		let valArr = val.split('');
 		let itemFound:any[]=[];
 		for(let i=0;i<valArr.length;i++){
