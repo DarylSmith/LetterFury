@@ -29,6 +29,7 @@ export class LetterFury {
         this.SkipsAllowed = 3;
         this.NumberOfSkips = 0;
         this.wordIntervalArr = {};
+        this.FinalScoreQueue = [];
         this._dataAccess = new DataAccess();
         this._wordLength = 3;
         // if set to true, outputs comments about game logic to console
@@ -947,25 +948,32 @@ export class LetterFury {
         const $console = this.$q("#consoleText");
         // sort all the users by date
         let items = results.sort((a, b) => b.points - a.points);
-        //remove first place item
-        const firstPlace = items.shift();
         $console.innerHTML = '';
         //iterate from last place to second
         for (let i = items.length - 1; i >= 0; i--) {
             const item = items[i];
-            this.WriteToConsole(`${item.player} is #${i + 2}  with ${item.points}`);
-            this.WriteToConsole(item.player);
+            const scoreItem = {
+                player: item.player,
+                rank: (i + 1).toString(),
+                score: item.points
+            };
+            this.FinalScoreQueue.push(scoreItem);
         }
-        const resultText = ` The winner is ${firstPlace.player} with a score of ${firstPlace.points}`;
-        this.WriteToConsole(resultText, "winner");
-        window.setTimeout(() => {
-            document.querySelectorAll(".console-comment").forEach(elem => {
-                elem.classList.add('scatter-console-1');
-            });
-            this.GroupGame.GroupGameStatus = "completed";
-            this.InitGameOver();
-            this.NavigateToGroupGamePage(true);
-        }, 7000);
+        while (this.FinalScoreQueue.length !== 0) {
+            const $console = this.$q("#consoleText");
+            $console.innerHtml = '';
+            const item = this.FinalScoreQueue.shift();
+            const resultText = `${item.player} is ${item.rank} with a score of ${item.score}`;
+            this.WriteToConsole(resultText, "winner");
+            window.setTimeout(() => {
+                document.querySelectorAll(".console-comment").forEach(elem => {
+                    elem.classList.add('scatter-console-1');
+                });
+                this.GroupGame.GroupGameStatus = "completed";
+                this.InitGameOver();
+                this.NavigateToGroupGamePage(true);
+            }, 4000);
+        }
     }
     GameOverText() {
         let $elem = document.createElement("div");

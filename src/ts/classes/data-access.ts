@@ -95,7 +95,7 @@ public InvokeSocketWordGuessed(guessedWord:string,nextWord:string, playerName:st
         game:game,
         playerName:playerName,
         score:score,
-        guessedWord:`|${guessedWord}|`
+        guessedWord:`${guessedWord}`
     }
 
     this.SendGameMessage(startObj);

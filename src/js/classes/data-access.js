@@ -67,7 +67,7 @@ export class DataAccess {
             game: game,
             playerName: playerName,
             score: score,
-            guessedWord: `|${guessedWord}|`
+            guessedWord: `${guessedWord}`
         };
         this.SendGameMessage(startObj);
     }
