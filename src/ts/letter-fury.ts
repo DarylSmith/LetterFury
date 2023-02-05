@@ -148,7 +148,7 @@ export class LetterFury{
 
 	// number used for countdown timer
 	public CountdownNumber:number= 0;
-	public LengthOfGameInMinutes= .2;
+	public LengthOfGameInMinutes= 2;
 
 	//these variables contain the emoji svg
 	public $happySvg:string = '';
