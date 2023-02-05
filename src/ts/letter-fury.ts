@@ -49,6 +49,7 @@ export class LetterFury{
     public wordIntervalArr:any={};
 
 	public FinalScoreQueue:ScoreItem[]=[];
+	public FinalScoreIndex=1;
 
     private _dataAccess = new DataAccess();
 
@@ -147,7 +148,7 @@ export class LetterFury{
 
 	// number used for countdown timer
 	public CountdownNumber:number= 0;
-	public LengthOfGameInMinutes= 2;
+	public LengthOfGameInMinutes= .2;
 
 	//these variables contain the emoji svg
 	public $happySvg:string = '';
@@ -700,6 +701,7 @@ export class LetterFury{
 
 	// this writes to the main console, and high score console. it takes the text, writes char by char, and applies 
 	//the class passed in (elemClass) to apply the correct colour
+	// if timeout time is 0, write entire string immediately
 	private WriteToConsole (text:string, elemClass?:string, target?:string, timeoutTime?:number) {
 		if (target === undefined) {
 			target = "#consoleText";
@@ -719,6 +721,12 @@ export class LetterFury{
 		this.$q(target).insertBefore(textElem, parentElem.firstChild);
 
 		var $currentElem = this.$q("#" + id);
+
+		if(timeoutTime==0){
+
+			$currentElem.innerHTML=text;
+			return;
+		}
 
 		text.split('').forEach((item, index) => {
 
@@ -1328,12 +1336,14 @@ export class LetterFury{
 
 		const $console = this.$q("#consoleText");
 
-		// sort all the users by date
-		let items = results.sort((a,b)=>b.points-a.points);
+		// sort all the users by points
+		let items = results.sort((a,b)=>b.points-a.points).slice(0,3);
+
+		this.FinalScoreQueue.push({player:'gameover','rank':'0','score':0});
 
 		$console.innerHTML='';
 		//iterate from last place to second
-		for(let i=items.length-1; i>=0;i--){
+		for(let i=0; i<items.length;i++){
 			const item = items[i];
 			const scoreItem:ScoreItem={
 				player:item.player,
@@ -1345,25 +1355,47 @@ export class LetterFury{
 
 		this.FinalScoreQueue.push(scoreItem);
 
+		
+
 		}
 
-		while(this.FinalScoreQueue.length!==0)
-		{	
-		const $console = this.$q("#consoleText");
-		$console.innerHtml='';
-		const item = this.FinalScoreQueue.shift();
-		const resultText=`${item.player} is ${item.rank} with a score of ${item.score}`;
-		this.WriteToConsole(resultText,"winner");
-			window.setTimeout(()=>{
-				
-				document.querySelectorAll(".console-comment").forEach(elem=>{
-					elem.classList.add('scatter-console-1');
-				});
-				this.GroupGame.GroupGameStatus="completed";
-				this. InitGameOver();
-				this.NavigateToGroupGamePage(true);
-			}, 4000)
+		this.ShowPlayerScore();
+
+		(window as any).endInterval = setInterval(()=>{
+		this.ShowPlayerScore();
+					if(this.FinalScoreQueue.length===0){
+						this.FinalScoreIndex=1;
+						clearInterval((window as any).endInterval);
+						this.GroupGame.GroupGameStatus="completed";
+						this. InitGameOver();
+						this.NavigateToGroupGamePage(true);
+
+					}
+				},500);
+	}
+
+
+
+	private ShowPlayerScore() {
+		const intervalNum = this.FinalScoreIndex%2;
+		if(intervalNum!==0){
+		this.ClearGameText()
+		const item = this.FinalScoreQueue.pop();
+		const resultText = `${item.player} is ${item.rank} with a score of ${item.score}`;
+		this.WriteToConsole(resultText,"winner",undefined,0);
 		}
+		else{
+			document.querySelectorAll(".console-comment").forEach($elem=>{
+				if($elem.id!==undefined){
+				console.log($elem.id);
+				const scatterVal=  this.FinalScoreQueue.length ===1?'winner': intervalNum.toString();
+
+				$elem.classList.add(`scatter-console-${scatterVal}`);
+				}
+			});
+	
+		}
+		this.FinalScoreIndex++;
 	}
 
 	private GameOverText(){

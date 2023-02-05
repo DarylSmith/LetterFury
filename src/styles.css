@@ -216,8 +216,8 @@ line-height: 1.8;
 	color:#32CD3C !important;
 }
 .winner {
-	color: #ffffff !important;
-	font-size:30px;
+	color: #32CD3C !important;
+	font-size:18px;
 }
 
 .discarded-letter{font-size:25px;}
@@ -587,6 +587,18 @@ font-size: 25px;
 
 	animation: ease-down .5s linear;
 	animation-fill-mode: forwards;
+
+
+}
+
+.scatter-console-0 {
+	animation: scatter-console-0 2s linear;
+	animation-fill-mode: forwards;
+}
+
+.scatter-console-winner {
+	animation: scatter-console-winner 2s linear;
+	animation-fill-mode: forwards;
 }
 
 .scatter-console-1 {
@@ -832,6 +844,31 @@ font-size: 25px;
 	100% {
 		opacity: 0;
 		transform: translate(30px, 800px) rotateZ(45deg);
+	}
+}
+
+@keyframes scatter-console-0 {
+	0% {
+		opacity: 1;
+		transform: translate(0, 0px) rotateZ(0deg);
+	}
+	75% {
+		opacity: 1;
+		transform: translate(20px, 600px) rotateZ(30deg);
+	}
+	100% {
+		opacity: 0;
+		letter-spacing:100px;
+		transform: translate(30px, 800px) rotateZ(45deg);
+	}
+}
+
+@keyframes scatter-console-winner {
+	0% {
+		font-size:18px;
+	}
+	100% {
+		font-size:1000px;
 	}
 }
 
