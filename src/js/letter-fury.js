@@ -51,7 +51,7 @@ export class LetterFury {
         this.CurrentRank = 0;
         // number used for countdown timer
         this.CountdownNumber = 0;
-        this.LengthOfGameInMinutes = .4;
+        this.LengthOfGameInMinutes = 2;
         //these variables contain the emoji svg
         this.$happySvg = '';
         this.$closeSvg = '';
