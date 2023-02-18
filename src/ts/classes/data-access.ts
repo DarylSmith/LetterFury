@@ -80,7 +80,7 @@ public InvokeSocketGameEnd(game:string){
     const startObj:GroupGamePayload = {
         action:'sendmessage',
         function: GroupGameFunction.GameEnd,
-        game:game
+        game:game,
     }
 
     this.SendGameMessage(startObj);

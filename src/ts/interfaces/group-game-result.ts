@@ -6,6 +6,7 @@ export interface GroupGameResult{
     action:string;
     word?:string;
     value?: any;
-    status?:GroupGameStatus
+    status?:GroupGameStatus;
+    standings?:[];
     
     }

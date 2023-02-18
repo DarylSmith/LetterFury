@@ -8,6 +8,7 @@ import { GroupGame } from './interfaces/group-game.js';
 import { LfIntro } from './classes/lf-intro.js';
 import { GroupGameStatus } from './enums/group-game-status.js';
 import { ScoreItem } from './interfaces/score-item.js';
+import { Standings } from './interfaces/standings.js';
 
 export class LetterFury{
 
@@ -98,7 +99,7 @@ export class LetterFury{
 				this.StartNextRound(false);
 				break;
 			case GroupGameFunction.GameEnd:
-				this.GroupGameEnd(details.value);
+				this.GroupGameEnd(details.value, details.standings);
 			break;
 			case GroupGameFunction.PlayerDisconnect:
 				if(details.status ===GroupGameStatus.GameExpired){
@@ -107,7 +108,7 @@ export class LetterFury{
 					// if the host leaves in the middle of game, end game immediately
 						this.GameState="game_over";
 						this.$q("#groupGameContainer").style.display="none";
-						this.NavigateToGroupGamePage(false);
+						this.NavigateToGroupGamePage(false,details.standings);
 					
 				}
 
@@ -148,7 +149,7 @@ export class LetterFury{
 
 	// number used for countdown timer
 	public CountdownNumber:number= 0;
-	public LengthOfGameInMinutes= 2;
+	public LengthOfGameInMinutes= .4;
 
 	//these variables contain the emoji svg
 	public $happySvg:string = '';
@@ -315,11 +316,11 @@ export class LetterFury{
 		this.NavigateToGroupGamePage(false);
 	}
 
-	public StartGroupGame(){
+	public StartGroupGame(isRestart:boolean){
 
 		//if the game is not ready, add a mess
 		const isNotReady:boolean =(this.GroupGame.GroupUserStatus==="player" && this.GroupGame.GroupUserConnected)
-		if(isNotReady){
+		if(isNotReady && !isRestart){
 			this.WriteToGroupGameConsole("Still waiting for players...<br/>");
 			return;
 		}
@@ -420,7 +421,7 @@ export class LetterFury{
 
 	}
 
-	private NavigateToGroupGamePage(isRestart:boolean){
+	private NavigateToGroupGamePage(isRestart:boolean, standings?:[]){
 		
 		this.$q("#returnToHomescreen").style.display="none";
 
@@ -452,11 +453,16 @@ export class LetterFury{
 		this.$q("#groupGameSection").style.display="block";
 		this.$q("#groupGameContainer").classList.add("easeInRight");
 
+		if(isRestart){
+			const standingsStr =  this.WriteGameStandings(standings);
+			this.$q("#groupGameStandings").innerHTML=standingsStr;
+		}
+
 		if(this.GroupGame.GroupUserStatus==="player"  ){
 			
 			this.$q("#inviteGroupGame").style.display="none";
 			{
-				this.StartGroupGame()
+				this.StartGroupGame(isRestart)
 			}
 		}
 
@@ -1331,15 +1337,14 @@ export class LetterFury{
 		}
 	}
 
-
-	private GroupGameEnd(results:any[]){
+	private GroupGameEnd(results:any[], standings:[]){
 
 		const $console = this.$q("#consoleText");
 
 		// sort all the users by points
 		let items = results.sort((a,b)=>b.points-a.points).slice(0,3);
 
-		this.FinalScoreQueue.push({player:'gameover','rank':'0','score':0});
+		this.FinalScoreQueue.push({player:'gameover','rank':0,'score':0});
 
 		$console.innerHTML='';
 		//iterate from last place to second
@@ -1347,7 +1352,7 @@ export class LetterFury{
 			const item = items[i];
 			const scoreItem:ScoreItem={
 				player:item.player,
-				rank: (i+1).toString(),
+				rank: (i+1),
 				score:item.points
 
 
@@ -1368,10 +1373,10 @@ export class LetterFury{
 						clearInterval((window as any).endInterval);
 						this.GroupGame.GroupGameStatus="completed";
 						this. InitGameOver();
-						this.NavigateToGroupGamePage(true);
+						this.NavigateToGroupGamePage(true, standings);
 
 					}
-				},500);
+				},2000);
 	}
 
 
@@ -1381,7 +1386,8 @@ export class LetterFury{
 		if(intervalNum!==0){
 		this.ClearGameText()
 		const item = this.FinalScoreQueue.pop();
-		const resultText = `${item.player} is ${item.rank} with a score of ${item.score}`;
+		const places:string[] = ['','first','second','third'];
+		const resultText = `${item.player} is ${places[item.rank]} with a score of ${item.score}`;
 		this.WriteToConsole(resultText,"winner",undefined,0);
 		}
 		else{
@@ -1491,6 +1497,33 @@ export class LetterFury{
 			};
 		}(0), 50);
 
+	}
+
+	private WriteGameStandings(standings:[]):string{
+
+		const overallStandings:Standings[]=[];
+		
+		standings.forEach((item:string)=>{
+			const players = overallStandings.map(e=>e.player);
+
+			const standings:Standings[]=JSON.parse(item);
+			standings.forEach(standing=>{
+				if(!players.includes(standing.player))
+				{
+					overallStandings.push(standing);
+				}
+				else{
+					const playerStanding = overallStandings.find(e=>e.player===standing.player);
+					playerStanding.points+=standing.points;
+				}
+			});
+		});
+
+		overallStandings.sort((a,b)=>b.points-a.points);
+		
+		const border:string = Array(8).fill('-').join('');
+		const standingsStr= overallStandings.map(e=> `${e.player} has ${e.points} points`).join('<br/>');
+		return `${border}<br/>${standingsStr}<br/>${border}`;
 	}
 
 	ClearSvgValues(){

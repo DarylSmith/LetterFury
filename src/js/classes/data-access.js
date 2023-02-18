@@ -55,7 +55,7 @@ export class DataAccess {
         const startObj = {
             action: 'sendmessage',
             function: GroupGameFunction.GameEnd,
-            game: game
+            game: game,
         };
         this.SendGameMessage(startObj);
     }

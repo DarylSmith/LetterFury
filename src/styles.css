@@ -112,6 +112,7 @@ h1:after {
 #legend {
 	color: #32CD3C;
 	font-weight: 900;
+	overflow: hidden;
 	font-size: 104px;
 	background-color: #000;
 	border: 1px solid #737373;
@@ -170,7 +171,7 @@ h1:after {
 {
     font-size: 34px;
     width: 50%;
-    height: 200px;
+    height: 250px;
     min-height: 0px ;
 	bottom: 0px;
 	font-size: 16px;
@@ -178,6 +179,11 @@ h1:after {
     text-align: left;
 	padding-left:20px;
 }
+
+#groupGameStandings{
+	color:#ffffff;
+}
+
 .groupGameLabel{
 margin: 20px auto;
 width: 50%;

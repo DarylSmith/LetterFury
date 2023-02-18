@@ -51,7 +51,7 @@ export class LetterFury {
         this.CurrentRank = 0;
         // number used for countdown timer
         this.CountdownNumber = 0;
-        this.LengthOfGameInMinutes = .2;
+        this.LengthOfGameInMinutes = .4;
         //these variables contain the emoji svg
         this.$happySvg = '';
         this.$closeSvg = '';
@@ -125,7 +125,7 @@ export class LetterFury {
                     this.StartNextRound(false);
                     break;
                 case GroupGameFunction.GameEnd:
-                    this.GroupGameEnd(details.value);
+                    this.GroupGameEnd(details.value, details.standings);
                     break;
                 case GroupGameFunction.PlayerDisconnect:
                     if (details.status === GroupGameStatus.GameExpired) {
@@ -133,7 +133,7 @@ export class LetterFury {
                         // if the host leaves in the middle of game, end game immediately
                         this.GameState = "game_over";
                         this.$q("#groupGameContainer").style.display = "none";
-                        this.NavigateToGroupGamePage(false);
+                        this.NavigateToGroupGamePage(false, details.standings);
                     }
             }
         });
@@ -217,10 +217,10 @@ export class LetterFury {
         this.GroupGame.GroupUserName = savedName ? savedName.toLocaleLowerCase() : this.CreateRandomNames().toLowerCase();
         this.NavigateToGroupGamePage(false);
     }
-    StartGroupGame() {
+    StartGroupGame(isRestart) {
         //if the game is not ready, add a mess
         const isNotReady = (this.GroupGame.GroupUserStatus === "player" && this.GroupGame.GroupUserConnected);
-        if (isNotReady) {
+        if (isNotReady && !isRestart) {
             this.WriteToGroupGameConsole("Still waiting for players...<br/>");
             return;
         }
@@ -291,7 +291,7 @@ export class LetterFury {
         this.$q("#letterContainer").classList.add("easeOutLeft");
         this.$q("#inputContainer").classList.add("easeOutLeft");
     }
-    NavigateToGroupGamePage(isRestart) {
+    NavigateToGroupGamePage(isRestart, standings) {
         this.$q("#returnToHomescreen").style.display = "none";
         if (this.GroupGame.GroupUserStatus === "player" && this.GroupGame.GroupGameStatus === "notstarted") {
             this.$q("#groupGameId").classList.add("easeInLeft");
@@ -315,10 +315,14 @@ export class LetterFury {
         this.$q("#ruleSection").style.display = "none";
         this.$q("#groupGameSection").style.display = "block";
         this.$q("#groupGameContainer").classList.add("easeInRight");
+        if (isRestart) {
+            const standingsStr = this.WriteGameStandings(standings);
+            this.$q("#groupGameStandings").innerHTML = standingsStr;
+        }
         if (this.GroupGame.GroupUserStatus === "player") {
             this.$q("#inviteGroupGame").style.display = "none";
             {
-                this.StartGroupGame();
+                this.StartGroupGame(isRestart);
             }
         }
     }
@@ -950,18 +954,18 @@ export class LetterFury {
                 break;
         }
     }
-    GroupGameEnd(results) {
+    GroupGameEnd(results, standings) {
         const $console = this.$q("#consoleText");
         // sort all the users by points
         let items = results.sort((a, b) => b.points - a.points).slice(0, 3);
-        this.FinalScoreQueue.push({ player: 'gameover', 'rank': '0', 'score': 0 });
+        this.FinalScoreQueue.push({ player: 'gameover', 'rank': 0, 'score': 0 });
         $console.innerHTML = '';
         //iterate from last place to second
         for (let i = 0; i < items.length; i++) {
             const item = items[i];
             const scoreItem = {
                 player: item.player,
-                rank: (i + 1).toString(),
+                rank: (i + 1),
                 score: item.points
             };
             this.FinalScoreQueue.push(scoreItem);
@@ -974,16 +978,17 @@ export class LetterFury {
                 clearInterval(window.endInterval);
                 this.GroupGame.GroupGameStatus = "completed";
                 this.InitGameOver();
-                this.NavigateToGroupGamePage(true);
+                this.NavigateToGroupGamePage(true, standings);
             }
-        }, 500);
+        }, 2000);
     }
     ShowPlayerScore() {
         const intervalNum = this.FinalScoreIndex % 2;
         if (intervalNum !== 0) {
             this.ClearGameText();
             const item = this.FinalScoreQueue.pop();
-            const resultText = `${item.player} is ${item.rank} with a score of ${item.score}`;
+            const places = ['', 'first', 'second', 'third'];
+            const resultText = `${item.player} is ${places[item.rank]} with a score of ${item.score}`;
             this.WriteToConsole(resultText, "winner", undefined, 0);
         }
         else {
@@ -1070,6 +1075,26 @@ export class LetterFury {
                 ++counter;
             };
         }(0), 50);
+    }
+    WriteGameStandings(standings) {
+        const overallStandings = [];
+        standings.forEach((item) => {
+            const players = overallStandings.map(e => e.player);
+            const standings = JSON.parse(item);
+            standings.forEach(standing => {
+                if (!players.includes(standing.player)) {
+                    overallStandings.push(standing);
+                }
+                else {
+                    const playerStanding = overallStandings.find(e => e.player === standing.player);
+                    playerStanding.points += standing.points;
+                }
+            });
+        });
+        overallStandings.sort((a, b) => b.points - a.points);
+        const border = Array(8).fill('-').join('');
+        const standingsStr = overallStandings.map(e => `${e.player} has ${e.points} points`).join('<br/>');
+        return `${border}<br/>${standingsStr}<br/>${border}`;
     }
     ClearSvgValues() {
         for (let i = 0; i < 3; i++) {
