@@ -8,5 +8,6 @@ export interface GroupGameResult{
     value?: any;
     status?:GroupGameStatus;
     standings?:[];
+    allPlayers?:[];
     
     }

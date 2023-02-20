@@ -100,23 +100,28 @@
 			window.location.reload();
 		 }
 
-		 window.InitGameplay=function(isStartGame){
+		
+				window.InitGameplay=function(isStartGame){
 
-			window.IsStartGame=isStartGame;
+				const username = localStorage.getItem("lf_username");		
+				// if the user has already logged in, continue
+				if(!username){
+					window.ShowModal('identity');
+				}
 
-			const username = localStorage.getItem("lf_username");		
-			// if the user has already logged in, continue
-			if(!username){
-				window.ShowModal('identity');
-			}
+				//if this is user has an identity and wants to start the game
+				if (username && isStartGame)
+				{
+					window.ShowModal('start')
+				}
 
-			//if this is user has an identity and wants to 
-			if (username && isStartGame)
+				// if this is a logged in user who want to join game
+				if (username && !isStartGame){
 
-				window.ShowModal('start')
+					window.AddPlayerToGame();
+				}
 
-		 }
-
+		}
 		 window.InitAnonGame= function(){
 
 			if(window.IsStartGame){
@@ -251,7 +256,9 @@
 			<div class="groupGameELem">Your Game ID is: <span id="groupGameVal"></span></div>
 			<div class="groupGameElem">Your Username is : <span id="groupUserVal"></span></div>
 			<div id="groupGameStandings"></div>
-			<div class="groupGameElem"> <span id="groupPlayersVal"></span></div>
+			<div class="groupGameElem"> 
+				<div id="groupPlayersVal"></div>
+			</div>
 
 
 		</div> 

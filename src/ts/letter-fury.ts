@@ -318,6 +318,9 @@ export class LetterFury{
 
 	public StartGroupGame(isRestart:boolean){
 
+		// remove the modal window if it's still there
+		this.$q("#button-modal").classList.remove("modal-window-active");
+
 		//if the game is not ready, add a mess
 		const isNotReady:boolean =(this.GroupGame.GroupUserStatus==="player" && this.GroupGame.GroupUserConnected)
 		if(isNotReady && !isRestart){
@@ -428,6 +431,7 @@ export class LetterFury{
 		if(this.GroupGame.GroupUserStatus==="player"  && this.GroupGame.GroupGameStatus==="notstarted"){
 
 			this.$q("#groupGameId").classList.add("easeInLeft");
+			this.$q("#startGroupGame").innerHTML="Join";
 
 			if(isRestart){
 			this.$q("#groupGameInstructions").innerText="Next is about to start. Please get ready!";	
@@ -1255,6 +1259,12 @@ export class LetterFury{
 		if(this.GroupGame.GroupUserName!==payload.player){		
 			const message = `${payload.player} has joined<br/>`;
 			this.WriteToGroupGameConsole(message);			
+		}
+		else{
+			const otherPlayers = payload.allPlayers
+								.filter(e=>e!==payload.player && e!=='INIT')
+								.map(e=>`${e} has joined` );
+			this.WriteToGroupGameConsole(otherPlayers.join('<br/>'));
 		}
 
 	}
