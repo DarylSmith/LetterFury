@@ -106,6 +106,10 @@
 		
 				window.InitGameplay=function(isStartGame){
 
+				// save this to the global object so it can be accessed
+				// after google login
+				window.IsStartGame	= isStartGame;
+
 				const username = localStorage.getItem("lf_username");		
 				// if the user has already logged in, continue
 				if(!username){
