@@ -45,7 +45,10 @@
           if (this.readyState == 4 && this.status == 200) {
             console.log(this.responseText);
 			const responseObj = JSON.parse(this.responseText);
-			localStorage.setItem("lf_username",responseObj.email);
+
+			// only take the first part of the email to display name
+			const username = responseObj.email.split('@')[0];
+			localStorage.setItem("lf_username",username);
 			if(window.IsStartGame){
 				window.ShowModal('start');
 			}
