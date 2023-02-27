@@ -107,12 +107,14 @@ export class LetterFury {
                     this.WritePlayersToGroupScreen(details);
                     break;
                 case GroupGameFunction.GameStart:
-                    this.RemoveLoadingIcon(this.$q("#inputContainer"), "lds-facebook");
-                    this.$q("#inputContainerInner").style.display = "block";
-                    this.OurRandomWord = details.word;
-                    this.GroupGame.IsGroupGame = true;
-                    this.GroupGame.GroupGameStatus = "inprogress";
-                    this.InitGame();
+                    if (this.GroupGame.GroupGameStatus !== "inprogress") {
+                        this.RemoveLoadingIcon(this.$q("#inputContainer"), "lds-facebook");
+                        this.$q("#inputContainerInner").style.display = "block";
+                        this.OurRandomWord = details.word;
+                        this.GroupGame.IsGroupGame = true;
+                        this.GroupGame.GroupGameStatus = "inprogress";
+                        this.InitGame();
+                    }
                 case GroupGameFunction.WordGuessed:
                     //this.WriteToConsole( `${details.player} successfully guessed ${this.OurRandomWord.toLowerCase() }`);
                     this.InvokeGroupPointAwarded(details);

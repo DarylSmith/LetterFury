@@ -425,7 +425,7 @@ window.NameUI=[];
 
 			}
 			else {
-				//DalyasGame.CountdownNumber = 5;gg
+				//DalyasGame.CountdownNumber = 5;
 				clearInterval(window.Countdown);
 				$q("#timer").innerHTML = "GO!";
 				DalyasGame.CurrentPointValue.PointsForCurrentWord = DalyasGame.CurrentPointValue.MaxPointsForWord;
