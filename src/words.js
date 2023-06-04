@@ -27,12 +27,12 @@ return[
 'Jab',
 'Lab',
 'Tab',
-'Dad',
+
 'Fad',
 'Lad',
 'Mad',
 'Bag',
-'Gag',
+
 'Hag',
 'Lag',
 'Mag',
@@ -51,7 +51,6 @@ return[
 'Tan',
 'Cap',
 'Lap',
-'Pap',
 'Rap',
 'Sap',
 'Tap',
@@ -105,7 +104,6 @@ return[
 'Dew',
 'Mew',
 'Pew',
-'Bib',
 'Fib',
 'Jib',
 'Rib',
@@ -134,7 +132,6 @@ return[
 'Yin',
 'Dip',
 'Lip',
-'Pip',
 'Sip',
 'Tip',
 'Git',
@@ -168,14 +165,14 @@ return[
 'Cop',
 'Hop',
 'Mop',
-'Pop',
+
 'Top',
 'Bot',
 'Cot',
 'Dot',
 'Lot',
 'Pot',
-'Tot',
+
 'Bow',
 'Cow',
 'Sow',
@@ -208,7 +205,7 @@ return[
 'Run',
 'Sun',
 'Cup',
-'Pup',
+
 'Cut',
 'Gut',
 'Hut',
@@ -221,8 +218,8 @@ return[
 'Emu',
 'End',
 'Era',
-'Eve',
-'Eye',
+
+
 'Ink',
 
 'Ion',
@@ -289,7 +286,7 @@ return[
 'Hop',
 'Lop',
 'Mop',
-'Pop',
+
 'Top',
 'Sop',
 'Bow',
@@ -314,7 +311,7 @@ return[
 'Fib',
 'Jib',
 'Rib',
-'Did',
+
 'Dig',
 'Jig',
 'Rig',
