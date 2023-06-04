@@ -27,6 +27,8 @@ export class LetterFury {
         this.IntroIndex = 1;
         // number of times a word can be skipped
         this.SkipsAllowed = 3;
+        // flagged when ws connection has been set
+        this.WebServiceConnectionSet = false;
         this.NumberOfSkips = 0;
         this.wordIntervalArr = {};
         this.FinalScoreQueue = [];
@@ -232,8 +234,13 @@ export class LetterFury {
             this.GroupGame.GroupGameName = this.GroupGame.GroupGameName !== '' ?
                 this.GroupGame.GroupGameName :
                 this.$q("#groupGameIdText").value.toLowerCase();
-            if (this.GroupGame.GroupGameName !== '') {
+            if (this.GroupGame.GroupGameName !== '' && !this.WebServiceConnectionSet) {
+                console.log('Initial Web Service setup for player');
+                this.WebServiceConnectionSet = true;
                 this._dataAccess.InvokeSocketConnection(this.GroupGame.GroupGameName, this.GroupGame.GroupUserName, this.GroupGame.GroupGameStatus);
+            }
+            else {
+                console.log('Web Service already set for player. Skipping...');
             }
             setTimeout(() => {
                 this.BuildRandomNameUI("groupUserVal", this.GroupGame.GroupUserName);
